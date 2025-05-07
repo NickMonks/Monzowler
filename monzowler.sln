@@ -1,0 +1,27 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monzowler.Core", "src\Monzowler.Core\Monzowler.Core.csproj", "{B455D4F8-CF6E-4B03-9191-A3E731E09D41}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monzowler.Api", "src\Monzowler.Api\Monzowler.Api.csproj", "{29D61560-81E2-46D6-A8E6-B9CFF19BC999}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{22E31CCB-6644-4B4E-8E35-ACE2E21DDF13}"
+	ProjectSection(SolutionItems) = preProject
+		compose.yaml = compose.yaml
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B455D4F8-CF6E-4B03-9191-A3E731E09D41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B455D4F8-CF6E-4B03-9191-A3E731E09D41}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B455D4F8-CF6E-4B03-9191-A3E731E09D41}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B455D4F8-CF6E-4B03-9191-A3E731E09D41}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29D61560-81E2-46D6-A8E6-B9CFF19BC999}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29D61560-81E2-46D6-A8E6-B9CFF19BC999}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29D61560-81E2-46D6-A8E6-B9CFF19BC999}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29D61560-81E2-46D6-A8E6-B9CFF19BC999}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
