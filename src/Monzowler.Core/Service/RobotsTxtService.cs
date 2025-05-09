@@ -1,23 +1,21 @@
 using Microsoft.Extensions.Configuration;
+using Monzowler.HttpClient.ApiClient;
 
 namespace Monzowler.Crawler.Service;
 
-using System.Net.Http;
-
 public class RobotsTxtService {
-    private readonly HttpClient _http = new();
-    private readonly string _userAgent;
+    private readonly IApiClient _apiClient;
 
-    public RobotsTxtService(IConfiguration config) {
-        _userAgent = config["UserAgent"];
+    public RobotsTxtService(IConfiguration config, IApiClient apiClient)
+    {
+        _apiClient = apiClient;
     }
 
-    public async Task<(List<string> Disallows, int? CrawlDelay)> GetRulesAsync(string rootUrl) {
+    public async Task<(List<string> Disallows, int? CrawlDelay)> GetRulesAsync(string rootUrl, CancellationToken cancellationToken = default) {
         try {
             var robotsUrl = new Uri(new Uri(rootUrl), "/robots.txt").ToString();
             
-            //TODO: move request to specific httpclient project
-            var content = await _http.GetStringAsync(robotsUrl);
+            var content = await _apiClient.GetStringAsync(robotsUrl, cancellationToken);
             var lines = content.Split('\n');
 
             var disallows = new List<string>();

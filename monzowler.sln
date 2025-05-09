@@ -6,8 +6,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monzowler.Api", "src\Monzow
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{22E31CCB-6644-4B4E-8E35-ACE2E21DDF13}"
 	ProjectSection(SolutionItems) = preProject
-		compose.yaml = compose.yaml
+		docker-compose.yaml = docker-compose.yaml
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monzowler.HttpClient", "src\Monzowler.HttpClient\Monzowler.HttpClient.csproj", "{3A4F2EAE-AC7A-43BA-A006-EFDA2B7386FD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,5 +25,9 @@ Global
 		{29D61560-81E2-46D6-A8E6-B9CFF19BC999}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{29D61560-81E2-46D6-A8E6-B9CFF19BC999}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{29D61560-81E2-46D6-A8E6-B9CFF19BC999}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A4F2EAE-AC7A-43BA-A006-EFDA2B7386FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A4F2EAE-AC7A-43BA-A006-EFDA2B7386FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A4F2EAE-AC7A-43BA-A006-EFDA2B7386FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A4F2EAE-AC7A-43BA-A006-EFDA2B7386FD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

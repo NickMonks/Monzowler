@@ -1,70 +1,152 @@
 using System.Collections.Concurrent;
-using Microsoft.Extensions.Configuration;
+using System.Threading.Channels;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Monzowler.Crawler.Interfaces;
-using Monzowler.Crawler.Service;
+using Monzowler.Crawler.Models;
+using Monzowler.Crawler.Parsers;
+using Monzowler.Crawler.Settings;
+using Monzowler.HttpClient.Throttler;
 
-public class CrawlerService : ICrawlerService {
-    private readonly HtmlParser _parser;
-    private readonly RobotsTxtService _robots;
-    private readonly ISitemapRepository _repo;
-    private readonly int _maxConcurrency;
-    private readonly int _defaultDelay;
+namespace Monzowler.Crawler.Service;
 
-    public CrawlerService(HtmlParser parser,
-                          RobotsTxtService robots,
-                          ISitemapRepository repo,
-                          IConfiguration config) {
-        _parser = parser;
-        _robots = robots;
-        _repo = repo;
-        _maxConcurrency = config.GetValue<int>("Crawler:MaxConcurrency");
-        _defaultDelay = config.GetValue<int>("Crawler:PolitenessDelayMilliseconds");
-    }
+public class CrawlerService(
+    IParser parser,
+    RobotsTxtService robots,
+    ISitemapRepository repo,
+    ILogger<CrawlerService> logger,
+    PolitenessThrottler throttler,
+    IOptions<CrawlerOptions> options)
+    : ICrawlerService
+{
+    private readonly CrawlerOptions _opts = options.Value;
+
+    public async Task<Dictionary<string, List<string>>> CrawlAsync(string rootUrl)
+{
+    var sitemap = new ConcurrentDictionary<string, List<string>>();
+    var visited = new ConcurrentDictionary<string, bool>();
+    var channel = Channel.CreateUnbounded<Link>();
+    var baseUri = new Uri(rootUrl);
+    var rootHost = baseUri.Host;
     
-    //TODO: create persistent queue and cache using Redis and SQS
 
-    public async Task<Dictionary<string, List<string>>> CrawlAsync(string rootUrl, int maxDepth) {
-        var sitemap = new ConcurrentDictionary<string, List<string>>();
-        var queue = new ConcurrentQueue<(string Url, int Depth)>();
-        queue.Enqueue((rootUrl, 0));
-        
-        //TODO: add the just added queue
-        var visited = new ConcurrentDictionary<string, bool>();
-        var semaphore = new SemaphoreSlim(_maxConcurrency);
-        var tasks = new List<Task>();
-        var baseUri = new Uri(rootUrl);
-        var rootHost = baseUri.Host;
+    var (disallows, crawlDelay) = await robots.GetRulesAsync(rootUrl);
+    throttler.SetDelay(rootHost, crawlDelay ?? 0);
 
-        // robots.txt
-        var (disallows, crawlDelay) = await _robots.GetRulesAsync(rootUrl);
-        var politeness = crawlDelay ?? _defaultDelay;
-        
-        //BFS approach
-        while (queue.TryDequeue(out var item)) {
-            if (item.Depth > maxDepth || visited.ContainsKey(item.Url)) continue;
-            var path = new Uri(item.Url).AbsolutePath;
-            if (!_robots.IsAllowed(path, disallows)) continue;
-            if (!visited.TryAdd(item.Url, true)) continue;
+    int writersRemaining = 0;
 
-            await semaphore.WaitAsync();
-            tasks.Add(Task.Run(async () => {
-                try {
-                    //TODO: move this politeness to a specific client HTTP so only do the delay there, not here
-                    await Task.Delay(politeness);
-                    var links = await _parser.ParseLinksAsync(item.Url, rootHost);
-                    sitemap[item.Url] = links;
-
-                    foreach (var l in links) queue.Enqueue((l, item.Depth + 1));
-                } catch {
-                    // TODO: log error
-                } finally {
-                    semaphore.Release();
-                }
-            }));
+    async Task<bool> TryEnqueueAsync(Link link)
+    {
+        try
+        {
+            await channel.Writer.WriteAsync(link);
+            Interlocked.Increment(ref writersRemaining);
+            logger.LogDebug("Enqueued: {Url}, writersRemaining: {Writers}", link.Url, writersRemaining);
+            return true;
         }
-
-        await Task.WhenAll(tasks);
-        await _repo.SaveSitemapAsync(rootUrl, sitemap);
-        return sitemap.ToDictionary(kv => kv.Key, kv => kv.Value);
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Failed to enqueue {Url}", link.Url);
+            return false;
+        }
     }
+
+    await TryEnqueueAsync(new Link
+    {
+        Url = rootUrl,
+        Domain = rootHost,
+        Depth = 0,
+        Retries = 0
+    });
+
+    var workers = Enumerable.Range(0, _opts.MaxConcurrency).Select(_ => Task.Run(async () =>
+    {
+        await foreach (var item in channel.Reader.ReadAllAsync())
+        {
+            if (item.Depth > _opts.MaxDepth) continue;
+
+            var path = new Uri(item.Url).AbsolutePath;
+            if (!robots.IsAllowed(path, disallows)) continue;
+
+            using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+            try
+            {
+                logger.LogInformation("Crawling: {Url} (Depth: {Depth})", item.Url, item.Depth);
+
+                var links = await parser.ParseLinksAsync(item.Url, rootHost, cts.Token);
+                sitemap[item.Url] = links;
+
+                foreach (var link in links.Where(l => l is not null))
+                {
+                    try
+                    {
+                        var linkHost = new Uri(link).Host;
+                        var newDepth = item.Depth + 1;
+                        var linkPath = new Uri(link).AbsolutePath;
+
+
+                        if (linkHost == rootHost &&
+                            newDepth <= _opts.MaxDepth &&
+                            !visited.ContainsKey(link) &&
+                            robots.IsAllowed(linkPath, disallows))
+                        {
+                            var newLink = new Link
+                            {
+                                Url = link,
+                                Domain = rootHost,
+                                Depth = newDepth,
+                                Retries = 0
+                            };
+
+                            if (await TryEnqueueAsync(newLink))
+                            {
+                                visited.TryAdd(link, true);
+                            }
+                        }
+                    }
+                    catch
+                    {
+                        logger.LogWarning("Invalid link: {Link}", link);
+                    }
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                logger.LogWarning("Timeout on {Url}, retrying", item.Url);
+
+                if (item.Retries < _opts.MaxRetries)
+                {
+                    visited.TryRemove(item.Url, out bool _);
+
+                    await TryEnqueueAsync(new Link
+                    {
+                        Url = item.Url,
+                        Domain = rootHost,
+                        Depth = item.Depth,
+                        Retries = item.Retries + 1
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Error processing {Url}", item.Url);
+            }
+            finally
+            {
+                var remaining = Interlocked.Decrement(ref writersRemaining);
+                logger.LogDebug("Finished: {Url}, writersRemaining: {Remaining}", item.Url, remaining);
+
+                if (remaining == 0)
+                {
+                    channel.Writer.Complete();
+                }
+            }
+        }
+    }));
+
+    await Task.WhenAll(workers);
+    await repo.SaveSitemapAsync(rootUrl, sitemap);
+    return sitemap.ToDictionary(kv => kv.Key, kv => kv.Value);
+}
+
 }

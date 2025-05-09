@@ -21,6 +21,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Monzowler.Core\Monzowler.Core.csproj" />
+      <ProjectReference Include="..\Monzowler.HttpClient\Monzowler.HttpClient.csproj" />
     </ItemGroup>
 
 </Project>

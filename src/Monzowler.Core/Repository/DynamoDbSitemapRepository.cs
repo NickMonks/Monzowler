@@ -13,35 +13,45 @@ public class DynamoDbSitemapRepository : ISitemapRepository {
     public DynamoDbSitemapRepository(IAmazonDynamoDB client) => _client = client;
 
     public async Task SaveSitemapAsync(string rootUrl, ConcurrentDictionary<string, List<string>> sitemap) {
-        var item = new Dictionary<string, AttributeValue> {
-            ["Url"] = new() { S = rootUrl },
-            ["Pages"] = new() {
-                M = sitemap.ToDictionary(
-                    kv => kv.Key,
-                    kv => new AttributeValue {
-                        L = kv.Value.Select(u => new AttributeValue { S = u }).ToList()
+        var domain = new Uri(rootUrl).Host;
+
+        var writeRequests = sitemap.Select(kv => new WriteRequest {
+            PutRequest = new PutRequest {
+                Item = new Dictionary<string, AttributeValue> {
+                    ["PK"] = new AttributeValue { S = domain },
+                    ["SK"] = new AttributeValue { S = kv.Key },
+                    ["Links"] = new AttributeValue {
+                        L = kv.Value.Select(link => new AttributeValue { S = link }).ToList()
                     }
-                )
+                }
             }
-        };
-        await _client.PutItemAsync(new PutItemRequest {
-            TableName = TableName,
-            Item = item
-        });
+        }).ToList();
+
+        foreach (var batch in writeRequests.Chunk(25)) {
+            await _client.BatchWriteItemAsync(new BatchWriteItemRequest {
+                RequestItems = new Dictionary<string, List<WriteRequest>> {
+                    [TableName] = batch.ToList()
+                }
+            });
+        }
     }
 
     public async Task<Dictionary<string, List<string>>> GetSitemapAsync(string rootUrl) {
-        var resp = await _client.GetItemAsync(new GetItemRequest {
-            TableName = TableName,
-            Key = new Dictionary<string, AttributeValue> {
-                ["Url"] = new() { S = rootUrl }
-            }
-        });
-        if (!resp.IsItemSet) return null;
+        var domain = new Uri(rootUrl).Host;
 
-        return resp.Item["Pages"].M.ToDictionary(
-            kv => kv.Key,
-            kv => kv.Value.L.Select(av => av.S).ToList()
+        var query = new QueryRequest {
+            TableName = TableName,
+            KeyConditionExpression = "PK = :pk",
+            ExpressionAttributeValues = new Dictionary<string, AttributeValue> {
+                [":pk"] = new AttributeValue { S = domain }
+            }
+        };
+
+        var response = await _client.QueryAsync(query);
+
+        return response.Items.ToDictionary(
+            item => item["SK"].S,
+            item => item["Links"].L.Select(l => l.S).ToList()
         );
     }
 }
