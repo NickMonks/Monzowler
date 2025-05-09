@@ -23,7 +23,7 @@ public class ApiClient(System.Net.Http.HttpClient httpClient, ILogger<ApiClient>
             // Ensure we are following politeness policy from robots.txt
             var domain = new Uri(url).Host;
             await _throttler.EnforceAsync(domain, ct);
-            
+
             var response = await _httpClient.GetAsync(url, ct);
 
             if (!response.IsSuccessStatusCode)

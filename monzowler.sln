@@ -11,6 +11,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monzowler.HttpClient", "src\Monzowler.HttpClient\Monzowler.HttpClient.csproj", "{3A4F2EAE-AC7A-43BA-A006-EFDA2B7386FD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monzowler.Persistence", "src\Monzowler.Persistence\Monzowler.Persistence.csproj", "{31B5561F-2446-4B82-8E8B-E1A56C6D3173}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monzowler.Api2", "src\Monzowler.Api2\Monzowler.Api2.csproj", "{7472313B-35DE-4819-8758-88F1743D38AA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,5 +33,13 @@ Global
 		{3A4F2EAE-AC7A-43BA-A006-EFDA2B7386FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3A4F2EAE-AC7A-43BA-A006-EFDA2B7386FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3A4F2EAE-AC7A-43BA-A006-EFDA2B7386FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{31B5561F-2446-4B82-8E8B-E1A56C6D3173}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31B5561F-2446-4B82-8E8B-E1A56C6D3173}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31B5561F-2446-4B82-8E8B-E1A56C6D3173}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31B5561F-2446-4B82-8E8B-E1A56C6D3173}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7472313B-35DE-4819-8758-88F1743D38AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7472313B-35DE-4819-8758-88F1743D38AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7472313B-35DE-4819-8758-88F1743D38AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7472313B-35DE-4819-8758-88F1743D38AA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -1,3 +1,139 @@
+GET http://localhost:4566
+x-amz-target: DynamoDB_20120810.ListTables
+content-type: application/x-amz-json-1.0
+User-Agent: IntelliJ HTTP Client/JetBrains Rider 2025.1.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+content-length: 2
+
+{}
+
+<> 2025-05-09T170108.200.amz-json-1.0
+
+###
+
+GET http://localhost:4566
+x-amz-target: DynamoDB_20120810.ListTables
+content-type: application/x-amz-json-1.0
+User-Agent: IntelliJ HTTP Client/JetBrains Rider 2025.1.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+content-length: 2
+
+{}
+
+<> 2025-05-09T170002.200.amz-json-1.0
+
+###
+
+POST http://localhost:5000/crawl
+Content-Type: application/json
+Content-Length: 34
+User-Agent: IntelliJ HTTP Client/JetBrains Rider 2025.1.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+{
+    "url": "https://monzo.com"
+}
+
+<> 2025-05-09T165652.200.json
+
+###
+
+POST http://localhost:5000/crawl
+Content-Type: application/json
+Content-Length: 34
+User-Agent: IntelliJ HTTP Client/JetBrains Rider 2025.1.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+{
+    "url": "https://monzo.com"
+}
+
+###
+
+GET http://localhost:4566
+x-amz-target: DynamoDB_20120810.ListTables
+content-type: application/x-amz-json-1.0
+User-Agent: IntelliJ HTTP Client/JetBrains Rider 2025.1.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+content-length: 2
+
+{}
+
+<> 2025-05-09T163719.200.amz-json-1.0
+
+###
+
+GET http://localhost:4566
+x-amz-target: DynamoDB_20120810.ListTables
+content-type: application/x-amz-json-1.0
+User-Agent: IntelliJ HTTP Client/JetBrains Rider 2025.1.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+content-length: 2
+
+{}
+
+<> 2025-05-09T163632.200.amz-json-1.0
+
+###
+
+POST http://localhost:5000/crawl
+Content-Type: application/json
+Content-Length: 34
+User-Agent: IntelliJ HTTP Client/JetBrains Rider 2025.1.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+{
+    "url": "https://monzo.com"
+}
+
+###
+
+POST http://localhost:5000/crawl
+Content-Type: application/json
+Content-Length: 34
+User-Agent: IntelliJ HTTP Client/JetBrains Rider 2025.1.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+{
+    "url": "https://monzo.com"
+}
+
+###
+
+POST http://localhost:5000/crawl
+Content-Type: application/json
+Content-Length: 34
+User-Agent: IntelliJ HTTP Client/JetBrains Rider 2025.1.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+{
+    "url": "https://monzo.com"
+}
+
+###
+
+POST http://localhost:5000/crawl
+Content-Type: application/json
+Content-Length: 34
+User-Agent: IntelliJ HTTP Client/JetBrains Rider 2025.1.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+{
+    "url": "https://monzo.com"
+}
+
+###
+
 POST http://localhost:5000/crawl
 Content-Type: application/json
 Content-Length: 34

@@ -1,38 +1,34 @@
-using Microsoft.Playwright;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
 
 namespace Monzowler.Crawler.Parsers;
 
-/// <summary>
-/// Playwright CreateAsync spins up a new Node.js instance each time.
-/// To improve performance we create a browser provider for this only once
-/// We use lazy defer to avoid instantiate it if we don't ever use it. 
-/// </summary>
-public class BrowserProvider : IAsyncDisposable
+public class BrowserProvider : IDisposable
 {
-    private readonly Lazy<Task<IPlaywright>> _playwright;
-    private readonly Lazy<Task<IBrowser>> _browser;
+    private readonly Lazy<IWebDriver> _driver;
 
     public BrowserProvider()
     {
-        _playwright = new(() => Playwright.CreateAsync());
-        _browser = new(async () =>
+        _driver = new(() =>
         {
-            var playwright = await _playwright.Value;
-            return await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
-            {
-                Headless = true
-            });
+            var options = new ChromeOptions();
+            options.AddArgument("--headless=new");
+            options.AddArgument("--no-sandbox");
+            options.AddArgument("--disable-dev-shm-usage");
+            options.AddArgument("--disable-gpu");
+
+            return new ChromeDriver(options);
         });
     }
 
-    public async Task<IBrowser> GetBrowserAsync() => await _browser.Value;
+    public IWebDriver GetDriver() => _driver.Value;
 
-    public async ValueTask DisposeAsync()
+    public void Dispose()
     {
-        if (_browser.IsValueCreated)
-            await (await _browser.Value).CloseAsync();
-
-        if (_playwright.IsValueCreated)
-            (await _playwright.Value).Dispose();
+        if (_driver.IsValueCreated)
+        {
+            _driver.Value.Quit();
+            _driver.Value.Dispose();
+        }
     }
 }

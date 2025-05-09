@@ -6,45 +6,74 @@
     <projectFile kind="Docker">src/Monzowler.Api/Monzowler.Api.csproj</projectFile>
     <projectFile profileName="http">src/Monzowler.Api/Monzowler.Api.csproj</projectFile>
     <projectFile profileName="https">src/Monzowler.Api/Monzowler.Api.csproj</projectFile>
+    <projectFile profileName="http">src/Monzowler.Api2/Monzowler.Api2.csproj</projectFile>
+    <projectFile profileName="https">src/Monzowler.Api2/Monzowler.Api2.csproj</projectFile>
     <projectFile>src/Monzowler.HttpClient/Monzowler.HttpClient.csproj</projectFile>
+    <projectFile profileName="http">src/Monzowler.Persistence/Monzowler.Persistence.csproj</projectFile>
+    <projectFile profileName="https">src/Monzowler.Persistence/Monzowler.Persistence.csproj</projectFile>
   </component>
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="94281c99-9f69-4f03-9c36-f7d808c54f8e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/docker-compose.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Monzowler.Core/Exceptions/ParseException.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Monzowler.Core/Models/Link.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Monzowler.Core/Parsers/BrowserProvider.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Monzowler.Core/Parsers/IParser.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Monzowler.Core/Parsers/Parser.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Monzowler.Core/Settings/AWSSettings.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Monzowler.Core/Settings/CrawlerOptions.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Monzowler.Core/Settings/ParserSettings.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Monzowler.Core/Utilities/Sanitizer.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Monzowler.HttpClient/ApiClient/ApiClient.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Monzowler.HttpClient/ApiClientServiceRegistration.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Monzowler.HttpClient/Handlers/ApiExceptionHandler.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Monzowler.HttpClient/Settings/ApiClientOptions.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Monzowler.HttpClient/Throttler/PolitenessThrottler.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.dockerignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Monzowler.Api.http" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Monzowler.Api/ServiceExtensions.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Monzowler.Api2/Dockerfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Monzowler.Core/Interfaces/ICrawlSink.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Monzowler.Core/Interfaces/ICrawlSinkFactory.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Monzowler.Core/Interfaces/IParser.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Monzowler.Core/Models/CrawlSession.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Monzowler.Core/Models/JobStatus.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Monzowler.Core/Models/Page.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Monzowler.Core/Models/ParserStatusCode.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Monzowler.Core/Models/Requests/JobRequest.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Monzowler.Core/Models/Requests/ParseLinkRequest.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Monzowler.Core/Models/Requests/ParserRequest.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Monzowler.Core/Models/Requests/SiteMapRequest.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Monzowler.Core/Models/Responses/CrawlResponse.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Monzowler.Core/Models/Responses/JobResponse.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Monzowler.Core/Models/Responses/ParseLinkResponse.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Monzowler.Core/Models/Responses/ParserResponse.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Monzowler.Core/Models/Responses/RobotsTxtResponse.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Monzowler.Core/Models/Responses/SiteMapResponse.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Monzowler.Core/Repository/CrawlJobRepository.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Monzowler.Core/Repository/Models/CrawlerDbModel.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Monzowler.Core/Repository/Sinks/CrawlSinkFactory.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Monzowler.Core/Repository/Sinks/CrawlSinkType.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Monzowler.Core/Repository/Sinks/CsvSink.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Monzowler.Core/Repository/Sinks/JsonSink.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Monzowler.Core/Repository/SiteMapRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.monzowler/.idea/httpRequests/http-requests-log.http" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.monzowler/.idea/httpRequests/http-requests-log.http" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.monzowler/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.monzowler/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/compose.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/monzowler.sln" beforeDir="false" afterPath="$PROJECT_DIR$/monzowler.sln" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/monzowler.sln.DotSettings.user" beforeDir="false" afterPath="$PROJECT_DIR$/monzowler.sln.DotSettings.user" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Monzowler.Api/Monzowler.Api.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Monzowler.Api/Monzowler.Api.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Monzowler.Api/Monzowler.Api.http" beforeDir="false" afterPath="$PROJECT_DIR$/src/Monzowler.Api/Monzowler.Api.http" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Monzowler.Api/Monzowler.Api.http" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Monzowler.Api/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Monzowler.Api/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Monzowler.Api/Properties/launchSettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/Monzowler.Api/Properties/launchSettings.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Monzowler.Api/appsettings.Development.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/Monzowler.Api/appsettings.Development.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Monzowler.Api/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/Monzowler.Api/appsettings.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Monzowler.Core/Interfaces/ICrawlerService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Monzowler.Core/Interfaces/ICrawlerService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Monzowler.Core/Models/CrawlRequest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Monzowler.Core/Models/CrawlRequest.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Monzowler.Core/Interfaces/ICrawlerService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Monzowler.Core/Interfaces/ISpiderService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Monzowler.Core/Interfaces/ISitemapRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Monzowler.Core/Interfaces/ISitemapRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Monzowler.Core/Models/CrawlRequest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Monzowler.Core/Models/Requests/CrawlRequest.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Monzowler.Core/Models/LinksResponse.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Monzowler.Core/Monzowler.Core.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Monzowler.Core/Monzowler.Core.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Monzowler.Core/Parsers/HtmlParser.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Monzowler.Core/Parsers/HtmlParser.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Monzowler.Core/Parsers/JsParser.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Monzowler.Core/Parsers/HeadlessParser.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Monzowler.Core/Repository/DynamoDbSitemapRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Monzowler.Core/Repository/DynamoDbSitemapRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Monzowler.Core/Service/CrawlerService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Monzowler.Core/Service/CrawlerService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Monzowler.Core/Parsers/BrowserProvider.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Monzowler.Core/Parsers/BrowserProvider.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Monzowler.Core/Parsers/HeadlessParser.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Monzowler.Core/Parsers/RenderedHtmlParser.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Monzowler.Core/Parsers/HtmlParser.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Monzowler.Core/Parsers/StaticHtmlParser.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Monzowler.Core/Parsers/IParser.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Monzowler.Core/Parsers/Parser.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Monzowler.Core/Service/ParserService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Monzowler.Core/Repository/DynamoDbSitemapRepository.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Monzowler.Core/Service/CrawlerService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Monzowler.Core/Service/SpiderService.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Monzowler.Core/Service/RobotsTxtService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Monzowler.Core/Service/RobotsTxtService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Monzowler.Core/Settings/CrawlerOptions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Monzowler.Core/Settings/CrawlerOptions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Monzowler.HttpClient/ApiClient/ApiClient.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Monzowler.HttpClient/ApiClient/ApiClient.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Monzowler.HttpClient/ApiClientServiceRegistration.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Monzowler.HttpClient/ApiClientServiceRegistration.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Monzowler.HttpClient/Handlers/ApiExceptionHandler.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Monzowler.HttpClient/Throttler/PolitenessThrottler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Monzowler.HttpClient/Throttler/PolitenessThrottler.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,6 +93,9 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/621526284d3e4868b98948aff942206525763e57e194a27623b66c384466/ServiceProviderServiceExtensions.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/6780d13016c376c4491c5618b257d84da7eacf747ed2719783e775546b79b/ThrowHelper.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/8056cd3f452fefb9834f05cdb275b762dd41f27b7766cd71174e78592dc495b/Monitor.CoreCLR.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/85e97f467d698c9e98eae9e3a1b39d58541173e57992d8f7111eabdd3db3526/HttpResponseMessage.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/b58d5acbc96db23d3b19593cb55c661bf3b634e8bba47dd2912a7d963d31b77/Channel.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/ec64fb63b217f08cc66b2e6c85d0eda26a9325b44e4772371afe4b5ccdbe5be/IAmazonDynamoDB.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Monzowler.Core/Parsers/IParser.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="https://json.schemastore.org/appsettings.json" root0="FORCE_HIGHLIGHTING" />
   </component>
@@ -87,9 +119,15 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    ".NET Project.Monzowler.Api.executor": "Debug",
+    ".NET Project.Monzowler.Api.executor": "Run",
+    "Docker.Monzowler.Api/Dockerfile.executor": "Run",
+    "Docker.docker-compose.yaml: Compose Deployment.executor": "Run",
     "HTTP Request.All in Monzowler.Api.executor": "Run",
+    "HTTP Request.Monzowler.Api | #1 (1).executor": "Run",
     "HTTP Request.Monzowler.Api | #1.executor": "Run",
+    "HTTP Request.Monzowler.Api | #2.executor": "Run",
+    "HTTP Request.Monzowler.Api | --- DEBUGGING PURPORSES ------ (1).executor": "Run",
+    "HTTP Request.Monzowler.Api | --- DEBUGGING PURPORSES ------.executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
@@ -102,7 +140,7 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RunManager" selected="HTTP Request.Monzowler.Api | #1">
+  <component name="RunManager" selected="HTTP Request.Monzowler.Api | --- DEBUGGING PURPORSES ------ (1)">
     <configuration name="Monzowler.Api" type="DotNetProject" factoryName=".NET Project" temporary="true">
       <option name="EXE_PATH" value="$PROJECT_DIR$/src/Monzowler.Api/bin/Debug/net8.0/Monzowler.Api" />
       <option name="PROGRAM_PARAMETERS" value="" />
@@ -149,11 +187,47 @@
         <option name="Build" />
       </method>
     </configuration>
-    <configuration name="All in Monzowler.Api" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" path="$PROJECT_DIR$/src/Monzowler.Api/Monzowler.Api.http">
+    <configuration name="Monzowler.Api | --- DEBUGGING PURPORSES ------ (1)" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/Monzowler.Api.http" executionIdentifier="--- DEBUGGING PURPORSES ------" index="2" runType="Run single request">
       <method v="2" />
     </configuration>
-    <configuration name="Monzowler.Api | #1" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/src/Monzowler.Api/Monzowler.Api.http" executionIdentifier="#1" runType="Run single request">
+    <configuration name="Monzowler.Api | --- DEBUGGING PURPORSES ------" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/src/Monzowler.Api/Monzowler.Api.http" executionIdentifier="--- DEBUGGING PURPORSES ------" index="2" runType="Run single request">
       <method v="2" />
+    </configuration>
+    <configuration name="Monzowler.Api | #1 (1)" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/Monzowler.Api.http" executionIdentifier="#1" runType="Run single request">
+      <method v="2" />
+    </configuration>
+    <configuration name="Monzowler.Api | #2" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/src/Monzowler.Api/Monzowler.Api.http" executionIdentifier="#2" index="2" runType="Run single request">
+      <method v="2" />
+    </configuration>
+    <configuration name="Monzowler.Api2: http" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
+      <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/src/Monzowler.Api2/Monzowler.Api2.csproj" />
+      <option name="LAUNCH_PROFILE_TFM" value="net8.0" />
+      <option name="LAUNCH_PROFILE_NAME" value="http" />
+      <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <option name="USE_MONO" value="0" />
+      <option name="RUNTIME_ARGUMENTS" value="" />
+      <option name="GENERATE_APPLICATIONHOST_CONFIG" value="1" />
+      <option name="SHOW_IIS_EXPRESS_OUTPUT" value="0" />
+      <option name="SEND_DEBUG_REQUEST" value="1" />
+      <option name="ADDITIONAL_IIS_EXPRESS_ARGUMENTS" value="" />
+      <method v="2">
+        <option name="Build" />
+      </method>
+    </configuration>
+    <configuration name="Monzowler.Api2: https" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
+      <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/src/Monzowler.Api2/Monzowler.Api2.csproj" />
+      <option name="LAUNCH_PROFILE_TFM" value="net8.0" />
+      <option name="LAUNCH_PROFILE_NAME" value="https" />
+      <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <option name="USE_MONO" value="0" />
+      <option name="RUNTIME_ARGUMENTS" value="" />
+      <option name="GENERATE_APPLICATIONHOST_CONFIG" value="1" />
+      <option name="SHOW_IIS_EXPRESS_OUTPUT" value="0" />
+      <option name="SEND_DEBUG_REQUEST" value="1" />
+      <option name="ADDITIONAL_IIS_EXPRESS_ARGUMENTS" value="" />
+      <method v="2">
+        <option name="Build" />
+      </method>
     </configuration>
     <configuration name="Monzowler.Api: http" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
       <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/src/Monzowler.Api/Monzowler.Api.csproj" />
@@ -215,6 +289,57 @@
         <option name="Build" />
       </method>
     </configuration>
+    <configuration name="Monzowler.Persistence: http" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
+      <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/src/Monzowler.Persistence/Monzowler.Persistence.csproj" />
+      <option name="LAUNCH_PROFILE_TFM" value="net8.0" />
+      <option name="LAUNCH_PROFILE_NAME" value="http" />
+      <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <option name="USE_MONO" value="0" />
+      <option name="RUNTIME_ARGUMENTS" value="" />
+      <option name="GENERATE_APPLICATIONHOST_CONFIG" value="1" />
+      <option name="SHOW_IIS_EXPRESS_OUTPUT" value="0" />
+      <option name="SEND_DEBUG_REQUEST" value="1" />
+      <option name="ADDITIONAL_IIS_EXPRESS_ARGUMENTS" value="" />
+      <method v="2">
+        <option name="Build" />
+      </method>
+    </configuration>
+    <configuration name="Monzowler.Persistence: https" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
+      <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/src/Monzowler.Persistence/Monzowler.Persistence.csproj" />
+      <option name="LAUNCH_PROFILE_TFM" value="net8.0" />
+      <option name="LAUNCH_PROFILE_NAME" value="https" />
+      <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <option name="USE_MONO" value="0" />
+      <option name="RUNTIME_ARGUMENTS" value="" />
+      <option name="GENERATE_APPLICATIONHOST_CONFIG" value="1" />
+      <option name="SHOW_IIS_EXPRESS_OUTPUT" value="0" />
+      <option name="SEND_DEBUG_REQUEST" value="1" />
+      <option name="ADDITIONAL_IIS_EXPRESS_ARGUMENTS" value="" />
+      <method v="2">
+        <option name="Build" />
+      </method>
+    </configuration>
+    <configuration name="Monzowler.Api2/Dockerfile" type="docker-deploy" factoryName="dockerfile" server-name="Docker">
+      <deployment type="dockerfile">
+        <settings>
+          <option name="imageTag" value="monzowler.api2" />
+          <option name="containerName" value="monzowler.api2" />
+          <option name="contextFolderPath" value="$PROJECT_DIR$" />
+          <option name="portBindings">
+            <list>
+              <DockerPortBindingImpl>
+                <option name="containerPort" value="8080" />
+                <option name="hostIp" value="127.0.0.1" />
+                <option name="hostPort" value="8080" />
+              </DockerPortBindingImpl>
+            </list>
+          </option>
+          <option name="sourceFilePath" value="src/Monzowler.Api2/Dockerfile" />
+        </settings>
+      </deployment>
+      <EXTENSION ID="com.jetbrains.rider.docker.debug" isFastModeEnabled="true" isSslEnabled="false" />
+      <method v="2" />
+    </configuration>
     <configuration name="Monzowler.Api/Dockerfile" type="docker-deploy" factoryName="dockerfile" server-name="Docker">
       <deployment type="dockerfile">
         <settings>
@@ -226,15 +351,21 @@
       <EXTENSION ID="com.jetbrains.rider.docker.debug" isFastModeEnabled="true" isSslEnabled="false" />
       <method v="2" />
     </configuration>
+    <configuration default="true" type="docker-deploy" factoryName="docker-compose.yml" temporary="true">
+      <deployment type="docker-compose.yml" />
+      <method v="2" />
+    </configuration>
     <configuration default="true" type="docker-deploy" factoryName="dockerfile" temporary="true">
       <deployment type="dockerfile" />
       <method v="2" />
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="HTTP Request.Monzowler.Api | #1" />
+        <item itemvalue="HTTP Request.Monzowler.Api | --- DEBUGGING PURPORSES ------ (1)" />
+        <item itemvalue="HTTP Request.Monzowler.Api | #1 (1)" />
         <item itemvalue=".NET Project.Monzowler.Api" />
-        <item itemvalue="HTTP Request.All in Monzowler.Api" />
+        <item itemvalue="HTTP Request.Monzowler.Api | --- DEBUGGING PURPORSES ------" />
+        <item itemvalue="HTTP Request.Monzowler.Api | #2" />
       </list>
     </recent_temporary>
   </component>
@@ -245,7 +376,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1746644183049</updated>
-      <workItem from="1746644184524" duration="36106000" />
+      <workItem from="1746644184524" duration="56139000" />
     </task>
     <servers />
   </component>
@@ -272,43 +403,17 @@
           <option name="timeStamp" value="3" />
         </breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/Monzowler.Core/Service/CrawlerService.cs</url>
-          <line>147</line>
+          <url>file://$PROJECT_DIR$/src/Monzowler.Core/Service/SpiderService.cs</url>
+          <line>149</line>
           <properties documentPath="$PROJECT_DIR$/src/Monzowler.Core/Service/CrawlerService.cs" containingFunctionPresentation="Method 'CrawlAsync'">
             <startOffsets>
-              <option value="4859" />
+              <option value="5151" />
             </startOffsets>
             <endOffsets>
-              <option value="4905" />
+              <option value="5157" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="56" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/Monzowler.Core/Parsers/HeadlessParser.cs</url>
-          <line>20</line>
-          <properties documentPath="$PROJECT_DIR$/src/Monzowler.Core/Parsers/HeadlessParser.cs" containingFunctionPresentation="Method 'ParseLinksAsync'">
-            <startOffsets>
-              <option value="646" />
-            </startOffsets>
-            <endOffsets>
-              <option value="693" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="59" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/src/Monzowler.Core/Parsers/HeadlessParser.cs</url>
-          <line>8</line>
-          <properties documentPath="$PROJECT_DIR$/src/Monzowler.Core/Parsers/HeadlessParser.cs" containingFunctionPresentation="Method 'GetRenderedHtmlAsync'">
-            <startOffsets>
-              <option value="213" />
-            </startOffsets>
-            <endOffsets>
-              <option value="260" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="60" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
