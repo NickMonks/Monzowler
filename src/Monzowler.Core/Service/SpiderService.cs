@@ -24,6 +24,8 @@ public class SpiderService(
         var session = new CrawlSession();
         var baseUri = new Uri(rootUrl);
         var rootHost = baseUri.Host;
+        
+        //TODO: Initiate job status
 
         var robotsTxtResponse = await robots.GetRulesAsync(rootUrl);
         throttler.SetDelay(rootHost, robotsTxtResponse.Delay);
@@ -37,17 +39,19 @@ public class SpiderService(
         }, logger);
         
         var workers = Enumerable.Range(0, _opts.MaxConcurrency)
-            .Select(_ => Task.Run(() => ExecuteAsync(session, baseUri, robotsTxtResponse.Disallows)));
+            .Select(_ => Task.Run(() => ExecuteAsync(session, baseUri, robotsTxtResponse)));
 
         await Task.WhenAll(workers);
         
-        //Update job status
+        //TODO: Update job status
+        
+        //TODO: Add sinking strategy
 
         await siteMapRepository.SaveCrawlAsync(session.Pages.ToList());
         return session.Pages.ToList();
     }
 
-    private async Task ExecuteAsync(CrawlSession session, Uri baseUri, List<string> disallows)
+    private async Task ExecuteAsync(CrawlSession session, Uri baseUri, RobotsTxtResponse robotsTxtResponse)
     {
         var rootHost = baseUri.Host;
 
@@ -57,7 +61,7 @@ public class SpiderService(
                 continue;
 
             var path = new Uri(item.Url).AbsolutePath;
-            if (!robots.IsAllowed(path, disallows))
+            if (!robots.IsAllowed(path, robotsTxtResponse.Disallows, robotsTxtResponse.Allows))
                 continue;
 
             using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(_opts.Timeout));
@@ -93,7 +97,7 @@ public class SpiderService(
                         if (linkUri.Host == rootHost &&
                             newDepth <= _opts.MaxDepth &&
                             !session.Visited.ContainsKey(link) &&
-                            robots.IsAllowed(linkPath, disallows))
+                            robots.IsAllowed(linkPath, robotsTxtResponse.Disallows, robotsTxtResponse.Allows))
                         {
                             var newLink = new Link
                             {

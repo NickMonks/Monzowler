@@ -1,4 +1,4 @@
-
+### --- API TESTING ---
 POST http://localhost:5000/crawl
 Content-Type: application/json
 
@@ -6,7 +6,7 @@ Content-Type: application/json
     "url": "https://monzo.com"
 }
 
-### --- DEBUGGING PURPORSES ------
+### --- DEBUGGING ---
 GET http://localhost:4566
 x-amz-target: DynamoDB_20120810.ListTables
 content-type: application/x-amz-json-1.0

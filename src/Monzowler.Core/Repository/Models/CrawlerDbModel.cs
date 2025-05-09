@@ -7,7 +7,7 @@ public record CrawlerDbModel
     public string Domain {get; set;}
     public string PageUrl {get; set;}
     public List<string> Links {get; set;}
-    public string? Error { get; set; }
+    public string? Status { get; set; }
     public string LastModified {get; set;}
     public string? JobId {get; set;}
     
@@ -18,7 +18,7 @@ public record CrawlerDbModel
             Domain = page.Domain,
             PageUrl = page.PageUrl,
             Links = page.Links,
-            Error = page.Error,
+            Status = page.Status,
             LastModified = page.LastModified,
             JobId = page.JobId
         };

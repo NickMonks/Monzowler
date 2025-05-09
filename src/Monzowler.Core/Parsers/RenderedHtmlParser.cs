@@ -64,24 +64,17 @@ public class RenderedHtmlParser(BrowserProvider provider, IApiClient _httApiClie
     
     private async Task<string> GetRenderedHtmlAsync(string url, CancellationToken cancellationToken)
     {
-        try
-        {
-            var driver = provider.GetDriver();
-            var html = await _httApiClient.GetStringAsync(url, cancellationToken);
+        var driver = provider.GetDriver();
+        var html = await _httApiClient.GetStringAsync(url, cancellationToken);
 
-            // about:blank is an empty browser page - we then write our raw htlm from the client
-            // to the document generated, using the DOM API
-            driver.Navigate().GoToUrl("about:blank");
-            ((IJavaScriptExecutor)driver).ExecuteScript("document.write(arguments[0]);", html);
+        // about:blank is an empty browser page - we then write our raw htlm from the client
+        // to the document generated, using the DOM API
+        driver.Navigate().GoToUrl("about:blank");
+        ((IJavaScriptExecutor)driver).ExecuteScript("document.write(arguments[0]);", html);
 
-            await WaitUntilDomReadyAsync(driver);
+        await WaitUntilDomReadyAsync(driver);
 
-            return driver.PageSource;
-        }
-        catch (Exception ex)
-        {
-            
-        }
+        return driver.PageSource;
     }
     
     /// <summary>

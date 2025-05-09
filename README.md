@@ -23,3 +23,4 @@ aws --endpoint-url=http://localhost:4566 --region=us-east-1 dynamodb scan -
 - If we had to extend this to multiple domains, then using Task.Delay() for each previous request is innefficient and wrong. A potential update would be to use a throttler that work as a Map for each domain, and it identifies the last time a request was done to that domain. If it's less than the delay time we will Task.Delay() 
 - We also might want to crawl urls that have been already been visited but changed the payload - we could create a hash and do this
 - What happens if the crawler crashes mid-way? we would like to be resilient and store each sitemap at least. 
+- Robot.txt can have more directives - we had the most basic and others a bit more complicated, but allow could be added for example

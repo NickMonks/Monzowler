@@ -40,8 +40,8 @@ public class SiteMapRepository : ISiteMapRepository
                     ["LastModified"] = new() { S = model.LastModified }
                 };
 
-                if (!string.IsNullOrEmpty(model.Error))
-                    item["Error"] = new AttributeValue { S = model.Error };
+                if (!string.IsNullOrEmpty(model.Status))
+                    item["Error"] = new AttributeValue { S = model.Status };
 
                 if (!string.IsNullOrEmpty(model.JobId))
                     item["JobId"] = new AttributeValue { S = model.JobId };
@@ -92,7 +92,7 @@ public class SiteMapRepository : ISiteMapRepository
                     ? item["Links"].L.Select(l => l.S).ToList()
                     : new List<string>(),
                 LastModified = item["LastModified"].S,
-                Error = item.ContainsKey("Error") ? item["Error"].S : null,
+                Status = item.ContainsKey("Error") ? item["Error"].S : null,
                 JobId = item.ContainsKey("JobId") ? item["JobId"].S : null
             };
 
