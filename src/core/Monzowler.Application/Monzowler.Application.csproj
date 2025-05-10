@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="HtmlAgilityPack" Version="1.12.1" />
+      <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="10.0.0-preview.3.25171.5" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.0" />
+      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.0.0" />
+      <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.0" />
+      <PackageReference Include="Selenium.WebDriver" Version="4.32.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\..\src\core\Monzowler.Shared\Monzowler.Shared.csproj" />
+      <ProjectReference Include="..\Monzowler.Domain\Monzowler.Domain.csproj" />
+    </ItemGroup>
+
+</Project>

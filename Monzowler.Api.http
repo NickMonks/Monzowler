@@ -7,13 +7,13 @@ Content-Type: application/json
 }
 
 ### --- JOB GET ---
-GET http://localhost:5002/crawl/ff1d2df6-fa74-4ea3-b227-5c6fecfc46e1
+GET http://localhost:5002/crawl/4a786fb8-a5cf-4e09-a732-374fed40ae5e
 Content-Type: application/json
 
 {}
 
 ### --- SITEMAP JOB GET ---
-GET http://localhost:5002/crawl/sitemap/ff1d2df6-fa74-4ea3-b227-5c6fecfc46e1
+GET http://localhost:5002/crawl/sitemap/4a786fb8-a5cf-4e09-a732-374fed40ae5e?Status=NoLinksFound
 Content-Type: application/json
 
 {}
@@ -22,5 +22,50 @@ Content-Type: application/json
 GET http://localhost:4566
 x-amz-target: DynamoDB_20120810.ListTables
 content-type: application/x-amz-json-1.0
+
+{}
+
+### --- DEBUG: CRAWL -----
+POST http://localhost:5000/crawl
+Content-Type: application/json
+
+{
+  "url": "https://monzo.com"
+}
+
+### --- DEBUG: NO LINKS FOUND -----
+POST http://localhost:5000/crawl
+Content-Type: application/json
+
+{
+  "url": "https://monzo.com/-webviews/content/p2p/ios"
+}
+
+
+### --- DEBUG: NOT FOUND -----
+POST http://localhost:5000/crawl
+Content-Type: application/json
+
+{
+  "url": "https://monzo.com/help/monzo-flex/interest-rates-for-monzo-flex"
+}
+
+### --- DEBUG: PARSER ERROR -----
+POST http://localhost:5000/crawl
+Content-Type: application/json
+
+{
+  "url": "https://monzo.com/help/monzo-flex/interest-rates-for-monzo-flex"
+}
+
+### --- DEBUG: JOB GET ---
+GET http://localhost:5000/crawl/4a9ef2e1-02bd-4662-81b6-004318f60a21
+Content-Type: application/json
+
+{}
+
+### --- DEBUG: SITEMAP JOB GET ---
+GET http://localhost:5000/crawl/sitemap/db627417-3193-4b22-a4c5-d179a4428935?status=Ok
+Content-Type: application/json
 
 {}
