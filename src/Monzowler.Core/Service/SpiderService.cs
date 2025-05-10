@@ -25,7 +25,7 @@ public class SpiderService(
         var session = new CrawlSession();
         var baseUri = new Uri(rootUrl);
         var rootHost = baseUri.Host;
-        
+
         //TODO: Initiate job status
 
         var robotsTxtResponse = await robots.GetRulesAsync(rootUrl);
@@ -38,12 +38,12 @@ public class SpiderService(
             Depth = 0,
             Retries = 0
         }, logger);
-        
+
         var workers = Enumerable.Range(0, _opts.MaxConcurrency)
             .Select(_ => Task.Run(() => ExecuteAsync(session, baseUri, robotsTxtResponse, jobId)));
 
         await Task.WhenAll(workers);
-        
+
         //TODO: Add sinking strategy
 
         await siteMapRepository.SaveCrawlAsync(session.Pages.ToList());

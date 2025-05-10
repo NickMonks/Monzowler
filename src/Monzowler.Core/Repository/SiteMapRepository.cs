@@ -22,7 +22,7 @@ public class SiteMapRepository(IAmazonDynamoDB dynamoDb) : ISiteMapRepository
                 .GroupBy(m => $"{m.Domain}::{m.PageUrl}")
                 .Select(g => g.First())
                 .ToList();
-            
+
             var writeRequests = deduplicatedBatch.Select(model =>
             {
                 var item = new Dictionary<string, AttributeValue>
@@ -42,7 +42,7 @@ public class SiteMapRepository(IAmazonDynamoDB dynamoDb) : ISiteMapRepository
 
                 if (!string.IsNullOrEmpty(model.JobId))
                     item["JobId"] = new AttributeValue { S = model.JobId };
-                
+
                 return new WriteRequest
                 {
                     PutRequest = new PutRequest
@@ -120,8 +120,8 @@ public class SiteMapRepository(IAmazonDynamoDB dynamoDb) : ISiteMapRepository
             {
                 Domain = item["Domain"].S,
                 PageUrl = item["PageUrl"].S,
-                Depth = (item.TryGetValue("Depth", out var attr) 
-                         && int.TryParse(attr.N, out var depth)) 
+                Depth = (item.TryGetValue("Depth", out var attr)
+                         && int.TryParse(attr.N, out var depth))
                     ? depth
                     : 0,
                 Links = item.TryGetValue("Links", out var value1)

@@ -7,7 +7,8 @@ namespace Monzowler.Crawler.Service;
 /// <summary>
 /// Service that parses and set rules for the robots.txt website.
 /// </summary>
-public class RobotsTxtService {
+public class RobotsTxtService
+{
     private readonly IApiClient _apiClient;
     private readonly ILogger<RobotsTxtService> _logger;
 
@@ -22,7 +23,7 @@ public class RobotsTxtService {
         _apiClient = apiClient;
         _logger = logger;
     }
-    
+
     private static bool TryGetDirectiveValue(string line, string directive, out string value)
     {
         if (line.StartsWith(directive, StringComparison.OrdinalIgnoreCase))
@@ -35,16 +36,18 @@ public class RobotsTxtService {
         return false;
     }
 
-    public async Task<RobotsTxtResponse> GetRulesAsync(string rootUrl, CancellationToken cancellationToken = default) {
-        try {
+    public async Task<RobotsTxtResponse> GetRulesAsync(string rootUrl, CancellationToken cancellationToken = default)
+    {
+        try
+        {
             var robotsUrl = new Uri(new Uri(rootUrl), RobotstxtUrl).ToString();
-            
+
             var content = await _apiClient.GetStringAsync(robotsUrl, cancellationToken);
             var lines = content.Split('\n');
 
             var disallows = new List<string>();
             var allows = new List<string>();
-            
+
             int delay = 0;
             bool applies = false;
 
@@ -65,7 +68,7 @@ public class RobotsTxtService {
                 {
                     disallows.Add(path);
                 }
-                
+
                 if (TryGetDirectiveValue(line, Allow, out var allow) && !string.IsNullOrEmpty(allow))
                 {
                     allows.Add(allow);
@@ -83,8 +86,10 @@ public class RobotsTxtService {
                 Allows = allows,
                 Delay = delay,
             };
-            
-        } catch (Exception ex) {
+
+        }
+        catch (Exception ex)
+        {
             _logger.LogWarning("No robots.txt have been found or is malformed - " +
                                "No rules set for {root}", rootUrl);
             return new RobotsTxtResponse
@@ -95,7 +100,7 @@ public class RobotsTxtService {
             };
         }
     }
-    
+
     /// <summary>
     /// Method to check if a page is allowed or not. We need to consider both the case the page is explicitly allowed
     /// and if it is then return true. If not and is included in the disallowed list, return false. 

@@ -19,7 +19,7 @@ public class PolitenessThrottler
     {
         _crawlDelays[domain] = delayMs;
     }
-    
+
     public async Task EnforceAsync(string domain, CancellationToken ct = default)
     {
         //If we don't find it we haven't set it up - therefore no delay
@@ -29,7 +29,7 @@ public class PolitenessThrottler
 
         if (_lastRequestTimes.TryGetValue(domain, out var lastTime))
         {
-            
+
             var elapsed = now - lastTime;
             var remaining = TimeSpan.FromMilliseconds(delayMs) - elapsed;
 

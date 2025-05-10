@@ -6,7 +6,8 @@ using Monzowler.HttpClient.ApiClient;
 
 namespace Monzowler.Crawler.Parsers;
 
-public class StaticHtmlParser : ISubParser {
+public class StaticHtmlParser : ISubParser
+{
     private readonly IApiClient _http;
     private readonly ILogger<StaticHtmlParser> _logger;
 
@@ -30,16 +31,18 @@ public class StaticHtmlParser : ISubParser {
 
         var links = nodes
             .Select(a => a.GetAttributeValue("href", string.Empty))
-            .Select(href => {
-                try {
+            .Select(href =>
+            {
+                try
+                {
                     if (string.IsNullOrWhiteSpace(href) || href.StartsWith("#")) return null;
 
                     var candidateUri = new Uri(new Uri(request.Url), href);
-                        
+
                     //only crawl http/https links - filter other types of links like mailto:, javascript:, etc
                     if (candidateUri.Scheme != Uri.UriSchemeHttp && candidateUri.Scheme != Uri.UriSchemeHttps)
                         return null;
-                    
+
                     var path = candidateUri.AbsolutePath.ToLowerInvariant();
                     var excludedExtensions = new[] {
                         ".pdf", ".doc", ".docx", ".xls", ".xlsx", ".zip", ".rar", ".jpg", ".png", ".gif", ".mp4", ".mp3", ".m4a"
@@ -49,7 +52,9 @@ public class StaticHtmlParser : ISubParser {
                         return null;
 
                     return candidateUri.ToString().TrimEnd('/');
-                } catch {
+                }
+                catch
+                {
                     return null;
                 }
             })

@@ -11,7 +11,7 @@ public class CrawlSession
     public ConcurrentDictionary<string, bool> Visited { get; } = new();
     public Channel<Link> ChannelSession { get; set; } = Channel.CreateUnbounded<Link>();
     private int _writersRemaining = 0;
-    
+
     public int WritersRemaining => _writersRemaining;
 
     public async Task<bool> TryEnqueueAsync(Link link, ILogger logger)

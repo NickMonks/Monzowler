@@ -31,10 +31,10 @@ public class BackgroundCrawlService(
             try
             {
                 logger.LogInformation("Starting crawl job {JobId}", job.JobId);
-                
+
                 await jobRepository.CreateAsync(job);
                 var _ = await spider.CrawlAsync(url, job.JobId);
-                
+
                 logger.LogInformation("Completed crawl job {JobId}", job.JobId);
                 await jobRepository.UpdateStatusAsync(job.JobId, JobStatus.Completed, DateTime.UtcNow);
 

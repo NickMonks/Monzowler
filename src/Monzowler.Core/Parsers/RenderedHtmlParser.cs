@@ -60,8 +60,8 @@ public class RenderedHtmlParser(BrowserProvider provider, IApiClient _httApiClie
             Links = links
         };
     }
-    
-    
+
+
     private async Task<string> GetRenderedHtmlAsync(string url, CancellationToken cancellationToken)
     {
         var driver = provider.GetDriver();
@@ -76,7 +76,7 @@ public class RenderedHtmlParser(BrowserProvider provider, IApiClient _httApiClie
 
         return driver.PageSource;
     }
-    
+
     /// <summary>
     /// Waits until the DOM is loaded - it simply adds some forced delay until the
     /// DOM is in ready state to be either completed or interactive. We limit this to be
@@ -103,7 +103,7 @@ public class RenderedHtmlParser(BrowserProvider provider, IApiClient _httApiClie
             if (!ready)
                 await Task.Delay(300);
         }
-        
+
         //TODO: throw exception here
     }
 }

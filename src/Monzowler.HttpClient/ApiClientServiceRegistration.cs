@@ -19,7 +19,7 @@ public static class ApiClientServiceRegistration
                 var httpApiSettings = configuration
                     .GetSection("ApiClient")
                     .Get<ApiClientOptions>() ?? throw new NullReferenceException();
-                
+
                 client.DefaultRequestHeaders.UserAgent.ParseAdd(httpApiSettings.UserAgent);
             })
             .AddPolicyHandler((sp, request) =>
@@ -30,7 +30,7 @@ public static class ApiClientServiceRegistration
                 return GetRetryPolicy(throttler, domain);
             });
     }
-    
+
     /// <summary>
     /// Retry policy for our HTTP Client. We will retry on 5xx, 408 (Timeout) errors.
     /// The current configuration has 5 retires with an exponential backoff strategy.

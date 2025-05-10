@@ -46,7 +46,7 @@ app.MapPost("/crawl", (
     {
         var rootUrl = new Uri(req.Url).GetLeftPart(UriPartial.Authority).TrimEnd('/');
         var jobId = crawler.EnqueueCrawl(rootUrl);
-        return Results.Accepted($"/crawl/{jobId}", new CrawlResponse { JobId = jobId, Status = JobStatus.Created});
+        return Results.Accepted($"/crawl/{jobId}", new CrawlResponse { JobId = jobId, Status = JobStatus.Created });
 
     }
     catch (Exception e)
@@ -89,8 +89,9 @@ app.MapGet("/crawl/{jobId}", async (
 });
 
 app.MapGet("/sitemap/{jobId}", async (
-    [FromRoute] string jobId, 
-    [FromServices] ISiteMapRepository repo) => {
+    [FromRoute] string jobId,
+    [FromServices] ISiteMapRepository repo) =>
+{
     var map = await repo.GetCrawlsByJobIdAsync(jobId);
     return map is null ? Results.NotFound() : Results.Ok(map);
 });

@@ -9,5 +9,5 @@ public class Link
     //Current depth of our Url 
     public int Depth { get; set; }
     //Retries on this Url if it failed because of timeout errors 
-    public int Retries  { get; set; }
+    public int Retries { get; set; }
 }

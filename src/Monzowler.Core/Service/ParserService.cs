@@ -13,8 +13,10 @@ namespace Monzowler.Crawler.Service;
 public class ParserService(IEnumerable<ISubParser> parsers, ILogger<ParserService> logger) : IParser
 {
     private readonly List<ISubParser> _parsers = parsers.ToList();
-    public async Task<ParserResponse> ParseLinksAsync(ParserRequest request, CancellationToken ct) {
-        foreach (var parser in _parsers) {
+    public async Task<ParserResponse> ParseLinksAsync(ParserRequest request, CancellationToken ct)
+    {
+        foreach (var parser in _parsers)
+        {
             try
             {
                 var response = await parser.ParseLinksAsync(request, ct);
@@ -37,14 +39,14 @@ public class ParserService(IEnumerable<ISubParser> parsers, ILogger<ParserServic
             catch (HttpRequestException ex)
             {
                 logger.LogWarning("Http Exception occured for {Url}: {Status}", request.Url, ex.StatusCode);
-                
+
                 var status = ex.StatusCode switch
                 {
-                    HttpStatusCode.RequestTimeout => 
+                    HttpStatusCode.RequestTimeout =>
                         ParserStatusCode.TimeoutError,
-                    HttpStatusCode.NotFound => 
+                    HttpStatusCode.NotFound =>
                         ParserStatusCode.NotFoundError,
-                    >= HttpStatusCode.InternalServerError and < HttpStatusCode.NetworkAuthenticationRequired 
+                    >= HttpStatusCode.InternalServerError and < HttpStatusCode.NetworkAuthenticationRequired
                         => ParserStatusCode.ServerError,
                     _ => ParserStatusCode.HttpError
                 };
@@ -55,12 +57,13 @@ public class ParserService(IEnumerable<ISubParser> parsers, ILogger<ParserServic
                     StatusCode = status
                 };
             }
-            catch (Exception ex) {
-                logger.LogWarning(ex, "ParserService {ParserService} failed for {Url}", 
+            catch (Exception ex)
+            {
+                logger.LogWarning(ex, "ParserService {ParserService} failed for {Url}",
                     parser.GetType().Name, request.Url);
             }
         }
-        
+
         logger.LogWarning("All parsers failed for {Url}", request.Url);
         return new ParserResponse
         {

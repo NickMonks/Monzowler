@@ -24,7 +24,7 @@ public class JobRepository : IJobRepository
             ["Url"] = new AttributeValue { S = job.Url },
             ["Status"] = new AttributeValue { S = job.Status.ToString() },
         };
-        
+
         if (job.StartedAt.HasValue)
         {
             item["StartedAt"] = new AttributeValue { S = job.StartedAt.Value.ToString("O") };
@@ -45,7 +45,7 @@ public class JobRepository : IJobRepository
         var updates = new Dictionary<string, AttributeValueUpdate>
         {
             ["Status"] = new(
-                new AttributeValue { S = status.ToString() }, 
+                new AttributeValue { S = status.ToString() },
                 AttributeAction.PUT
                 )
         };
@@ -94,7 +94,7 @@ public class JobRepository : IJobRepository
 
         var item = result.Item;
         Enum.TryParse<JobStatus>(item["Status"].S, ignoreCase: true, out var status);
-        
+
         return new Job
         {
             JobId = item["JobId"].S,

@@ -10,7 +10,7 @@ public static class ServiceExtensions
     {
         services.Configure<CrawlerOptions>(configuration.GetSection("Crawler"));
     }
-    
+
 
     public static void AddAwsServices(this IServiceCollection services, IConfiguration configuration)
     {
