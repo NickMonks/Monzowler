@@ -1,0 +1,8 @@
+{
+  "jobId": "bad1da73-ca61-4f5d-8e1d-8a9921eeb2b8",
+  "status": "Failed",
+  "url": "https://monzo.com",
+  "startedAt": "2025-05-10T11:29:43.596139+01:00",
+  "completedAt": "2025-05-10T11:29:56.892051+01:00",
+  "error": "Cannot do operations on a non-existent table"
+}

@@ -6,6 +6,18 @@ Content-Type: application/json
     "url": "https://monzo.com"
 }
 
+### --- JOB GET ---
+GET http://localhost:5000/crawl/3304da96-af11-499a-843c-218954d6f673
+Content-Type: application/json
+
+{}
+
+### --- SITEMAP JOB GET ---
+GET http://localhost:5000/sitemap/3304da96-af11-499a-843c-218954d6f673
+Content-Type: application/json
+
+{}
+
 ### --- DEBUGGING ---
 GET http://localhost:4566
 x-amz-target: DynamoDB_20120810.ListTables

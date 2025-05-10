@@ -6,6 +6,7 @@ public record CrawlerDbModel
 {
     public string Domain {get; set;}
     public string PageUrl {get; set;}
+    public int Depth {get; set;}
     public List<string> Links {get; set;}
     public string? Status { get; set; }
     public string LastModified {get; set;}
@@ -17,6 +18,7 @@ public record CrawlerDbModel
         {
             Domain = page.Domain,
             PageUrl = page.PageUrl,
+            Depth = page.Depth,
             Links = page.Links,
             Status = page.Status,
             LastModified = page.LastModified,

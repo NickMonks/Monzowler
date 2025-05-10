@@ -1,18 +1,14 @@
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.Model;
-using Monzowler.Crawler.Interfaces;
 using Monzowler.Crawler.Models;
+using Monzowler.Crawler.Repository.Interfaces;
 using Monzowler.Crawler.Repository.Models;
 
-public class SiteMapRepository : ISiteMapRepository
-{
-    private readonly IAmazonDynamoDB _dynamoDb;
-    private const string TableName = "Crawler-Sitemap";
+namespace Monzowler.Crawler.Repository;
 
-    public SiteMapRepository(IAmazonDynamoDB dynamoDb)
-    {
-        _dynamoDb = dynamoDb;
-    }
+public class SiteMapRepository(IAmazonDynamoDB dynamoDb) : ISiteMapRepository
+{
+    private const string TableName = "Crawler-Sitemap";
 
     public async Task SaveCrawlAsync(List<Page> pages)
     {
@@ -32,6 +28,7 @@ public class SiteMapRepository : ISiteMapRepository
                 var item = new Dictionary<string, AttributeValue>
                 {
                     ["Domain"] = new() { S = model.Domain },
+                    ["Depth"] = new() { N = model.Depth.ToString() },
                     ["PageUrl"] = new() { S = model.PageUrl },
                     ["Links"] = new()
                     {
@@ -41,7 +38,7 @@ public class SiteMapRepository : ISiteMapRepository
                 };
 
                 if (!string.IsNullOrEmpty(model.Status))
-                    item["Error"] = new AttributeValue { S = model.Status };
+                    item["Status"] = new AttributeValue { S = model.Status };
 
                 if (!string.IsNullOrEmpty(model.JobId))
                     item["JobId"] = new AttributeValue { S = model.JobId };
@@ -63,7 +60,7 @@ public class SiteMapRepository : ISiteMapRepository
                 }
             };
 
-            await _dynamoDb.BatchWriteItemAsync(request);
+            await dynamoDb.BatchWriteItemAsync(request);
         }
     }
 
@@ -79,7 +76,7 @@ public class SiteMapRepository : ISiteMapRepository
             }
         };
 
-        var response = await _dynamoDb.QueryAsync(request);
+        var response = await dynamoDb.QueryAsync(request);
 
         var results = new List<CrawlerDbModel>();
         foreach (var item in response.Items)
@@ -88,17 +85,52 @@ public class SiteMapRepository : ISiteMapRepository
             {
                 Domain = item["Domain"].S,
                 PageUrl = item["PageUrl"].S,
-                Links = item.ContainsKey("Links")
-                    ? item["Links"].L.Select(l => l.S).ToList()
-                    : new List<string>(),
+                Links = item.TryGetValue("Links", out var value2)
+                    ? value2.L.Select(l => l.S).ToList()
+                    : [],
                 LastModified = item["LastModified"].S,
-                Status = item.ContainsKey("Error") ? item["Error"].S : null,
-                JobId = item.ContainsKey("JobId") ? item["JobId"].S : null
+                Status = item.TryGetValue("Status", out var value) ? value.S : null,
+                JobId = item.TryGetValue("JobId", out var value1) ? value1.S : null
             };
 
             results.Add(model);
         }
 
         return results;
+    }
+
+    public async Task<List<CrawlerDbModel>> GetCrawlsByJobIdAsync(string jobId)
+    {
+        var request = new QueryRequest
+        {
+            TableName = TableName,
+            IndexName = "GSI_JobId",
+            KeyConditionExpression = "JobId = :v_jobId",
+            ExpressionAttributeValues = new Dictionary<string, AttributeValue>
+            {
+                {":v_jobId", new AttributeValue { S = jobId }}
+            }
+        };
+
+        var response = await dynamoDb.QueryAsync(request);
+
+        return response.Items.Select(item =>
+        {
+            return new CrawlerDbModel
+            {
+                Domain = item["Domain"].S,
+                PageUrl = item["PageUrl"].S,
+                Depth = (item.TryGetValue("Depth", out var attr) 
+                         && int.TryParse(attr.N, out var depth)) 
+                    ? depth
+                    : 0,
+                Links = item.TryGetValue("Links", out var value1)
+                    ? value1.L.Select(l => l.S).ToList()
+                    : [],
+                LastModified = item["LastModified"].S,
+                Status = item.TryGetValue("Status", out var value2) ? value2.S : null,
+                JobId = item.TryGetValue("JobId", out var value3) ? value3.S : null
+            };
+        }).ToList();
     }
 }

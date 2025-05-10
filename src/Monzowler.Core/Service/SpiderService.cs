@@ -3,6 +3,7 @@ using Microsoft.Extensions.Options;
 using Monzowler.Crawler.Interfaces;
 using Monzowler.Crawler.Models;
 using Monzowler.Crawler.Parsers;
+using Monzowler.Crawler.Repository.Interfaces;
 using Monzowler.Crawler.Settings;
 using Monzowler.HttpClient.Throttler;
 
@@ -19,7 +20,7 @@ public class SpiderService(
 {
     private readonly CrawlerOptions _opts = options.Value;
 
-    public async Task<List<Page>> CrawlAsync(string rootUrl)
+    public async Task<List<Page>> CrawlAsync(string rootUrl, string jobId)
     {
         var session = new CrawlSession();
         var baseUri = new Uri(rootUrl);
@@ -39,11 +40,9 @@ public class SpiderService(
         }, logger);
         
         var workers = Enumerable.Range(0, _opts.MaxConcurrency)
-            .Select(_ => Task.Run(() => ExecuteAsync(session, baseUri, robotsTxtResponse)));
+            .Select(_ => Task.Run(() => ExecuteAsync(session, baseUri, robotsTxtResponse, jobId)));
 
         await Task.WhenAll(workers);
-        
-        //TODO: Update job status
         
         //TODO: Add sinking strategy
 
@@ -51,7 +50,7 @@ public class SpiderService(
         return session.Pages.ToList();
     }
 
-    private async Task ExecuteAsync(CrawlSession session, Uri baseUri, RobotsTxtResponse robotsTxtResponse)
+    private async Task ExecuteAsync(CrawlSession session, Uri baseUri, RobotsTxtResponse robotsTxtResponse, string jobId)
     {
         var rootHost = baseUri.Host;
 
@@ -79,9 +78,10 @@ public class SpiderService(
                 session.Pages.Add(new Page
                 {
                     PageUrl = item.Url,
+                    Depth = item.Depth,
                     Domain = rootHost,
                     Links = parserResponse.Links,
-                    JobId = "",
+                    JobId = jobId,
                     Status = parserResponse.StatusCode.ToString(),
                     LastModified = DateTime.UtcNow.ToString("O"),
                 });
