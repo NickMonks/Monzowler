@@ -1,5 +1,5 @@
 ﻿services:
-  monzowler:
+  monzowler-api:
     build:
       context: .
       dockerfile: src/Monzowler.Api/Dockerfile
@@ -14,7 +14,7 @@
       - AWS_ACCESS_KEY_ID=XX
       - AWS_SECRET_ACCESS_KEY=XX
     ports:
-      - "5000:5000"
+      - "5002:5000"
   
   localstack:
     image: localstack/localstack:latest
@@ -28,7 +28,7 @@
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock" 
     healthcheck:
-      test: curl http://localhost:4566/_localstack/health -sb --fail | grep available
+      test: curl http://localstack:4566/_localstack/health -sb --fail | grep available
       interval: 1s
       retries: 100
       start_period: 1s

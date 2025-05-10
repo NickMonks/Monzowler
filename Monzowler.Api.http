@@ -1,5 +1,5 @@
-### --- API TESTING ---
-POST http://localhost:5000/crawl
+### --- CREATE JOB CRAL ---
+POST http://localhost:5002/crawl
 Content-Type: application/json
 
 {
@@ -7,13 +7,13 @@ Content-Type: application/json
 }
 
 ### --- JOB GET ---
-GET http://localhost:5000/crawl/3304da96-af11-499a-843c-218954d6f673
+GET http://localhost:5002/crawl/bd59a374-421d-4c68-9fa1-8f30a9d1f83e
 Content-Type: application/json
 
 {}
 
 ### --- SITEMAP JOB GET ---
-GET http://localhost:5000/sitemap/3304da96-af11-499a-843c-218954d6f673
+GET http://localhost:5002/sitemap/bd59a374-421d-4c68-9fa1-8f30a9d1f83e
 Content-Type: application/json
 
 {}

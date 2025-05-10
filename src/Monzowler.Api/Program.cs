@@ -31,9 +31,9 @@ builder.Services.AddTransient<IParser, ParserService>();
 builder.Services.AddSingleton<IJobRepository, JobRepository>();
 
 //Crawler Background Worker
-builder.Services.AddSingleton<BackgroundCrawlService>();
+builder.Services.AddScoped<BackgroundCrawlService>();
 
-//Add Http registration
+builder.Logging.SetMinimumLevel(LogLevel.Information);
 var app = builder.Build();
 
 app.MapPost("/crawl", (
