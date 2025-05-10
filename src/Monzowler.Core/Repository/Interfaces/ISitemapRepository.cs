@@ -7,5 +7,5 @@ public interface ISiteMapRepository
 {
     public Task SaveCrawlAsync(List<Page> pages);
     public Task<List<CrawlerDbModel>> GetCrawlsByDomainAsync(string domain);
-    public Task<List<CrawlerDbModel>> GetCrawlsByJobIdAsync(string JobId);
+    public Task<List<CrawlerDbModel>> GetCrawlsByJobIdAsync(string jobId);
 }

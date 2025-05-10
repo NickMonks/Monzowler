@@ -7,13 +7,13 @@ Content-Type: application/json
 }
 
 ### --- JOB GET ---
-GET http://localhost:5002/crawl/bd59a374-421d-4c68-9fa1-8f30a9d1f83e
+GET http://localhost:5002/crawl/ff1d2df6-fa74-4ea3-b227-5c6fecfc46e1
 Content-Type: application/json
 
 {}
 
 ### --- SITEMAP JOB GET ---
-GET http://localhost:5002/sitemap/bd59a374-421d-4c68-9fa1-8f30a9d1f83e
+GET http://localhost:5002/crawl/sitemap/ff1d2df6-fa74-4ea3-b227-5c6fecfc46e1
 Content-Type: application/json
 
 {}
