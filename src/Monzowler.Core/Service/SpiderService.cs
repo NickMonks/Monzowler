@@ -25,9 +25,7 @@ public class SpiderService(
         var session = new CrawlSession();
         var baseUri = new Uri(rootUrl);
         var rootHost = baseUri.Host;
-
-        //TODO: Initiate job status
-
+        
         var robotsTxtResponse = await robots.GetRulesAsync(rootUrl);
         throttler.SetDelay(rootHost, robotsTxtResponse.Delay);
 

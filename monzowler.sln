@@ -1,5 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
+# 
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monzowler.Core", "src\Monzowler.Core\Monzowler.Core.csproj", "{B455D4F8-CF6E-4B03-9191-A3E731E09D41}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monzowler.Api", "src\Monzowler.Api\Monzowler.Api.csproj", "{29D61560-81E2-46D6-A8E6-B9CFF19BC999}"
@@ -13,11 +14,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monzowler.HttpClient", "src
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monzowler.Persistence", "src\Monzowler.Persistence\Monzowler.Persistence.csproj", "{31B5561F-2446-4B82-8E8B-E1A56C6D3173}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monzowler.Api2", "src\Monzowler.Api2\Monzowler.Api2.csproj", "{7472313B-35DE-4819-8758-88F1743D38AA}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monzowler.Unittest", "test\Monzowler.Unittest\Monzowler.Unittest.csproj", "{BBC0053F-5D00-4187-9C83-365CC6D28990}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monzowler.IntegrationTest", "test\Monzowler.IntegrationTest\Monzowler.IntegrationTest.csproj", "{2ACCDB45-24F7-443E-830F-94CCA2616A0D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{563BF4FD-E7AD-4BF6-B772-8F27755D20AB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monzowler.Api2", "src\Monzowler.Api2\Monzowler.Api2.csproj", "{A091659C-4497-4396-8F90-BB811D18E0E0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,10 +44,6 @@ Global
 		{31B5561F-2446-4B82-8E8B-E1A56C6D3173}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{31B5561F-2446-4B82-8E8B-E1A56C6D3173}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{31B5561F-2446-4B82-8E8B-E1A56C6D3173}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7472313B-35DE-4819-8758-88F1743D38AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7472313B-35DE-4819-8758-88F1743D38AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7472313B-35DE-4819-8758-88F1743D38AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7472313B-35DE-4819-8758-88F1743D38AA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BBC0053F-5D00-4187-9C83-365CC6D28990}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BBC0053F-5D00-4187-9C83-365CC6D28990}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BBC0053F-5D00-4187-9C83-365CC6D28990}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -53,5 +52,12 @@ Global
 		{2ACCDB45-24F7-443E-830F-94CCA2616A0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2ACCDB45-24F7-443E-830F-94CCA2616A0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2ACCDB45-24F7-443E-830F-94CCA2616A0D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A091659C-4497-4396-8F90-BB811D18E0E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A091659C-4497-4396-8F90-BB811D18E0E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A091659C-4497-4396-8F90-BB811D18E0E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A091659C-4497-4396-8F90-BB811D18E0E0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A091659C-4497-4396-8F90-BB811D18E0E0} = {563BF4FD-E7AD-4BF6-B772-8F27755D20AB}
 	EndGlobalSection
 EndGlobal

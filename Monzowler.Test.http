@@ -1,0 +1,38 @@
+### --- TEST URL LOCALHOST ---
+POST http://localhost:5000/crawl
+Content-Type: application/json
+
+{
+  "url": "https://monzo.com"
+}
+
+### --- TEST NON-HTML FRIENDLY URL ---
+POST http://localhost:5002/crawl
+Content-Type: application/json
+
+{
+  "url": "https://monzo.com/-webviews/content/p2p/ios/"
+}
+
+### --- TEST NON-RETRYABLE ERROR URL ---
+POST http://localhost:5002/crawl
+Content-Type: application/json
+
+{
+  "url": "https://monzo.com/-webviews/content/p2p/ios/"
+}
+
+### --- TEST UPARSABLE ERROR URL ---
+POST http://localhost:5002/crawl
+Content-Type: application/json
+
+{
+  "url": "https://monzo.com/-webviews/content/p2p/ios/"
+}
+
+### --- DEBUGGING ---
+GET http://localhost:4566
+x-amz-target: DynamoDB_20120810.ListTables
+content-type: application/x-amz-json-1.0
+
+{}

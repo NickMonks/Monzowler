@@ -53,12 +53,14 @@ public class ParserService(IEnumerable<ISubParser> parsers, ILogger<ParserServic
 
                 return new ParserResponse
                 {
-                    Links = new(),
+                    Links = [],
                     StatusCode = status
                 };
             }
             catch (Exception ex)
             {
+                //Swallow the exception - we want to try our fallback parser if failed
+                //TODO: Ensure we only do this for non HTTP ERRORS!
                 logger.LogWarning(ex, "ParserService {ParserService} failed for {Url}",
                     parser.GetType().Name, request.Url);
             }
@@ -67,7 +69,7 @@ public class ParserService(IEnumerable<ISubParser> parsers, ILogger<ParserServic
         logger.LogWarning("All parsers failed for {Url}", request.Url);
         return new ParserResponse
         {
-            Links = new(),
+            Links = [],
             StatusCode = ParserStatusCode.ParserError
         };
     }
