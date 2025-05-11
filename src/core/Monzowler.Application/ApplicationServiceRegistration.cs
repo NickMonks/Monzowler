@@ -4,7 +4,6 @@ using Monzowler.Application.Services;
 using Monzowler.Application.Services.Parsers;
 using Monzowler.Crawler.Interfaces;
 using Monzowler.Crawler.Parsers;
-using Monzowler.Crawler.Service;
 
 namespace Monzowler.Application;
 

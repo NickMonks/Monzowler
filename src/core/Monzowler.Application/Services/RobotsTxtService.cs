@@ -1,8 +1,10 @@
+using System.Diagnostics;
 using Microsoft.Extensions.Logging;
 using Monzowler.Crawler.Contracts.HttpClient;
 using Monzowler.Crawler.Models;
+using Monzowler.Shared.Observability;
 
-namespace Monzowler.Crawler.Service;
+namespace Monzowler.Application.Services;
 
 /// <summary>
 /// Services that parses and set rules for the robots.txt website.
@@ -41,11 +43,18 @@ public class RobotsTxtService(IApiClient apiClient, ILogger<RobotsTxtService> lo
     /// <returns></returns>
     public async Task<RobotsTxtResponse> GetRulesAsync(string rootUrl, string crawlerUserAgent = "*", CancellationToken cancellationToken = default)
     {
+        using var span = TracingHelper.Source.StartActivity("GetRulesRobot");
+        span?.SetTag("rootUrl", rootUrl);
+        span?.SetTag("userAgent", crawlerUserAgent);
+
         try
         {
+            span?.AddEvent(new ActivityEvent("ParsingStarted"));
+
             var robotsUrl = new Uri(new Uri(rootUrl), RobotstxtUrl).ToString();
             var content = await apiClient.GetStringAsync(robotsUrl, cancellationToken);
             var lines = content.Split('\n', StringSplitOptions.RemoveEmptyEntries);
+            span?.SetTag("lineCount", lines.Length);
 
             var disallows = new List<string>();
             var allows = new List<string>();
@@ -63,20 +72,19 @@ public class RobotsTxtService(IApiClient apiClient, ILogger<RobotsTxtService> lo
                     agent = agent.Trim();
                     if (currentAgents.Count > 0)
                     {
-                        // if we encounter a new agent, reset the flag unless current group matched
                         isRelevantGroup = currentAgents.Contains(crawlerUserAgent, StringComparer.OrdinalIgnoreCase)
-                                       || currentAgents.Contains(AllWildcard);
+                                          || currentAgents.Contains(AllWildcard);
                         currentAgents.Clear();
                     }
+
                     currentAgents.Add(agent);
                     continue;
                 }
 
                 if (!isRelevantGroup && currentAgents.Count > 0)
                 {
-                    // Determine if the current group is relevant (if not already set)
                     isRelevantGroup = currentAgents.Contains(crawlerUserAgent, StringComparer.OrdinalIgnoreCase)
-                                   || currentAgents.Contains(AllWildcard);
+                                      || currentAgents.Contains(AllWildcard);
                 }
 
                 if (!isRelevantGroup) continue;
@@ -91,6 +99,11 @@ public class RobotsTxtService(IApiClient apiClient, ILogger<RobotsTxtService> lo
                     delay = d * 1000;
             }
 
+            span?.SetTag("disallowCount", disallows.Count);
+            span?.SetTag("allowCount", allows.Count);
+            span?.SetTag("crawlDelay", delay);
+            span?.AddEvent(new ActivityEvent("ParsingCompleted"));
+
             return new RobotsTxtResponse
             {
                 Disallows = disallows,
@@ -100,6 +113,9 @@ public class RobotsTxtService(IApiClient apiClient, ILogger<RobotsTxtService> lo
         }
         catch (Exception ex)
         {
+            span?.SetStatus(ActivityStatusCode.Error, ex.Message);
+            span?.AddEvent(new ActivityEvent("ParsingFailed"));
+
             logger.LogWarning(ex, "robots.txt could not be parsed for {root}", rootUrl);
             return new RobotsTxtResponse
             {

@@ -1,7 +1,9 @@
+using System.Diagnostics;
 using System.Net;
 using Microsoft.Extensions.Logging;
 using Monzowler.Crawler.Models;
 using Monzowler.Crawler.Parsers;
+using Monzowler.Shared.Observability;
 
 namespace Monzowler.Application.Services;
 
@@ -14,63 +16,87 @@ public class ParserService(IEnumerable<ISubParser> parsers, ILogger<ParserServic
 {
     private readonly List<ISubParser> _parsers = parsers.ToList();
     public async Task<ParserResponse> ParseLinksAsync(ParserRequest request, CancellationToken ct)
+{
+    using var span = TracingHelper.Source.StartActivity("ParseLinks", ActivityKind.Internal);
+    span?.SetTag("url", request.Url);
+
+    foreach (var parser in _parsers)
     {
-        foreach (var parser in _parsers)
+        var parserName = parser.GetType().Name;
+
+        using var childSpan = TracingHelper.Source.StartActivity("ParserAttempt", ActivityKind.Internal);
+        childSpan?.SetTag("parser", parserName);
+        childSpan?.SetTag("type", parser.GetType().Name);
+
+        try
         {
-            try
-            {
-                var response = await parser.ParseLinksAsync(request, ct);
-                
-                if (response.Links.Count > 0)
-                {
-                    return new ParserResponse
-                    {
-                        Links = response.Links,
-                        StatusCode = ParserStatusCode.Ok
-                    };
-                }
-        
-                return new ParserResponse
-                {
-                    Links = new(),
-                    StatusCode = ParserStatusCode.NoLinksFound
-                };
+            var response = await parser.ParseLinksAsync(request, ct);
 
-            }
-            catch (HttpRequestException ex)
+            if (response.Links.Count > 0)
             {
-                logger.LogWarning("Http Exception occured for {Url}: {Status}", request.Url, ex.StatusCode);
-                
-                //TODO: Add more status codes in the future 
-                var status = ex.StatusCode switch
-                {
-                    HttpStatusCode.RequestTimeout =>
-                        ParserStatusCode.TimeoutError,
-                    HttpStatusCode.NotFound =>
-                        ParserStatusCode.NotFoundError,
-                    >= HttpStatusCode.InternalServerError and < HttpStatusCode.NetworkAuthenticationRequired
-                        => ParserStatusCode.ServerError,
-                    _ => ParserStatusCode.HttpError
-                };
+                childSpan?.SetTag("status", ParserStatusCode.Ok.ToString());
+                childSpan?.SetTag("linkCount", response.Links.Count);
+                childSpan?.AddEvent(new ActivityEvent("ParserSuccess"));
 
                 return new ParserResponse
                 {
-                    Links = [],
-                    StatusCode = status
+                    Links = response.Links,
+                    StatusCode = ParserStatusCode.Ok
                 };
             }
-            catch (Exception ex)
+
+            childSpan?.SetTag("status", ParserStatusCode.NoLinksFound.ToString());
+            childSpan?.AddEvent(new ActivityEvent("NoLinksFound"));
+
+            return new ParserResponse
             {
-                logger.LogWarning(ex, "ParserService {ParserService} failed for {Url}",
-                    parser.GetType().Name, request.Url);
-            }
+                Links = new(),
+                StatusCode = ParserStatusCode.NoLinksFound
+            };
         }
-
-        logger.LogWarning("All parsers failed for {Url}", request.Url);
-        return new ParserResponse
+        catch (HttpRequestException ex)
         {
-            Links = [],
-            StatusCode = ParserStatusCode.ParserError
-        };
+            var status = ex.StatusCode switch
+            {
+                HttpStatusCode.RequestTimeout => ParserStatusCode.TimeoutError,
+                HttpStatusCode.NotFound => ParserStatusCode.NotFoundError,
+                >= HttpStatusCode.InternalServerError and < HttpStatusCode.NetworkAuthenticationRequired
+                    => ParserStatusCode.ServerError,
+                _ => ParserStatusCode.HttpError
+            };
+
+            childSpan?.SetStatus(ActivityStatusCode.Error, status.ToString());
+            childSpan?.SetTag("httpStatusCode", ex.StatusCode?.ToString());
+            childSpan?.SetTag("status", status.ToString());
+            childSpan?.AddEvent(new ActivityEvent("HttpException"));
+
+            logger.LogWarning("Http Exception occurred for {Url}: {Status}", request.Url, ex.StatusCode);
+
+            return new ParserResponse
+            {
+                Links = [],
+                StatusCode = status
+            };
+        }
+        catch (Exception ex)
+        {
+            childSpan?.SetStatus(ActivityStatusCode.Error, ex.Message);
+            childSpan?.AddEvent(new ActivityEvent("ParsingFailed"));
+
+            logger.LogWarning(ex, "ParserService {ParserService} failed for {Url}",
+                parserName, request.Url);
+        }
     }
+
+    span?.SetStatus(ActivityStatusCode.Error, "AllParsersFailed");
+    span?.AddEvent(new ActivityEvent("AllParsersFailed"));
+
+    logger.LogWarning("All parsers failed for {Url}", request.Url);
+    return new ParserResponse
+    {
+        Links = [],
+        StatusCode = ParserStatusCode.ParserError
+    };
+}
+
 }

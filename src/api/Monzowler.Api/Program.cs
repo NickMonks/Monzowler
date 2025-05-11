@@ -1,38 +1,35 @@
 using System.Text.Json.Serialization;
 using Monzowler.Api;
-using Monzowler.Application;
+using Monzowler.Api.Middlewares;
 using Monzowler.Crawler.Settings;
-using Monzowler.HttpClient;
-using Monzowler.Persistence;
 using JsonOptions = Microsoft.AspNetCore.Http.Json.JsonOptions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Services and DI setup
 builder.Services.AddLogging();
-
-//Settings
 builder.Services.Configure<CrawlerOptions>(builder.Configuration.GetSection("Crawler"));
 builder.Services.Configure<JsonOptions>(options =>
 {
     options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
-
-builder.Services.AddPersistenceRegistration(builder.Configuration);
-builder.Services.AddApplicationRegistration(builder.Configuration);
-builder.Services.AddApiClientRegistration(builder.Configuration);
-
-// DI registrations
+builder.Services.AddStartupServices(builder.Configuration);
+builder.Services.AddObservability(builder.Configuration);
 builder.Services.AddScoped<BackgroundCrawlService>();
-
-// Add controller support
 builder.Services.AddControllers();
 
-builder.Logging.SetMinimumLevel(LogLevel.Information);
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Use routing for controllers
-app.MapControllers();
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
+app.MapControllers();
+app.UseMiddleware<OpenTelemetryMiddleware>();
 app.Run();
+
+//Needed for testing purposes
+public partial class Program { }

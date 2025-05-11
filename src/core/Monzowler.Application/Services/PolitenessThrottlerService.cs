@@ -1,4 +1,6 @@
 using System.Collections.Concurrent;
+using System.Diagnostics;
+using Monzowler.Shared.Observability;
 
 namespace Monzowler.Application.Services;
 
@@ -22,21 +24,25 @@ public class PolitenessThrottlerService
 
     public async Task EnforceAsync(string domain, CancellationToken ct = default)
     {
-        //If we don't find it we haven't set it up - therefore no delay
         var now = DateTime.UtcNow;
 
-        if (!_crawlDelays.TryGetValue(domain, out var delayMs)) return;
-
+        if (!_crawlDelays.TryGetValue(domain, out var delayMs))
+        {
+            return;
+        }
+        
         if (_lastRequestTimes.TryGetValue(domain, out var lastTime))
         {
-
             var elapsed = now - lastTime;
             var remaining = TimeSpan.FromMilliseconds(delayMs) - elapsed;
 
             if (remaining > TimeSpan.Zero)
             {
-                //As we are using async delay it shouldn't block our worker thread
+                using var span = TracingHelper.Source.StartActivity("EnforcePoliteness", ActivityKind.Internal);
+                span?.SetTag("domain", domain);
+                span?.AddEvent(new ActivityEvent("ThrottlingStarted"));
                 await Task.Delay(remaining, ct);
+                span?.AddEvent(new ActivityEvent("ThrottlingEnded"));
             }
         }
 

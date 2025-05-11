@@ -16,6 +16,16 @@ services:
       retries: 100
       start_period: 1s
       timeout: 1s
+  
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    ports:
+      - "13133:13133"
+      - "16686:16686"
+      - "4317:4317"
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+      - LOG_LEVEL=debug
 
   awscli:
     image: garland/aws-cli-docker:latest

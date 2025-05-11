@@ -1,4 +1,4 @@
-### --- CREATE JOB CRAL ---
+### --- CREATE JOB CRAWL ---
 POST http://localhost:5002/crawl
 Content-Type: application/json
 
@@ -7,7 +7,7 @@ Content-Type: application/json
 }
 
 ### --- JOB GET ---
-GET http://localhost:5002/crawl/4a786fb8-a5cf-4e09-a732-374fed40ae5e
+GET http://localhost:5002/crawl/c746865d-713a-4b08-8796-e5af21909b0f
 Content-Type: application/json
 
 {}
