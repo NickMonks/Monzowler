@@ -1,6 +1,9 @@
 using System.Text.Json.Serialization;
+using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Models;
 using Monzowler.Api;
 using Monzowler.Crawler.Settings;
+using Monzowler.Domain.Entities;
 using JsonOptions = Microsoft.AspNetCore.Http.Json.JsonOptions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,15 +19,26 @@ builder.Services.AddObservability(builder.Configuration);
 builder.Services.AddScoped<BackgroundCrawler>();
 builder.Services.AddControllers();
 
-builder.Services.AddSwaggerGen();
+//Swagger OpenAPI Specification
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
+    c.UseInlineDefinitionsForEnums();
+    c.MapType<ParserStatusCode>(() => new OpenApiSchema
+    {
+        Type = "string",
+        //So we can show strings on swagger instead of ugly int's
+        Enum = Enum.GetNames(typeof(ParserStatusCode))
+            .Select(name => new OpenApiString(name))
+            .Cast<IOpenApiAny>()
+            .ToList()
+    });
+});
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.MapControllers();
 app.Run();
