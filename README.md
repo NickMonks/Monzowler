@@ -28,15 +28,15 @@ C4Context
   Person(user, "Developer/User", "Triggers crawl jobs via the API")
   
   System(monzowler, "Monzowler API", "Orchestrates and manages crawl jobs")
-  System(localstack, "LocalStack (DynamoDB)", "Stores job metadata and crawled pages")
+  System(localstack, "DynamoDB", "Stores job metadata and crawled pages")
   System(jaeger, "Jaeger", "Provides distributed tracing and observability")
 
   System_Ext(websites, "External Websites", "Targets of the web crawler")
   
-  Rel(user, monzowler, "Submits crawl jobs to")
-  Rel(monzowler, websites, "Crawls links from")
-  Rel(monzowler, localstack, "Stores results and job data in")
-  Rel(monzowler, jaeger, "Emits tracing data to")
+  Rel(user, monzowler)
+  Rel(monzowler, websites)
+  Rel(monzowler, localstack)
+  Rel(monzowler, jaeger)
 
   UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="1")
   UpdateRelStyle(user, monzowler, $offsetX="-30", $offsetY="30")
