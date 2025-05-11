@@ -6,8 +6,4 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\..\..\Monzowler\src\core\Monzowler.Domain\Monzowler.Domain.csproj" />
-    </ItemGroup>
-
 </Project>

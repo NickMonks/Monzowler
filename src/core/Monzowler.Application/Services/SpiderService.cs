@@ -1,10 +1,12 @@
 using System.Diagnostics;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Monzowler.Application.Session;
 using Monzowler.Crawler.Interfaces;
 using Monzowler.Crawler.Models;
 using Monzowler.Crawler.Parsers;
 using Monzowler.Crawler.Settings;
+using Monzowler.Domain.Entities;
 using Monzowler.Persistence.Interfaces;
 using Monzowler.Shared.Observability;
 
@@ -16,10 +18,10 @@ public class SpiderService(
     ISiteMapRepository siteMapRepository,
     ILogger<SpiderService> logger,
     PolitenessThrottlerService throttler,
-    IOptions<CrawlerOptions> options)
+    IOptions<CrawlerSettings> options)
     : ISpiderService
 {
-    private readonly CrawlerOptions _opts = options.Value;
+    private readonly CrawlerSettings _opts = options.Value;
 
     public async Task<List<Page>> CrawlAsync(string rootUrl, string jobId)
     {
@@ -31,7 +33,7 @@ public class SpiderService(
         var baseUri = new Uri(rootUrl);
         var rootHost = baseUri.Host;
 
-        var robotsTxtResponse = await robots.GetRulesAsync(rootUrl);
+        var robotsTxtResponse = await robots.GetRulesAsync(rootUrl, _opts.UserAgent);
         throttler.SetDelay(rootHost, robotsTxtResponse.Delay);
 
         await session.TryEnqueueAsync(new Link
@@ -42,6 +44,7 @@ public class SpiderService(
             Retries = 0
         }, logger);
 
+        
         var workers = Enumerable.Range(0, _opts.MaxConcurrency)
             .Select(_ => Task.Run(() => ExecuteAsync(session, baseUri, robotsTxtResponse, jobId)));
 
@@ -61,28 +64,40 @@ public class SpiderService(
     await foreach (var item in session.ChannelSession.Reader.ReadAllAsync())
     {
         using var span = TracingHelper.Source.StartActivity("CrawlPage", ActivityKind.Internal);
-        span?.SetTag("url", item.Url);
-        span?.SetTag("depth", item.Depth);
-        span?.SetTag("jobId", jobId);
-        span?.SetTag("retries", item.Retries);
-
-        if (item.Depth > _opts.MaxDepth)
-        {
-            span?.AddEvent(new ActivityEvent("Skipped:MaxDepth"));
-            continue;
-        }
-
-        var path = new Uri(item.Url).AbsolutePath;
-        if (!robots.IsAllowed(path, robotsTxtResponse.Disallows, robotsTxtResponse.Allows))
-        {
-            span?.AddEvent(new ActivityEvent("Skipped:DisallowedByRobots"));
-            continue;
-        }
-
-        using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(_opts.Timeout));
 
         try
         {
+            span?.SetTag("url", item.Url);
+            span?.SetTag("depth", item.Depth);
+            span?.SetTag("jobId", jobId);
+            span?.SetTag("retries", item.Retries);
+
+            if (item.Depth > _opts.MaxDepth)
+            {
+                span?.AddEvent(new ActivityEvent("Skipped:MaxDepth"));
+                return;
+            }
+
+            var path = new Uri(item.Url).AbsolutePath;
+            if (!robots.IsAllowed(path, robotsTxtResponse.Disallows, robotsTxtResponse.Allows))
+            {
+                //We are not allowed to scrape the url. We still add the page on our job
+                span?.AddEvent(new ActivityEvent("Skipped:DisallowedByRobots"));
+                session.Pages.Add(new Page
+                {
+                    PageUrl = item.Url,
+                    Depth = item.Depth,
+                    Domain = rootHost,
+                    Links = [],
+                    JobId = jobId,
+                    Status = nameof(ParserStatusCode.Disallowed),
+                    LastModified = DateTime.UtcNow.ToString("O"),
+                });
+                return;
+            }
+
+            using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(_opts.Timeout));
+            
             logger.LogInformation("Crawling: {Url} (Depth: {Depth})", item.Url, item.Depth);
 
             var parserResponse = await parser.ParseLinksAsync(new ParserRequest
@@ -126,12 +141,27 @@ public class SpiderService(
                             Depth = newDepth,
                             Retries = 0
                         };
-
+                    
                         if (await session.TryEnqueueAsync(newLink, logger))
                         {
                             session.Visited.TryAdd(link, true);
                             span?.AddEvent(new ActivityEvent("LinkEnqueued"));
                         }
+                    } else if (!robots.IsAllowed(linkPath, robotsTxtResponse.Disallows, robotsTxtResponse.Allows))
+                    {
+                        // We want to record disallowed pages too 
+                        session.Pages.Add(new Page
+                        {
+                            PageUrl = link,
+                            Depth = newDepth,
+                            Domain = rootHost,
+                            Links = [],
+                            JobId = jobId,
+                            Status = nameof(ParserStatusCode.Disallowed),
+                            LastModified = DateTime.UtcNow.ToString("O"),
+                        });
+
+                        logger.LogInformation("Disallowed link skipped and recorded: {Link}", link);
                     }
                 }
                 catch
@@ -169,10 +199,10 @@ public class SpiderService(
         }
         finally
         {
-            var remaining = session.DecrementWriters();
-            logger.LogDebug("Finished: {Url}, writersRemaining: {Remaining}", item.Url, remaining);
+            session.Item.Decrement();
+            logger.LogDebug("Finished: {Url}, writersRemaining: {Remaining}", item.Url, session.Item.Count);
 
-            if (remaining == 0)
+            if (session.Item.IsEmpty)
             {
                 session.ChannelSession.Writer.Complete();
             }

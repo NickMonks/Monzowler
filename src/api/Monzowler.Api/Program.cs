@@ -1,20 +1,19 @@
 using System.Text.Json.Serialization;
 using Monzowler.Api;
-using Monzowler.Api.Middlewares;
 using Monzowler.Crawler.Settings;
 using JsonOptions = Microsoft.AspNetCore.Http.Json.JsonOptions;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddLogging();
-builder.Services.Configure<CrawlerOptions>(builder.Configuration.GetSection("Crawler"));
+builder.Services.Configure<CrawlerSettings>(builder.Configuration.GetSection("Crawler"));
 builder.Services.Configure<JsonOptions>(options =>
 {
     options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
 builder.Services.AddStartupServices(builder.Configuration);
 builder.Services.AddObservability(builder.Configuration);
-builder.Services.AddScoped<BackgroundCrawlService>();
+builder.Services.AddScoped<BackgroundCrawler>();
 builder.Services.AddControllers();
 
 builder.Services.AddSwaggerGen();
@@ -28,7 +27,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.MapControllers();
-app.UseMiddleware<OpenTelemetryMiddleware>();
 app.Run();
 
 //Needed for testing purposes

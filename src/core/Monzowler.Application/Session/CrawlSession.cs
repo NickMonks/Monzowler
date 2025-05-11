@@ -3,23 +3,26 @@ using System.Threading.Channels;
 using Microsoft.Extensions.Logging;
 using Monzowler.Crawler.Models;
 
-namespace Monzowler.Application.Services;
+namespace Monzowler.Application.Session;
 
+/// <summary>
+/// Represent a unique session of the crawler, meaning when the crawler starts it will
+/// instantiate and encapsulate a concurrent list of pages, the channel where we will produce/consume
+/// pages from, etc. 
+/// </summary>
 public class CrawlSession
 {
     public ConcurrentBag<Page> Pages { get; } = new();
     public ConcurrentDictionary<string, bool> Visited { get; } = new();
-    public Channel<Link> ChannelSession { get; set; } = Channel.CreateUnbounded<Link>();
-    private int _writersRemaining = 0;
-
-    public int WritersRemaining => _writersRemaining;
+    public Channel<Link> ChannelSession { get; } = Channel.CreateUnbounded<Link>();
+    public Item Item { get; } = new();
 
     public async Task<bool> TryEnqueueAsync(Link link, ILogger logger)
     {
         try
         {
             await ChannelSession.Writer.WriteAsync(link);
-            Interlocked.Increment(ref _writersRemaining);
+            Item.Increment();
             logger.LogDebug("Enqueued: {Url}", link.Url);
             return true;
         }
@@ -29,9 +32,28 @@ public class CrawlSession
             return false;
         }
     }
+}
 
-    public int DecrementWriters()
+/// <summary>
+/// Represents the number of active items that are currently processing in our channel
+/// This is critical to ensure we don't close too soon the writers channel from our current sessions
+/// We need to
+/// </summary>
+public class Item
+{
+    private int _activeCount;
+
+    public void Increment()
     {
-        return Interlocked.Decrement(ref _writersRemaining);
+        Interlocked.Increment(ref _activeCount);
     }
+
+    public void Decrement()
+    {
+        Interlocked.Decrement(ref _activeCount);
+    }
+
+    public int Count => _activeCount;
+
+    public bool IsEmpty => _activeCount == 0;
 }

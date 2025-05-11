@@ -60,8 +60,8 @@ public class RobotsTxtService(IApiClient apiClient, ILogger<RobotsTxtService> lo
             var allows = new List<string>();
             int delay = 0;
 
-            bool isRelevantGroup = false;
-            var currentAgents = new List<string>();
+            var groups = new List<RobotsGroup>();
+            var currentGroup = new RobotsGroup();
 
             foreach (var raw in lines.Select(l => l.Trim()))
             {
@@ -69,34 +69,40 @@ public class RobotsTxtService(IApiClient apiClient, ILogger<RobotsTxtService> lo
 
                 if (TryGetDirectiveValue(raw, UserAgent, out var agent))
                 {
-                    agent = agent.Trim();
-                    if (currentAgents.Count > 0)
+                    //If we see a new user-agent and the current group has agent, it means we 
+                    //added the rules of that group before, and this belongs to a new group itself
+                    if (currentGroup.Agents.Count > 0)
                     {
-                        isRelevantGroup = currentAgents.Contains(crawlerUserAgent, StringComparer.OrdinalIgnoreCase)
-                                          || currentAgents.Contains(AllWildcard);
-                        currentAgents.Clear();
+                        groups.Add(currentGroup);
+                        currentGroup = new RobotsGroup();
                     }
-
-                    currentAgents.Add(agent);
+                    
+                    //else, we add it on our current active group
+                    currentGroup.Agents.Add(agent.Trim());
                     continue;
                 }
 
-                if (!isRelevantGroup && currentAgents.Count > 0)
-                {
-                    isRelevantGroup = currentAgents.Contains(crawlerUserAgent, StringComparer.OrdinalIgnoreCase)
-                                      || currentAgents.Contains(AllWildcard);
-                }
+                if (TryGetDirectiveValue(raw, Disallow, out var disallow) && !string.IsNullOrWhiteSpace(disallow))
+                    currentGroup.Disallows.Add(disallow);
 
-                if (!isRelevantGroup) continue;
-
-                if (TryGetDirectiveValue(raw, Disallow, out var path) && !string.IsNullOrWhiteSpace(path))
-                    disallows.Add(path);
-
-                if (TryGetDirectiveValue(raw, Allow, out var allowPath) && !string.IsNullOrWhiteSpace(allowPath))
-                    allows.Add(allowPath);
+                if (TryGetDirectiveValue(raw, Allow, out var allow) && !string.IsNullOrWhiteSpace(allow))
+                    currentGroup.Allows.Add(allow);
 
                 if (TryGetDirectiveValue(raw, CrawlDelay, out var delayStr) && int.TryParse(delayStr, out var d))
-                    delay = d * 1000;
+                    currentGroup.CrawlDelay = d * 1000;
+            }
+
+            // Add the last group
+            if (currentGroup.Agents.Count > 0)
+                groups.Add(currentGroup);
+
+            // As per robot txt spec, we need to find the first matching group 
+            var matchedGroup = groups.FirstOrDefault(g => g.Matches(crawlerUserAgent));
+            if (matchedGroup != null)
+            {
+                disallows = matchedGroup.Disallows;
+                allows = matchedGroup.Allows;
+                delay = matchedGroup.CrawlDelay;
             }
 
             span?.SetTag("disallowCount", disallows.Count);
@@ -142,4 +148,31 @@ public class RobotsTxtService(IApiClient apiClient, ILogger<RobotsTxtService> lo
         if (isExplicitlyAllowed) return true;
         return !isDisallowed;
     }
+    
+    /// <summary>
+    /// A group is one or more `User-agent:` lines followed by zero or more rules (Allow: or Disallow: lines)
+    /// The rules are applied to all user-agents within that group. 
+    /// </summary>
+    private class RobotsGroup
+    {
+        public List<string> Agents { get; } = new();
+        public List<string> Disallows { get; } = new();
+        public List<string> Allows { get; } = new();
+        public int CrawlDelay { get; set; } = 0;
+
+        public bool Matches(string userAgent)
+        {
+            return Agents.Any(a => a.Equals(userAgent, StringComparison.OrdinalIgnoreCase)) ||
+                   Agents.Contains(AllWildcard);
+        }
+
+        public void Reset()
+        {
+            Agents.Clear();
+            Disallows.Clear();
+            Allows.Clear();
+            CrawlDelay = 0;
+        }
+    }
 }
+

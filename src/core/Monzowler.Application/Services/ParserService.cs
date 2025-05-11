@@ -3,6 +3,7 @@ using System.Net;
 using Microsoft.Extensions.Logging;
 using Monzowler.Crawler.Models;
 using Monzowler.Crawler.Parsers;
+using Monzowler.Domain.Entities;
 using Monzowler.Shared.Observability;
 
 namespace Monzowler.Application.Services;
@@ -60,6 +61,7 @@ public class ParserService(IEnumerable<ISubParser> parsers, ILogger<ParserServic
             {
                 HttpStatusCode.RequestTimeout => ParserStatusCode.TimeoutError,
                 HttpStatusCode.NotFound => ParserStatusCode.NotFoundError,
+                HttpStatusCode.Forbidden => ParserStatusCode.Forbidden,
                 >= HttpStatusCode.InternalServerError and < HttpStatusCode.NetworkAuthenticationRequired
                     => ParserStatusCode.ServerError,
                 _ => ParserStatusCode.HttpError

@@ -36,8 +36,7 @@ public static class StartupExtensions
                 .AddOtlpExporter(opts =>
                 {
                     opts.Endpoint = new Uri(observabilitySettings.JaegerExporterUri);
-                })
-                .AddConsoleExporter();
+                });
         });
     }
 }

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Monzowler.Application.Contracts.Persistence;
 using Monzowler.Crawler.Models;
+using Monzowler.Domain.Entities;
 using Monzowler.Persistence.Interfaces;
 
 namespace Monzowler.Api.Controllers
@@ -8,7 +9,7 @@ namespace Monzowler.Api.Controllers
     [ApiController]
     [Route("[controller]")]
     public class CrawlController(
-        BackgroundCrawlService crawler,
+        BackgroundCrawler crawler,
         IJobRepository jobRepository,
         ISiteMapRepository siteMapRepository,
         ILogger<CrawlController> logger)

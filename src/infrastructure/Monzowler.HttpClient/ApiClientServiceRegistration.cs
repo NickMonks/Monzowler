@@ -16,11 +16,11 @@ public static class ApiClientServiceRegistration
         services.AddSingleton<PolitenessThrottlerService>();
         services.AddHttpClient<IApiClient, ApiClient.ApiClient>(client =>
             {
-                var httpApiSettings = configuration
-                    .GetSection("ApiClient")
-                    .Get<ApiClientOptions>() ?? throw new NullReferenceException();
+                var crawlerSettings = configuration
+                    .GetSection("Crawler")
+                    .Get<CrawlerSettings>() ?? throw new NullReferenceException();
                 
-                client.DefaultRequestHeaders.UserAgent.ParseAdd(httpApiSettings.UserAgent);
+                client.DefaultRequestHeaders.UserAgent.ParseAdd(crawlerSettings.UserAgent);
             })
             .AddPolicyHandler((sp, request) =>
             {

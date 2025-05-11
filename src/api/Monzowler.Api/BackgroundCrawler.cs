@@ -4,17 +4,16 @@ using Monzowler.Application.Contracts.Persistence;
 using Monzowler.Crawler.Interfaces;
 using Monzowler.Crawler.Models;
 using Monzowler.Shared.Observability;
-using OpenTelemetry.Trace;
 
 namespace Monzowler.Api;
 
 /// <summary>
 /// Due to the nature of the crawler we don't want the user to wait for the whole response of the crawler.
-/// Therefore, we run a background worker that process the crawling separately. 
+/// Therefore, we run a background task that process the crawling separately. It also tracks the job progress and status
 /// </summary>
-public class BackgroundCrawlService(
+public class BackgroundCrawler(
     ISpiderService spider,
-    ILogger<BackgroundCrawlService> logger,
+    ILogger<BackgroundCrawler> logger,
     IJobRepository jobRepository)
 {
     private readonly ConcurrentDictionary<string, List<Page>> _results = new();
@@ -34,6 +33,8 @@ public class BackgroundCrawlService(
         
         Task.Run(async () =>
         {
+            //Important: we need to get the parent context. the span is async-local but not thread-local,
+            //So the context might be lost. So we need to grab it from the parent. 
             Activity.Current = parentContext;
             Activity? span = TracingHelper.StartSpanWithActivity("JobStarted", job);
 
@@ -51,7 +52,7 @@ public class BackgroundCrawlService(
             }
             catch (Exception ex)
             {
-                logger.LogInformation("----- JOB {JobId} : FAILED -------", job.JobId);
+                logger.LogError("----- JOB {JobId} : FAILED -------", job.JobId);
                 span?.SetStatus(ActivityStatusCode.Error, ex.Message);
                 span?.AddEvent(new ActivityEvent("JobFailed"));
 
@@ -59,7 +60,7 @@ public class BackgroundCrawlService(
             }
             finally
             {
-                //Important: we need to dispose this to mark the span as ready to export
+                //Important: we need to dispose this to mark the span as ready to export!
                 span?.Dispose();
             }
         });

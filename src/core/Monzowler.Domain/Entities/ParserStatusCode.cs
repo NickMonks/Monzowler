@@ -1,4 +1,4 @@
-namespace Monzowler.Crawler.Models;
+namespace Monzowler.Domain.Entities;
 
 /// <summary>
 /// Parser status code based on the response 
@@ -11,6 +11,8 @@ public enum ParserStatusCode
     TimeoutError,
     NotFoundError,
     HttpError,
+    Forbidden,
     ParserError,
+    Disallowed,
     UnknownError
 }

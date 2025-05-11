@@ -20,4 +20,10 @@
         <Using Include="Xunit"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Helpers\" />
+      <Folder Include="Parsers\" />
+      <Folder Include="Session\" />
+    </ItemGroup>
+
 </Project>

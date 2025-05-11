@@ -7,13 +7,13 @@ Content-Type: application/json
 }
 
 ### --- JOB GET ---
-GET http://localhost:5002/crawl/c746865d-713a-4b08-8796-e5af21909b0f
+GET http://localhost:5002/crawl/94aa7ba3-289d-4b7a-8e5b-ca28ca0b8081
 Content-Type: application/json
 
 {}
 
 ### --- SITEMAP JOB GET ---
-GET http://localhost:5002/crawl/sitemap/4a786fb8-a5cf-4e09-a732-374fed40ae5e?Status=NoLinksFound
+GET http://localhost:5002/crawl/sitemap/f2e4b922-22b3-469e-b363-4703cfeaa616
 Content-Type: application/json
 
 {}
@@ -59,13 +59,21 @@ Content-Type: application/json
 }
 
 ### --- DEBUG: JOB GET ---
-GET http://localhost:5000/crawl/4a9ef2e1-02bd-4662-81b6-004318f60a21
+GET http://localhost:5000/crawl/8d0e0a89-4347-4780-90ad-0dc2f572851e
 Content-Type: application/json
 
 {}
 
 ### --- DEBUG: SITEMAP JOB GET ---
-GET http://localhost:5000/crawl/sitemap/db627417-3193-4b22-a4c5-d179a4428935?status=Ok
+GET http://localhost:5000/crawl/sitemap/414d4056-526f-450d-afad-bee5f3edbb11?status=NotFoundError
 Content-Type: application/json
 
 {}
+
+### --- CREATE JOB CRAWL (BBC) - DEBUG ---
+POST http://localhost:5000/crawl
+Content-Type: application/json
+
+{
+  "url": "https://www.bbc.co.uk/"
+}
