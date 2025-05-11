@@ -5,7 +5,7 @@ using Monzowler.Crawler.Models;
 using Monzowler.Crawler.Parsers;
 using Monzowler.Shared.Utilities;
 
-namespace Monzowler.Application.Services.Parsers;
+namespace Monzowler.Application.Parsers;
 
 public class StaticHtmlParser(IApiClient http, ILogger<StaticHtmlParser> logger) : ISubParser
 {

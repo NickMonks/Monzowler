@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Monzowler.Application.Parsers;
 using Monzowler.Application.Services;
 using Monzowler.Application.Services.Parsers;
 using Monzowler.Crawler.Interfaces;

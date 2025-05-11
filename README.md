@@ -1,6 +1,6 @@
-# Monzowler
+# 🕸️🏦 Monzowler
 
-A fast, performant webcrawler for the Monzo Task Challenge! 🕸️🏦
+A fast, performant webcrawler for the Monzo Task Challenge! 
 
 # How to Run
 
@@ -179,9 +179,30 @@ This model leads to:
 While some of these issues can be mitigated (e.g., using `SemaphoreSlim` to cap concurrency), doing so adds complexity, and still lacks a centralized, coordinated pipeline for managing crawl state, retries, and graceful shutdown. 
 In practice, it became clear that this approach was both inefficient and hard to maintain for a recursive, stateful crawling task.
 
+## Politeness & `Robots.txt`
+
+Something I discovered a while ago is that politeness is paramount for most of webcrawlers - we don't want to overload domains to look like they are having DDoS attacks or simply not degrage their performance.
+That's why websites have the `/robots.txt` file with certain rules to follow on what websites are good / not good to crawl, subdomains that are not disallowed, etc.
+
+On our webcrawler this is done through the `RobotsTxtService`
+
+Additionally, we also ready the `After-Delay` rule, which is not a mandatory field in the robots.txt spec but an interesting use-case that we implemented. See below on the HttpClient section for more info. 
+
+## HTTP Client
+
+
 ## Parsers
 
+Once our worker gets a response from the API, as per our task requirements we need to be able to parse the HTML, and extract the links.
+This is relatively simple: In HTML, the anchor tag (<`a>`) creates hyperlinks so we just need to retrieve this from the DOM, and extract the `href` link.
+The difficulty are mainly two:
+- For Static websites this simple - we just need to extract links from the anchor tags. However modern websites are JavaScript-heavy websites, and they need rendering before getting the HTML (unless it's been SEO-optimised). In order to solve this, we created two parsers:
+   - Static HTML parser: Fast and simple, using a popular library, `HtmlAgilityPack`.
+   - Rendered HTLM Parser using selenium: Much slower because it requires running the browser through a WebDriver (in our case `chromedriver`) , copying the heavy JS code and past in a blank page and wait for completion.
+   - Because the latter is much slower, we set up a fallback mechanism to first run static HTML parser, and if fails try the other one. 
+- Some of these links are broken or are not crawlable (e.g. pdfs, jpg, etc), so we need to sanitize them
 
+With that, we created an efficient parser flow logic that handles different exceptions and sets the Parser status code.
 
 # Testing
 
@@ -204,4 +225,15 @@ TBD
 - What happens if the crawler crashes mid-way? we would like to be resilient and store each sitemap at least. 
 - Robot.txt can have more directives - we had the most basic and others a bit more complicated, but allow could be added for example
 - If we need real-time updates - we could consider long polling. 
-- The way we implemented our core logic behaves like a BFS (Breath-First Search), although is not absolutely guaranteed due to the use of concurrent workers. However, depending on of our approach we could have choose DFS approach. I though DFS was less useful because we likely want to explore the links closest to the root domain and less on deep links. However if the requirements were different I would implement this differently. 
+- The way we implemented our core logic behaves like a BFS (Breath-First Search), although is not absolutely guaranteed due to the use of concurrent workers. However, depending on of our approach we could have choose DFS approach. I though DFS was less useful because we likely want to explore the links closest to the root domain and less on deep links. However if the requirements were different I would implement this differently.
+
+## Parsers
+Although we are using fallback mechanism to run the rendered HTML parser, we could have many of these to parse actual files like .pdf, .docx, etc. 
+
+## Infrastructure
+Currently our crawler is a good solution and the code is production-ready. However, in order to make this really production ready we should think of setting up the infrastructure and CI/CD deployment pipelines. A suggestion on how
+
+## CI/CD Development
+- Setup protection branch and CI jobs to run test, perform security scan, linting, etc
+- Trigger Github actions to create releases. An option could be to connect this to ArgoCD for deploying the binaries, and Spacelift for provision terraform changes. 
+
