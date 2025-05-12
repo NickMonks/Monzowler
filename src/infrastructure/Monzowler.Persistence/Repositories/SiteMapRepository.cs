@@ -107,7 +107,7 @@ public class SiteMapRepository(IAmazonDynamoDB dynamoDb) : ISiteMapRepository
             results.Add(model);
         }
 
-        return results.Select(r =>CrawlerDbModel.From(r)).ToList();
+        return results.Select(r => CrawlerDbModel.From(r)).ToList();
     }
 
     public async Task<List<Page>> GetCrawlsByJobIdAsync(string jobId)

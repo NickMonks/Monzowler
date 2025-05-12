@@ -1,6 +1,6 @@
 # 🕸️🏦 Monzowler
 
-A fast, performant webcrawler for the Monzo Task Challenge! 
+A fast, performant webcrawler for the Monzo Task Challenge!
 
 # How to Run
 
@@ -201,6 +201,7 @@ A key challenge was knowing when to shut down the crawler. Since ReadAllAsync() 
 Special care needs to be done to ensure we are peforming atomic increase/decrease operations, otherwise we risk to have race conditions. This can be done using Interlocked or pure locks.
 I choose Interlock because it much more faster (CPU instruction level). 
 
+Another important thing to mention is the use of `CancellationToken` in the code. As we described above, we have an ApiClient that 
 ## Alternatives
 
 Other alternatives where explored first, see below why they weren't chosen.

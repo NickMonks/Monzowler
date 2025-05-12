@@ -13,7 +13,7 @@ public static class ApplicationServiceRegistration
     public static void AddApplicationRegistration(this IServiceCollection services,
         IConfiguration configuration)
     {
-        services.AddSingleton<RobotsTxtService>();
+        services.AddSingleton<IRobotsTxtService, RobotsTxtService>();
         services.AddSingleton<IBrowserProvider, BrowserProvider>();
         services.AddScoped<ISpiderService, SpiderService>();
         services.AddTransient<ISubParser, StaticHtmlParser>();

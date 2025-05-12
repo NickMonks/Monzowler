@@ -24,7 +24,7 @@ public class RenderedHtmlParser(IBrowserProvider provider, IApiClient httpApiCli
     {
         logger.LogInformation("Start parsing links - {ParserName}", nameof(StaticHtmlParser));
         using var span = TracingHelper.Source.StartActivity(nameof(RenderedHtmlParser));
-        
+
         var html = await GetRenderedHtmlAsync(request.Url, ct);
         var doc = new HtmlDocument();
         doc.LoadHtml(html);

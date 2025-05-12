@@ -13,7 +13,7 @@ public static class PersistenceServiceRegistration
     {
         services.AddDefaultAWSOptions(configuration.GetAWSOptions("AWS"));
         services.AddAWSService<IAmazonDynamoDB>();
-        
+
         services.AddSingleton<IJobRepository, JobRepository>();
         services.AddScoped<ISiteMapRepository, SiteMapRepository>();
     }

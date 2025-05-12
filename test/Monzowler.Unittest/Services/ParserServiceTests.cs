@@ -33,7 +33,7 @@ public class ParserServiceTests
                });
 
         var service = new ParserService([parser1.Object], _mockLogger.Object);
-        
+
         //Act
         var result = await service.ParseLinksAsync(CreateRequest(), CancellationToken.None);
 
@@ -57,7 +57,7 @@ public class ParserServiceTests
                    HasScriptTags = false
                });
         var service = new ParserService([parser1.Object, parser2.Object], _mockLogger.Object);
-        
+
         //Act
         var result = await service.ParseLinksAsync(CreateRequest(), CancellationToken.None);
 
@@ -74,7 +74,7 @@ public class ParserServiceTests
         parser1.Setup(p => p.ParseLinksAsync(It.IsAny<ParserRequest>(), It.IsAny<CancellationToken>()))
                .ReturnsAsync(new ParserResponse { Links = [], HasScriptTags = false });
         var service = new ParserService([parser1.Object], _mockLogger.Object);
-        
+
         //Act
         var result = await service.ParseLinksAsync(CreateRequest(), CancellationToken.None);
 
@@ -82,7 +82,7 @@ public class ParserServiceTests
         Assert.Equal(ParserStatusCode.NoLinksFound, result.StatusCode);
         Assert.Empty(result.Links);
     }
-    
+
     [Theory]
     [InlineData(HttpStatusCode.RequestTimeout, ParserStatusCode.TimeoutError)]
     [InlineData(HttpStatusCode.NotFound, ParserStatusCode.NotFoundError)]
@@ -95,7 +95,7 @@ public class ParserServiceTests
         parser.Setup(p => p.ParseLinksAsync(It.IsAny<ParserRequest>(), It.IsAny<CancellationToken>()))
               .ThrowsAsync(new HttpRequestException("Error", null, statusCode));
         var service = new ParserService([parser.Object], _mockLogger.Object);
-        
+
         //Act
         var result = await service.ParseLinksAsync(CreateRequest(), CancellationToken.None);
 
@@ -117,7 +117,7 @@ public class ParserServiceTests
                .ThrowsAsync(new Exception("Still failing"));
 
         var service = new ParserService([parser1.Object, parser2.Object], _mockLogger.Object);
-        
+
         //Act
         var result = await service.ParseLinksAsync(CreateRequest(), CancellationToken.None);
 

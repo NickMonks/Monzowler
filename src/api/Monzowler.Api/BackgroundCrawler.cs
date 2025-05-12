@@ -27,10 +27,10 @@ public class BackgroundCrawler(
             Url = url,
             StartedAt = DateTime.UtcNow
         };
-        
+
         using var span = TracingHelper.StartSpan("JobCreated", job);
         var parentContext = Activity.Current;
-        
+
         Task.Run(async () =>
         {
             //Important: we need to get the parent context. the span is async-local but not thread-local,
@@ -41,7 +41,7 @@ public class BackgroundCrawler(
             try
             {
                 logger.LogInformation(" ----- JOB {JobId} : START -------", job.JobId);
-        
+
                 await jobRepository.CreateAsync(job);
                 var _ = await spider.CrawlAsync(url, job.JobId);
 
@@ -64,7 +64,7 @@ public class BackgroundCrawler(
                 span?.Dispose();
             }
         });
-        
+
         return job.JobId;
     }
 }

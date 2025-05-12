@@ -25,7 +25,7 @@ public record CrawlerDbModel
             JobId = page.JobId
         };
     }
-    
+
     public static Page From(CrawlerDbModel model)
     {
         return new Page
@@ -39,5 +39,5 @@ public record CrawlerDbModel
             JobId = model.JobId
         };
     }
-    
+
 }

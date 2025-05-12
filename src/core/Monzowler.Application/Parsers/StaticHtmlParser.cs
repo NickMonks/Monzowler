@@ -33,7 +33,7 @@ public class StaticHtmlParser(IApiClient http, ILogger<StaticHtmlParser> logger)
             .Where(u => u is not null && new Uri(u).Host == request.AllowedHost)
             .Distinct()
             .ToList();
-        
+
         var hasScriptTags = doc.DocumentNode.SelectSingleNode("//script") is not null;
 
         return new ParserResponse

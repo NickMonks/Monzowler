@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using Microsoft.Extensions.Logging;
+using Monzowler.Application.Contracts.Services;
 using Monzowler.Crawler.Contracts.HttpClient;
 using Monzowler.Crawler.Models;
 using Monzowler.Shared.Observability;
@@ -9,7 +10,7 @@ namespace Monzowler.Application.Services;
 /// <summary>
 /// Services that parses and set rules for the robots.txt website.
 /// </summary>
-public class RobotsTxtService(IApiClient apiClient, ILogger<RobotsTxtService> logger)
+public class RobotsTxtService(IApiClient apiClient, ILogger<RobotsTxtService> logger) : IRobotsTxtService
 {
     private const string RobotstxtUrl = "/robots.txt";
     private const string UserAgent = "User-agent:";
@@ -76,7 +77,7 @@ public class RobotsTxtService(IApiClient apiClient, ILogger<RobotsTxtService> lo
                         groups.Add(currentGroup);
                         currentGroup = new RobotsGroup();
                     }
-                    
+
                     //else, we add it on our current active group
                     currentGroup.Agents.Add(agent.Trim());
                     continue;
@@ -148,7 +149,7 @@ public class RobotsTxtService(IApiClient apiClient, ILogger<RobotsTxtService> lo
         if (isExplicitlyAllowed) return true;
         return !isDisallowed;
     }
-    
+
     /// <summary>
     /// A group is one or more `User-agent:` lines followed by zero or more rules (Allow: or Disallow: lines)
     /// The rules are applied to all user-agents within that group. 

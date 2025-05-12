@@ -30,7 +30,7 @@ public class PolitenessThrottlerService
         {
             return;
         }
-        
+
         if (_lastRequestTimes.TryGetValue(domain, out var lastTime))
         {
             var elapsed = now - lastTime;

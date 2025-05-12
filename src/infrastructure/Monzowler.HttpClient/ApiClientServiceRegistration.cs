@@ -19,7 +19,7 @@ public static class ApiClientServiceRegistration
                 var crawlerSettings = configuration
                     .GetSection("Crawler")
                     .Get<CrawlerSettings>() ?? throw new NullReferenceException();
-                
+
                 client.DefaultRequestHeaders.UserAgent.ParseAdd(crawlerSettings.UserAgent);
             })
             .AddPolicyHandler((sp, request) =>
@@ -43,7 +43,7 @@ public static class ApiClientServiceRegistration
         return HttpPolicyExtensions
             .HandleTransientHttpError()
             .WaitAndRetryAsync(
-                retryCount: 5,
+                retryCount: 3,
                 // The strategy is the following:
                 // Check if the error is a 429 TooManyRequest Error - if so we need to honour the
                 // retry-after header from rate limiting.

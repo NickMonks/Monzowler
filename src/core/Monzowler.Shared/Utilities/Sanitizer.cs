@@ -10,7 +10,7 @@ public static class Sanitizer
                 return null;
 
             var candidateUri = new Uri(new Uri(url), href);
-            
+
             //Ignores anything that is not an http-based link, like mailto:, ftp:, javascript:,...
             if (candidateUri.Scheme != Uri.UriSchemeHttp && candidateUri.Scheme != Uri.UriSchemeHttps)
                 return null;
@@ -32,6 +32,6 @@ public static class Sanitizer
             //href could not be sanitised nor parser correctly
             return null;
         }
-        
+
     }
 }

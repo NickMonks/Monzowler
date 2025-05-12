@@ -65,7 +65,7 @@ Content-Type: application/json
 {}
 
 ### --- DEBUG: SITEMAP JOB GET ---
-GET http://localhost:5000/crawl/sitemap/414d4056-526f-450d-afad-bee5f3edbb11?status=NotFoundError
+GET http://localhost:5000/crawl/sitemap/850ef988-22ed-4b76-8e84-16c3224373a5?status=ServerError&status=ParserError
 Content-Type: application/json
 
 {}
@@ -75,5 +75,15 @@ POST http://localhost:5000/crawl
 Content-Type: application/json
 
 {
-  "url": "https://www.bbc.co.uk/"
+  "url": "https://monzo.com"
 }
+
+### --- RENDERED HTML PARSING - DEBUG ---
+POST http://localhost:5000/crawl
+Content-Type: application/json
+
+{
+  "url": "https://monzo.com/help/monzo-fraud-category/Getting-your-money-back-authorised-push-payment-fraud"
+}
+
+

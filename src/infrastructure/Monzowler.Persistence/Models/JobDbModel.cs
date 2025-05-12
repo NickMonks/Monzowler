@@ -10,7 +10,7 @@ public class JobDbModel
     public DateTime? StartedAt { get; private init; }
     public DateTime? CompletedAt { get; set; }
     public string? Error { get; set; }
-    
+
     public static JobDbModel To(Job job)
     {
         return new JobDbModel

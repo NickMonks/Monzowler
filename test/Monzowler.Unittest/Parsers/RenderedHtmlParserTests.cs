@@ -13,7 +13,6 @@ public class RenderedHtmlParserTests : IDisposable
     private readonly Mock<IApiClient> _mockHttp;
     private readonly RenderedHtmlParser _parser;
     private readonly BrowserProvider _provider;
-    private readonly Mock<ILogger<RenderedHtmlParser>> _logger;
     private const string Url = "https://example.com";
     private const string AllowedHost = "example.com";
 
@@ -21,7 +20,8 @@ public class RenderedHtmlParserTests : IDisposable
     {
         _provider = new BrowserProvider();
         _mockHttp = new Mock<IApiClient>();
-        _parser = new RenderedHtmlParser(_provider, _mockHttp.Object, _logger.Object);
+        var logger = new Mock<ILogger<RenderedHtmlParser>>();
+        _parser = new RenderedHtmlParser(_provider, _mockHttp.Object, logger.Object);
     }
 
     [Fact]

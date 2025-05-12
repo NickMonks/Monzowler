@@ -7,7 +7,7 @@ public static class TracingHelper
 {
     private const string SourceName = "Monzowler";
     public static readonly ActivitySource Source = new ActivitySource(SourceName);
-    
+
     /// <summary>
     /// Utility method that uses reflection to take the property name and values and sets in the
     /// tag of the current span. It also needs to return disposable, so if the activity is null
@@ -35,7 +35,7 @@ public static class TracingHelper
 
         return activity;
     }
-    
+
     public static IDisposable StartSpan(string name, object? tagSource = null)
     {
         var activity = TracingHelper.Source.StartActivity(name);
@@ -53,9 +53,9 @@ public static class TracingHelper
             }
         }
 
-        return (IDisposable?) activity ?? new Disposable();
+        return (IDisposable?)activity ?? new Disposable();
     }
-    
+
     public static IDisposable StartSpan(string name, Dictionary<string, object>? tags = null)
     {
         var activity = TracingHelper.Source.StartActivity(name);
@@ -64,11 +64,11 @@ public static class TracingHelper
             foreach (var tag in tags)
                 activity.SetTag(tag.Key, tag.Value);
         }
-        
+
         return (IDisposable?)activity ?? new Disposable();
 
     }
-    
+
     private class Disposable : IDisposable
     {
         public void Dispose() { }

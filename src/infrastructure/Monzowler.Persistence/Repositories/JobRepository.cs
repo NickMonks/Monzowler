@@ -13,7 +13,7 @@ public class JobRepository(IAmazonDynamoDB dynamo) : IJobRepository
     public async Task CreateAsync(Job job)
     {
         var jobModel = JobDbModel.To(job);
-        
+
         var item = new Dictionary<string, AttributeValue>
         {
             ["JobId"] = new AttributeValue { S = jobModel.JobId },
