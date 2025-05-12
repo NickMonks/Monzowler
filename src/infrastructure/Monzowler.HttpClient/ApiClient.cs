@@ -2,7 +2,7 @@ using Microsoft.Extensions.Logging;
 using Monzowler.Application.Services;
 using Monzowler.Crawler.Contracts.HttpClient;
 
-namespace Monzowler.HttpClient.ApiClient;
+namespace Monzowler.HttpClient;
 
 public class ApiClient(System.Net.Http.HttpClient httpClient, ILogger<ApiClient> logger, PolitenessThrottlerService throttlerService) : IApiClient
 {

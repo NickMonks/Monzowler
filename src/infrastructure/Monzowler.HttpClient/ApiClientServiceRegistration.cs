@@ -14,7 +14,7 @@ public static class ApiClientServiceRegistration
     public static void AddApiClientRegistration(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddSingleton<PolitenessThrottlerService>();
-        services.AddHttpClient<IApiClient, ApiClient.ApiClient>(client =>
+        services.AddHttpClient<IApiClient, ApiClient>(client =>
             {
                 var crawlerSettings = configuration
                     .GetSection("Crawler")
