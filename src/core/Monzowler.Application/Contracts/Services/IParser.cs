@@ -1,4 +1,5 @@
 using Monzowler.Crawler.Models;
+using Monzowler.Domain.Responses;
 
 namespace Monzowler.Crawler.Parsers;
 

@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Monzowler.Crawler.Models;
 using Monzowler.Crawler.Parsers;
 using Monzowler.Domain.Entities;
+using Monzowler.Domain.Responses;
 using Monzowler.Shared.Observability;
 
 namespace Monzowler.Application.Services;
@@ -18,15 +19,12 @@ public class ParserService(IEnumerable<ISubParser> parsers, ILogger<ParserServic
     private readonly List<ISubParser> _parsers = parsers.ToList();
     public async Task<ParserResponse> ParseLinksAsync(ParserRequest request, CancellationToken ct)
 {
-    using var span = TracingHelper.Source.StartActivity("ParseLinks", ActivityKind.Internal);
+    using var span = TracingHelper.Source.StartActivity("ParseLinks");
     span?.SetTag("url", request.Url);
 
     foreach (var parser in _parsers)
     {
-        var parserName = parser.GetType().Name;
-
-        using var childSpan = TracingHelper.Source.StartActivity("ParserAttempt", ActivityKind.Internal);
-        childSpan?.SetTag("parser", parserName);
+        using var childSpan = TracingHelper.Source.StartActivity("ParserAttempt");
         childSpan?.SetTag("type", parser.GetType().Name);
 
         try
@@ -45,10 +43,17 @@ public class ParserService(IEnumerable<ISubParser> parsers, ILogger<ParserServic
                     StatusCode = ParserStatusCode.Ok
                 };
             }
-
+            
+            //If no links are found there is the possibility that the links are within scripts tags
+            //therefore we need to try our renderered parser.
+            if (response.HasScriptTags)
+            {
+                childSpan?.AddEvent(new ActivityEvent("HasScriptTags_ConsiderFallback"));
+                continue;
+            }
+            
             childSpan?.SetTag("status", ParserStatusCode.NoLinksFound.ToString());
             childSpan?.AddEvent(new ActivityEvent("NoLinksFound"));
-
             return new ParserResponse
             {
                 Links = new(),
@@ -86,7 +91,7 @@ public class ParserService(IEnumerable<ISubParser> parsers, ILogger<ParserServic
             childSpan?.AddEvent(new ActivityEvent("ParsingFailed"));
 
             logger.LogWarning(ex, "ParserService {ParserService} failed for {Url}",
-                parserName, request.Url);
+                parser.GetType().Name, request.Url);
         }
     }
 

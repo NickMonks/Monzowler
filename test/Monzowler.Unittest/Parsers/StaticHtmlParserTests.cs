@@ -43,7 +43,28 @@ public class StaticHtmlParserTests
             Assert.Contains("https://example.com/page1", result.Links);
             Assert.Contains("https://example.com/page2", result.Links);
             Assert.DoesNotContain("https://other-example.com/page1", result.Links);
+        }
+        
+        [Fact]
+        public async Task ParseLinksAsync_HasScriptTag_ReturnsTrue()
+        {
+            //Arrange
+            var html = Helper.LoadStaticHtlm("valid_with_script_tags.html");
 
+            _mockHttp.Setup(h => h.GetStringAsync(Url, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(html);
+            
+            var request = new ParserRequest
+            {
+                Url = Url,
+                AllowedHost = AllowedHost
+            };
+            
+            //Act
+            var result = await _parser.ParseLinksAsync(request, CancellationToken.None);
+            
+            //Assert
+            Assert.True(result.HasScriptTags);
         }
         
         
