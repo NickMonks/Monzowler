@@ -1,0 +1,9 @@
+# This line should be ignored
+User-agent: TestBot
+Disallow: /private
+Allow: /private/allowed
+Crawl-delay: 5
+
+User-agent: *
+Disallow: /tmp
+Crawl-delay: 1

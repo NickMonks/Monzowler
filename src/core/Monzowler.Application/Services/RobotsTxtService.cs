@@ -153,7 +153,7 @@ public class RobotsTxtService(IApiClient apiClient, ILogger<RobotsTxtService> lo
     /// A group is one or more `User-agent:` lines followed by zero or more rules (Allow: or Disallow: lines)
     /// The rules are applied to all user-agents within that group. 
     /// </summary>
-    private class RobotsGroup
+    public class RobotsGroup
     {
         public List<string> Agents { get; } = new();
         public List<string> Disallows { get; } = new();

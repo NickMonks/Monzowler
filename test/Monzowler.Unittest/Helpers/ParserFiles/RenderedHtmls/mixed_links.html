@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Rendered Mixed Links Test Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        setTimeout(() => {
+            // Crawlable
+            const link1 = document.createElement('a');
+            link1.href = 'https://example.com/page1';
+            link1.innerText = 'Valid absolute link';
+            document.body.appendChild(link1);
+
+            const link2 = document.createElement('a');
+            link2.href = '/page2';
+            link2.innerText = 'Valid relative link';
+            document.body.appendChild(link2);
+
+            // Should be excluded by sanitizer
+            const mailto = document.createElement('a');
+            mailto.href = 'mailto:support@example.com';
+            mailto.innerText = 'Email us';
+            document.body.appendChild(mailto);
+
+            const jsLink = document.createElement('a');
+            jsLink.href = 'javascript:void(0)';
+            jsLink.innerText = 'Run JS';
+            document.body.appendChild(jsLink);
+
+            const pdf = document.createElement('a');
+            pdf.href = 'https://example.com/file.pdf';
+            pdf.innerText = 'PDF file';
+            document.body.appendChild(pdf);
+
+            const docx = document.createElement('a');
+            docx.href = 'https://example.com/document.docx';
+            docx.innerText = 'DOCX file';
+            document.body.appendChild(docx);
+
+            const anchor = document.createElement('a');
+            anchor.href = '#section1';
+            anchor.innerText = 'Anchor link';
+            document.body.appendChild(anchor);
+
+            const ftp = document.createElement('a');
+            ftp.href = 'ftp://example.com/resource';
+            ftp.innerText = 'FTP link';
+            document.body.appendChild(ftp);
+
+            // External domain
+            const external = document.createElement('a');
+            external.href = 'https://external-site.com/page';
+            external.innerText = 'Other domain link';
+            document.body.appendChild(external);
+        }, 100);
+    </script>
+</head>
+<body>
+<header>
+    <h1>JS Rendered Mixed Links</h1>
+</header>
+
+<main>
+    <p>All links are injected via JavaScript after page load.</p>
+</main>
+
+<footer>
+    <p>End of test</p>
+</footer>
+</body>
+</html>

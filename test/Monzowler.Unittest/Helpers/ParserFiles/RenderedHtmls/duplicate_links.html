@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Rendered Duplicate Links Test</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        // Dynamically insert duplicate links after a small delay
+        setTimeout(() => {
+            const link1 = document.createElement('a');
+            link1.href = 'https://example.com/page1';
+            link1.innerText = 'Link 1';
+            document.body.appendChild(link1);
+
+            const link2 = document.createElement('a');
+            link2.href = 'https://example.com/page1';
+            link2.innerText = 'Link 2 (Duplicate)';
+            document.body.appendChild(link2);
+        }, 100);
+    </script>
+</head>
+<body>
+<header>
+    <h1>JS Rendered Duplicate Links</h1>
+</header>
+
+<main>
+    <p>Links will be inserted via JavaScript.</p>
+</main>
+
+<footer>
+    <p>Footer content here</p>
+</footer>
+</body>
+</html>

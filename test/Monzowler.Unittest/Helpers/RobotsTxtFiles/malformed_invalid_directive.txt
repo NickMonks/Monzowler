@@ -1,0 +1,3 @@
+User-agent: TestBot
+Invalid-Directive: something
+Disallow: /bad

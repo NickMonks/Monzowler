@@ -9,10 +9,10 @@ namespace Monzowler.Application.Parsers;
 
 public class StaticHtmlParser(IApiClient http, ILogger<StaticHtmlParser> logger) : ISubParser
 {
-    private readonly ILogger<StaticHtmlParser> _logger = logger;
-
     public async Task<ParserResponse> ParseLinksAsync(ParserRequest request, CancellationToken ct)
     {
+        logger.LogInformation("Start parsing links - {ParserName}", nameof(StaticHtmlParser));
+        
         var response = await http.GetStringAsync(request.Url, ct);
         var doc = new HtmlDocument();
         doc.LoadHtml(response);

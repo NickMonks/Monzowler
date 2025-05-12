@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Rendered Links Test</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        // We simulate JS rendering by injecting links into the DOM after a delay
+        setTimeout(() => {
+            const link1 = document.createElement('a');
+            link1.href = 'https://example.com/page1';
+            link1.innerText = 'JS Rendered Absolute Link';
+            document.body.appendChild(link1);
+
+            const link2 = document.createElement('a');
+            link2.href = '/page2';
+            link2.innerText = 'JS Rendered Relative Link';
+            document.body.appendChild(link2);
+
+            const link3 = document.createElement('a');
+            link3.href = 'https://other-example.com/page1';
+            link3.innerText = 'External Link';
+            document.body.appendChild(link3);
+        }, 100); // Simulate delay for rendering
+    </script>
+</head>
+<body>
+<header>
+    <h1>JS-Injected Test Page</h1>
+</header>
+<main>
+    <p>This page relies on JavaScript to insert links.</p>
+</main>
+<footer>
+    <p>Footer content here</p>
+</footer>
+</body>
+</html>

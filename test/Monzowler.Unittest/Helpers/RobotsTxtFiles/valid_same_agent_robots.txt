@@ -1,0 +1,6 @@
+User-agent: TestBot
+Disallow: /first-group
+
+User-agent: TestBot
+Disallow: /second-group
+Allow: /allowed-later

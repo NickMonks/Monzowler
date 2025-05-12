@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Rendered No Links</title>
+    <script>
+        // Simulate JavaScript executing but not injecting any links
+        setTimeout(() => {
+            const message = document.createElement('p');
+            message.innerText = 'JS ran, but no links were added.';
+            document.body.appendChild(message);
+        }, 100);
+    </script>
+</head>
+<body>
+<h1>JS Executed, No Links Present</h1>
+</body>
+</html>

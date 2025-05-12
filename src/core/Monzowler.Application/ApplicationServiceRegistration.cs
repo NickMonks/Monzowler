@@ -1,8 +1,8 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Monzowler.Application.Contracts.Services;
 using Monzowler.Application.Parsers;
 using Monzowler.Application.Services;
-using Monzowler.Application.Services.Parsers;
 using Monzowler.Crawler.Interfaces;
 using Monzowler.Crawler.Parsers;
 
@@ -14,7 +14,7 @@ public static class ApplicationServiceRegistration
         IConfiguration configuration)
     {
         services.AddSingleton<RobotsTxtService>();
-        services.AddSingleton<BrowserProvider>();
+        services.AddSingleton<IBrowserProvider, BrowserProvider>();
         services.AddScoped<ISpiderService, SpiderService>();
         services.AddTransient<ISubParser, StaticHtmlParser>();
         services.AddTransient<ISubParser, RenderedHtmlParser>();

@@ -1,19 +1,20 @@
 using HtmlAgilityPack;
+using Monzowler.Application.Contracts.Services;
 using Monzowler.Crawler.Contracts.HttpClient;
 using Monzowler.Crawler.Models;
 using Monzowler.Crawler.Parsers;
 using Monzowler.Shared.Utilities;
 using OpenQA.Selenium;
 
-namespace Monzowler.Application.Services.Parsers;
+namespace Monzowler.Application.Parsers;
 
 /// <summary>
 /// Parser used for JavaScript-heavy websites that require full browser rendering.
-/// for example websites that uses frameworks like React, Angular,
+/// for example websites that uses frameworks like React, Angular (where they hide the code under <script> tags)
 /// especially those that are not SEO-optimized or do not expose static HTML content.
 /// </summary>
 /// <param name="provider"></param>
-public class RenderedHtmlParser(BrowserProvider provider, IApiClient _httpApiClient) : ISubParser
+public class RenderedHtmlParser(IBrowserProvider provider, IApiClient _httpApiClient) : ISubParser
 {
     public async Task<ParserResponse> ParseLinksAsync(ParserRequest request, CancellationToken ct)
     {

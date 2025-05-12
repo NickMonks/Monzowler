@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mixed Links Test Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+<header>
+    <h1>Testing Mixed Links</h1>
+</header>
+
+<main>
+    <!-- Crawlable -->
+    <p><a href="https://example.com/page1">Valid absolute link</a></p>
+    <p><a href="/page2">Valid relative link</a></p>
+
+    <!-- Should be excluded by sanitizer -->
+    <p><a href="mailto:support@example.com">Email us</a></p>
+    <p><a href="javascript:void(0)">Run JS</a></p>
+    <p><a href="https://example.com/file.pdf">PDF file</a></p>
+    <p><a href="https://example.com/document.docx">DOCX file</a></p>
+    <p><a href="#section1">Anchor link</a></p>
+    <p><a href="ftp://example.com/resource">FTP link</a></p>
+
+    <!-- External domain -->
+    <p><a href="https://external-site.com/page">Other domain link</a></p>
+</main>
+
+<footer>
+    <p>End of test</p>
+</footer>
+</body>
+</html>

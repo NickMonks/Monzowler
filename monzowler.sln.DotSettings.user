@@ -9,5 +9,15 @@
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003ARequestDelegateFactory_002Ecs_002Fl_003A_002E_002E_003FLibrary_003FApplication_0020Support_003FJetBrains_003FRider2025_002E1_003Fresharper_002Dhost_003FSourcesCache_003F3222da496abbe1a1317bf25877e9094f1ee5c654e899857b8b5ead49bdf17c7_003FRequestDelegateFactory_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003AServiceProviderServiceExtensions_002Ecs_002Fl_003A_002E_002E_003FLibrary_003FApplication_0020Support_003FJetBrains_003FRider2025_002E1_003Fresharper_002Dhost_003FSourcesCache_003F621526284d3e4868b98948aff942206525763e57e194a27623b66c384466_003FServiceProviderServiceExtensions_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003AThrowHelper_002Ecs_002Fl_003A_002E_002E_003FLibrary_003FApplication_0020Support_003FJetBrains_003FRider2025_002E1_003Fresharper_002Dhost_003FSourcesCache_003F6780d13016c376c4491c5618b257d84da7eacf747ed2719783e775546b79b_003FThrowHelper_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=7232afb6_002D3fd3_002D453c_002D9582_002D998528f7d4b6/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="GetRulesAsync_ReturnsCorrectRules_ForMatchingUserAgent" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;TestAncestor&gt;
+    &lt;TestId&gt;xUnit::BBC0053F-5D00-4187-9C83-365CC6D28990::net8.0::Monzowler.Unittest.Services.RobotsTxtServiceTests&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::BBC0053F-5D00-4187-9C83-365CC6D28990::net8.0::Monzowler.Unittest.Services.PolitenessThrottlerServiceTests&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::BBC0053F-5D00-4187-9C83-365CC6D28990::net8.0::Monzowler.Unittest.Parsers.StaticHtmlParserTests.ParseLinksAsync_ExtractsValidLinks&lt;/TestId&gt;
+  &lt;/TestAncestor&gt;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=749b07b4_002D5c54_002D49dd_002D8d00_002D3e9db0e5b5fd/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="ParseLinksAsync_ExtractsValidLinks" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;Project Location="/Users/nicolaskevingarreta/Monzowler/test/Monzowler.Unittest" Presentation="&amp;lt;Monzowler.Unittest&amp;gt;" /&gt;
+&lt;/SessionState&gt;</s:String>
 	
 	</wpf:ResourceDictionary>
