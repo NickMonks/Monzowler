@@ -259,6 +259,10 @@ One option is to implement long polling or SSE (Server-side events) to enhance t
 We are crawling on a domain every time a new job is requested. However this is very inefficient - the same URLs will be scraped again and again, plus http calls are our main bottleneck!
 Therefore we can set up some distributed caching like Redis for this purpose. However we need to be careful on this - what if some pages have new URLs to be crawled? A tradeoff needs to be done to efficiently deal with this. 
 
+## Database improvements
+- Paginated response
+- Commit crawls midway
+
 ## Parsers
 Although we are using fallback mechanism to run the rendered HTML parser, we could have many of these to parse actual files like .pdf, .docx, etc. 
 

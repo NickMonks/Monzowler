@@ -75,7 +75,7 @@ POST http://localhost:5000/crawl
 Content-Type: application/json
 
 {
-  "url": "https://monzo.com"
+  "url": "https://www.hellointerview.com/"
 }
 
 ### --- RENDERED HTML PARSING - DEBUG ---

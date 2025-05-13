@@ -8,7 +8,13 @@ namespace Monzowler.Application.Services;
 /// Represents a browser provider that manages a Selenium Chrome WebDriver instance.
 /// A WebDriver is an API that allows you to control a real web browser programmatically,
 /// making it useful for JavaScript-heavy websites where static HTML isn't sufficient.
-/// 
+///
+/// This implementation supports both local development and Docker-based environments:
+/// - In Docker (e.g., ARM with Chromium), it uses environment variables to locate the
+///   Chromium binary and ChromeDriver explicitly, bypassing Selenium Manager. We set them
+///   inside the docker-compose.yaml
+/// - Locally, it falls back to default behavior if paths are not specified,
+///   allowing auto-resolution via Selenium Manager.
 /// The WebDriver is created lazily to avoid the high cost of launching a browser
 /// unless it's explicitly needed.
 /// </summary>
@@ -23,11 +29,32 @@ public class BrowserProvider : IBrowserProvider, IDisposable
         _driver = new(() =>
         {
             var options = new ChromeOptions();
+
+            // Allow override via environment variables - we need to do this 
+            // to run docker in selenium 
+            var chromeBinary = Environment.GetEnvironmentVariable("CHROME_BINARY");
+            var driverPath = Environment.GetEnvironmentVariable("CHROMEDRIVER_PATH");
+
             options.AddArgument("--headless=new");
             options.AddArgument("--no-sandbox");
             options.AddArgument("--disable-dev-shm-usage");
             options.AddArgument("--disable-gpu");
+            
+            if (!string.IsNullOrWhiteSpace(chromeBinary))
+            {
+                options.BinaryLocation = chromeBinary;
+            }
 
+            if (!string.IsNullOrWhiteSpace(driverPath))
+            {
+                var service = ChromeDriverService.CreateDefaultService(driverPath);
+                service.SuppressInitialDiagnosticInformation = true;
+                service.EnableVerboseLogging = false;
+
+                return new ChromeDriver(service, options);
+            }
+
+            // Fallback to use SeleniumManager if driverPath not specified
             return new ChromeDriver(options);
         });
     }

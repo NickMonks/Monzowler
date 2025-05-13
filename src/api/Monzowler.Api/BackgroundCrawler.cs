@@ -53,6 +53,7 @@ public class BackgroundCrawler(
             catch (Exception ex)
             {
                 logger.LogError("----- JOB {JobId} : FAILED -------", job.JobId);
+                Activity.Current = parentContext;
                 span?.SetStatus(ActivityStatusCode.Error, ex.Message);
                 span?.AddEvent(new ActivityEvent("JobFailed"));
 

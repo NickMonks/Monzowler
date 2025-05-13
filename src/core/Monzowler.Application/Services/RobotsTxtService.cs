@@ -123,7 +123,7 @@ public class RobotsTxtService(IApiClient apiClient, ILogger<RobotsTxtService> lo
             span?.SetStatus(ActivityStatusCode.Error, ex.Message);
             span?.AddEvent(new ActivityEvent("ParsingFailed"));
 
-            logger.LogWarning(ex, "robots.txt could not be parsed for {root}", rootUrl);
+            logger.LogWarning(ex, "robots.txt could not be parsed for {root} - we will crawl all links", rootUrl);
             return new RobotsTxtResponse
             {
                 Disallows = [],
@@ -165,14 +165,6 @@ public class RobotsTxtService(IApiClient apiClient, ILogger<RobotsTxtService> lo
         {
             return Agents.Any(a => a.Equals(userAgent, StringComparison.OrdinalIgnoreCase)) ||
                    Agents.Contains(AllWildcard);
-        }
-
-        public void Reset()
-        {
-            Agents.Clear();
-            Disallows.Clear();
-            Allows.Clear();
-            CrawlDelay = 0;
         }
     }
 }

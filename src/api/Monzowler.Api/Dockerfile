@@ -1,5 +1,23 @@
 ﻿FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+
+# Install Chrome
+USER root
+
+# Install Chrome and ChromeDriver
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    chromium \
+    chromium-driver \
+    fonts-liberation \
+    libnss3 \
+    libatk-bridge2.0-0 \
+    libxss1 \
+    libasound2 \
+    libgbm1 \
+    libgtk-3-0 \
+    && rm -rf /var/lib/apt/lists/*
+
 USER $APP_UID
+
 WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081

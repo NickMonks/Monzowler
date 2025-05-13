@@ -35,6 +35,8 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+
 var app = builder.Build();
 
 app.UseSwagger();
