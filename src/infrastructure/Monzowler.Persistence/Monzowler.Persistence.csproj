@@ -15,7 +15,5 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\core\Monzowler.Application\Monzowler.Application.csproj" />
-      <ProjectReference Include="..\..\core\Monzowler.Core\Monzowler.Core.csproj" />
-      <ProjectReference Include="..\..\core\Monzowler.Domain\Monzowler.Domain.csproj" />
     </ItemGroup>
 </Project>

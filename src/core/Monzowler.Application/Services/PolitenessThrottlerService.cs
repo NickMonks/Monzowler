@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using System.Diagnostics;
+using Monzowler.Application.Contracts.Services;
 using Monzowler.Shared.Observability;
 
 namespace Monzowler.Application.Services;
@@ -9,7 +10,7 @@ namespace Monzowler.Application.Services;
 /// throttler the request for a given domain if the last request was done before the demanded
 /// interval. Despite not been part of the official robot txt protocol is a nice addition to our crawler!
 /// </summary>
-public class PolitenessThrottlerService
+public class PolitenessThrottlerService : IPolitenessThrottlerService
 {
     private readonly ConcurrentDictionary<string, DateTime> _lastRequestTimes = new();
     private readonly ConcurrentDictionary<string, int> _crawlDelays = new(); // in milliseconds!

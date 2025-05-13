@@ -1,14 +1,15 @@
 using Microsoft.Extensions.Logging;
+using Monzowler.Application.Contracts.Services;
 using Monzowler.Application.Services;
 using Monzowler.Crawler.Contracts.HttpClient;
 
 namespace Monzowler.HttpClient;
 
-public class ApiClient(System.Net.Http.HttpClient httpClient, ILogger<ApiClient> logger, PolitenessThrottlerService throttlerService) : IApiClient
+public class ApiClient(System.Net.Http.HttpClient httpClient, ILogger<ApiClient> logger, IPolitenessThrottlerService throttlerService) : IApiClient
 {
     private readonly System.Net.Http.HttpClient _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
     private readonly ILogger<ApiClient> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-    private readonly PolitenessThrottlerService _throttlerService = throttlerService ?? throw new ArgumentNullException(nameof(throttlerService));
+    private readonly IPolitenessThrottlerService _throttlerService = throttlerService ?? throw new ArgumentNullException(nameof(throttlerService));
 
     public async Task<string> GetStringAsync(string url, CancellationToken ct)
     {

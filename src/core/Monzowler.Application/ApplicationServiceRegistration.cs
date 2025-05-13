@@ -15,6 +15,7 @@ public static class ApplicationServiceRegistration
     {
         services.AddSingleton<IRobotsTxtService, RobotsTxtService>();
         services.AddSingleton<IBrowserProvider, BrowserProvider>();
+        services.AddSingleton<IPolitenessThrottlerService, PolitenessThrottlerService>();
         services.AddScoped<ISpiderService, SpiderService>();
         services.AddTransient<ISubParser, StaticHtmlParser>();
         services.AddTransient<ISubParser, RenderedHtmlParser>();

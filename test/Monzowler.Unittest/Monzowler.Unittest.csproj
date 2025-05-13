@@ -11,6 +11,8 @@
 
     <ItemGroup>
         
+        <PackageReference Include="AWSSDK.DynamoDBv2" Version="4.0.0.3" />
+        
         <PackageReference Include="coverlet.collector" Version="6.0.0"/>
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0"/>
         <PackageReference Include="Moq" Version="4.20.72" />
@@ -23,8 +25,10 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\src\api\Monzowler.Api\Monzowler.Api.csproj" />
       <ProjectReference Include="..\..\src\core\Monzowler.Application\Monzowler.Application.csproj" />
       <ProjectReference Include="..\..\src\infrastructure\Monzowler.HttpClient\Monzowler.HttpClient.csproj" />
+      <ProjectReference Include="..\..\src\infrastructure\Monzowler.Persistence\Monzowler.Persistence.csproj" />
     </ItemGroup>
 
     <ItemGroup>

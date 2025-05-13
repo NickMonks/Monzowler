@@ -1,6 +1,6 @@
 using System.Net;
 using Microsoft.Extensions.Logging;
-using Monzowler.Application.Services;
+using Monzowler.Application.Contracts.Services;
 using Monzowler.HttpClient;
 using Moq;
 using Moq.Protected;
@@ -9,7 +9,7 @@ namespace Monzowler.Unittest.HttpClient;
 
 public class ApiClientTests
 {
-    private readonly Mock<PolitenessThrottlerService> _throttlerMock = new();
+    private readonly Mock<IPolitenessThrottlerService> _throttlerMock = new();
     private readonly Mock<ILogger<ApiClient>> _loggerMock = new();
 
     private static System.Net.Http.HttpClient CreateHttpClient(HttpResponseMessage response, out Mock<HttpMessageHandler> handlerMock)

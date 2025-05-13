@@ -18,7 +18,7 @@ public class SpiderService(
     IRobotsTxtService robots,
     ISiteMapRepository siteMapRepository,
     ILogger<SpiderService> logger,
-    PolitenessThrottlerService throttler,
+    IPolitenessThrottlerService throttler,
     IOptions<CrawlerSettings> options)
     : ISpiderService
 {
