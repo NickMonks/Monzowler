@@ -71,6 +71,7 @@ namespace Monzowler.Api.Controllers
         {
             var allCrawls = await siteMapRepository.GetCrawlsByJobIdAsync(jobId);
 
+            //For each status requested we will filter the response
             if (status is { Count: > 0 })
             {
                 allCrawls = allCrawls

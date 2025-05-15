@@ -1,9 +1,7 @@
 ﻿FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 
-# Install Chrome
+# Install Chrome - need this for the renderer parser
 USER root
-
-# Install Chrome and ChromeDriver
 RUN apt-get update && apt-get install -y --no-install-recommends \
     chromium \
     chromium-driver \

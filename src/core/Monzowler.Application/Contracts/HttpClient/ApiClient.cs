@@ -1,4 +1,4 @@
-namespace Monzowler.Crawler.Contracts.HttpClient;
+namespace Monzowler.Application.Contracts.HttpClient;
 
 public interface IApiClient
 {

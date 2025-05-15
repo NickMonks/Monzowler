@@ -38,7 +38,6 @@ public class BackgroundCrawler(
             try
             {
                 logger.LogInformation(" ----- JOB {JobId} : START -------", job.JobId);
-
                 await jobRepository.CreateAsync(job);
                 var _ = await spider.CrawlAsync(url, job.JobId);
 

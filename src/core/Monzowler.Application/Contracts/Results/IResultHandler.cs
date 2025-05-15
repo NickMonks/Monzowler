@@ -1,6 +1,6 @@
 using Monzowler.Domain.Entities;
 
-namespace Monzowler.Application.Results;
+namespace Monzowler.Application.Contracts.Results;
 
 /// <summary>
 /// Because we have different sinks/results (e.g. either API or CLI)

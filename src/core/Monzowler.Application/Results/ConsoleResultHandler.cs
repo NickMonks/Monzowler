@@ -1,3 +1,4 @@
+using Monzowler.Application.Contracts.Results;
 using Monzowler.Domain.Entities;
 
 namespace Monzowler.Application.Results;

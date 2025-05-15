@@ -1,8 +1,8 @@
 using System.Net;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Monzowler.Application.Contracts.HttpClient;
 using Monzowler.Application.Services;
-using Monzowler.Crawler.Contracts.HttpClient;
 using Monzowler.Shared.Settings;
 using Polly;
 using Polly.Extensions.Http;

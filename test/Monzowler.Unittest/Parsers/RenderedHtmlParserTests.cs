@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Logging;
+using Monzowler.Application.Contracts.HttpClient;
 using Monzowler.Application.Parsers;
 using Monzowler.Application.Services;
-using Monzowler.Crawler.Contracts.HttpClient;
 using Monzowler.Crawler.Models;
 using Monzowler.Domain.Requests;
 using Monzowler.Unittest.Helpers;

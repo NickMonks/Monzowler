@@ -2,6 +2,7 @@ using Amazon.DynamoDBv2;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Monzowler.Application.Contracts.Persistence;
+using Monzowler.Application.Contracts.Results;
 using Monzowler.Application.Results;
 using Monzowler.Persistence.Interfaces;
 using Monzowler.Persistence.Repositories;

@@ -1,9 +1,7 @@
-using System.Diagnostics;
 using HtmlAgilityPack;
 using Microsoft.Extensions.Logging;
+using Monzowler.Application.Contracts.HttpClient;
 using Monzowler.Application.Contracts.Services;
-using Monzowler.Crawler.Contracts.HttpClient;
-using Monzowler.Crawler.Models;
 using Monzowler.Crawler.Parsers;
 using Monzowler.Domain.Requests;
 using Monzowler.Domain.Responses;
@@ -23,7 +21,7 @@ public class RenderedHtmlParser(IBrowserProvider provider, IApiClient httpApiCli
 {
     public async Task<ParserResponse> ParseLinksAsync(ParserRequest request, CancellationToken ct)
     {
-        logger.LogInformation("Start parsing links - {ParserName}", nameof(StaticHtmlParser));
+        logger.LogInformation("Start parsing links - {ParserName}", nameof(RenderedHtmlParser));
         using var span = TracingHelper.Source.StartActivity(nameof(RenderedHtmlParser));
 
         var html = await GetRenderedHtmlAsync(request.Url, ct);

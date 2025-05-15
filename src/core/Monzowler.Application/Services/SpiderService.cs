@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Monzowler.Application.Contracts.Results;
 using Monzowler.Application.Contracts.Services;
 using Monzowler.Application.Results;
 using Monzowler.Application.Session;
@@ -177,10 +178,9 @@ public class SpiderService(
             }
             catch (OperationCanceledException ex)
             {
+                logger.LogWarning("Operation was cancelled on {Url} due to timeout", item.Url);
                 span?.SetStatus(ActivityStatusCode.Error, "Timeout");
                 span?.AddEvent(new ActivityEvent("Timeout"));
-
-                logger.LogWarning("Operation was cancelled on {Url} due to timeout", item.Url);
 
                 if (item.Retries < _opts.MaxRetries)
                 {
@@ -197,15 +197,15 @@ public class SpiderService(
             }
             catch (Exception ex)
             {
+                //There was an exception - we want to keep continue nonetheless 
+                logger.LogError(ex, "Error processing {Url}", item.Url);
                 span?.SetStatus(ActivityStatusCode.Error, ex.Message);
                 span?.AddEvent(new ActivityEvent("UnhandledError"));
-
-                logger.LogError(ex, "Error processing {Url}", item.Url);
             }
             finally
             {
                 session.Item.Decrement();
-                logger.LogDebug("Finished: {Url}, writersRemaining: {Remaining}", item.Url, session.Item.Count);
+                logger.LogDebug("Finished: {Url}, items pending in channel: {Remaining}", item.Url, session.Item.Count);
 
                 if (session.Item.IsEmpty)
                 {

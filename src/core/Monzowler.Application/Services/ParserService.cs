@@ -1,7 +1,6 @@
 using System.Diagnostics;
 using System.Net;
 using Microsoft.Extensions.Logging;
-using Monzowler.Crawler.Models;
 using Monzowler.Crawler.Parsers;
 using Monzowler.Domain.Entities;
 using Monzowler.Domain.Requests;

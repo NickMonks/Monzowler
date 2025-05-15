@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Logging;
+using Monzowler.Application.Contracts.HttpClient;
 using Monzowler.Application.Contracts.Services;
-using Monzowler.Crawler.Contracts.HttpClient;
 
 namespace Monzowler.HttpClient;
 

@@ -2,6 +2,15 @@
 
 A fast, performant webcrawler for the Monzo Task Challenge!
 
+# 📦 Tech Stack
+- ASP.NET Core – API: Webcrawler service
+- DynamoDB - main persistence to store `Jobs` and `Sitemaps`
+- Jaeger - Distributed tracing for observability
+
+# Requirements
+
+For information regarding assumed requirements of the home task assigment check this document.
+
 # How to Run
 
 ## Option 1 (Recommended)
@@ -12,12 +21,33 @@ Run the `docker-compose.yml` file using the following command:
 docker compose up -d 
 ```
 
-To use the API endpoints specificed below, open `locahost:5002/swagger` endpoint and give it a try. Alternatively you can 
-use the `Monzowler.Api.http` file or choose your favourite API Platform!
+To use the API endpoints specificed below, open `locahost:5002/swagger/index.html` endpoint and give it a try there. The flow is the following:
+- Call `POST /Crawl` by clicking _Try It Out_ button and set the request body, e.g.
+```json
+{
+  "url": "https://monzo.com/",
+  "maxDepth": 3,
+  "maxRetries": 2
+}
+```
+- It will return a `jobId` in the response. Use the `GET /Crawl/{jobId}` endpoint to track the status (it should take a few seconds if depth < 2).
+- When status is `"Completed"`, check the `GET /Crawl/sitemap/{jobId}` endpoint - you can get the sitemap JSON response and filter by status.
 
-## Option 2 - run locally (Debug)
+For more info about the API specs, check API Overview section. 
 
-TBD
+Alternatively you can use the `Monzowler.Api.http` file or choose your favourite API Platform to hit the controller. 
+
+## Option 2 - Command Line
+
+:warning: For this option you need to install dotnet +8. Follow [this](https://dotnet.microsoft.com/en-us/download) link to do so. 
+
+If you don't want to run the API and simply what the logs - use the CLI tool under `api/Monzowler.CLI`. And follow the steps:
+
+Navigate to `src/api/Monzowler.CLI` directory and run:
+
+```curl
+dotnet run -- {your_url} --jobId {your_job_id}
+```
 
 # 🧪 API Overview
 
@@ -100,176 +130,14 @@ Example Response:
 - `204 No Content`: No matching pages found.
 - `500 Internal Server Error`: On failure to fetch data.
 
-# 📦 Tech Stack
-- ASP.NET Core – API: Webcrawler service
-- DynamoDB - main persistence to store `Jobs` and `Sitemaps`
-- Jaeger - Distributed tracing for observability
-
-# Architecture
-
-## C4 Context Diagram
-
-```mermaid
-C4Context
-  %% Monzowler C4 Context Diagram
-
-  Person(user, "Developer/User", "Triggers crawl jobs via the API")
-  
-  System(monzowler, "Monzowler API", "Orchestrates and manages crawl jobs")
-  System(localstack, "DynamoDB", "Stores job metadata and crawled pages")
-  System(jaeger, "Jaeger", "Provides distributed tracing and observability")
-
-  System_Ext(websites, "External Websites", "Targets of the web crawler")
-  
-  Rel(user, monzowler, "Submits crawl jobs to")
-  Rel(monzowler, websites, "Crawls links from")
-  Rel(monzowler, localstack, "Stores results and job data in")
-  Rel(monzowler, jaeger, "Emits tracing data to")
-
-  UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="1")
-  UpdateRelStyle(user, monzowler, $offsetX="-30", $offsetY="30")
-  UpdateRelStyle(monzowler, websites, $offsetX="30", $offsetY="-40")
-  UpdateRelStyle(monzowler, localstack, $offsetX="30", $offsetY="30")
-  UpdateRelStyle(monzowler, jaeger, $offsetX="-30", $offsetY="-30")
-```
-
-
-
-### Code Architecture
-
-## Politeness & `Robots.txt`
-
-Something I discovered a while ago is that politeness is paramount for most of webcrawlers - we don't want to overload domains to look like they are having DDoS attacks or simply not degrage their performance.
-That's why websites have the `/robots.txt` file with certain rules to follow on what websites are good / not good to crawl, subdomains that are not disallowed, etc.
-
-On our webcrawler this is done through the `RobotsTxtService`
-
-Additionally, we also ready the `After-Delay` rule, which is not a mandatory field in the robots.txt spec but an interesting use-case that we implemented. See below on the HttpClient section for more info.
-
-## HTTP Client
-
-The Http Client is written to be able to be performant and fast.
-
-Additionally, it handles retries and throttling request when there is a requested delay from the `/robots.txt`
-
-### Retry logic
-Using `Polly` library, we can easily set some retries to the calling API when the URL experience either 5xx error codes or timeouts `408`. In that case, we setup an exponential backoff retry.
-We also included the `429 too Many Requests` error code - we shouldn't hit this, but if we do there is a `Retry-After` header that we can read and throttle. 
-
-### Polite Throttling
-
-TBD
-
-## Parsers
-
-Once our worker gets a response from the API, as per our task requirements we need to be able to parse the HTML, and extract the links.
-This is relatively simple: In HTML, the anchor tag (<`a>`) creates hyperlinks so we just need to retrieve this from the DOM, and extract the `href` link.
-The difficulty are mainly two:
-- For Static websites this simple - we just need to extract links from the anchor tags. However modern websites are JavaScript-heavy websites, and they need rendering before getting the HTML (unless it's been SEO-optimised). In order to solve this, we created two parsers:
-  - Static HTML parser: Fast and simple, using a popular library, `HtmlAgilityPack`.
-  - Rendered HTLM Parser using selenium: Much slower because it requires running the browser through a WebDriver (in our case `chromedriver`) , copying the heavy JS code and past in a blank page and wait for completion.
-  - Because the latter is much slower, we set up a fallback mechanism to first run static HTML parser, and if fails try the other one.
-- Some of these links are broken or are not crawlable (e.g. pdfs, jpg, etc), so we need to sanitize them
-
-With that, we created an efficient parser flow logic that handles different exceptions and sets the Parser status code.
-
-## Observability
-
-TBD
-
-# Concurrency Model
-
-As we want to make our Web Crawler performant and efficient we want to be able to allow concurrent tasks for all the different URLs. After considering different options,
-I decided to use a consumer-producer pattern via .NET's `Channel<T>`.`Channel<T>` is implemented with low-lock and async-native constructs, whereas lock/SemaphoreSlim uses traditional synchronization primitives that scale worse under high contention.
-Also, is more readable approach, less error-prone and more mantainable!
-
-As a summary, Channels are an implementation of the producer/consumer programming model: producers asynchronously produce data, and consumers asynchronously consume that data. The data is passed in a FIFO (First-In, First-Out) queue data structure.
-
-The approach taken is the following:
-- The main thread starts by enqueuing the root link into our `Channel<Link>`, encapsulated in the `CrawlerSession` class. 
-- We generate a number of concurrent worker to consume the channel (limited by the `MaxConcurrenty` settings). The `await foreach (var item in session.ChannelSession.Reader.ReadAllAsync())` will block until a link is available in the channel. 
-- The worker pulls a message from the channel when available, and does a few things:
-   - Downloads the page at the link URL
-   - Parses the HTML (either static or dynamically rendered — see the `Parsers` section).
-   - Checks if the link has been visited or exceeds `maxDepth` (using thread-safe HashMap/Dictionaries to avoid data races).
-   - If valid, messages are enqueued into the channel for further crawling.
-
-A key challenge was knowing when to shut down the crawler. Since ReadAllAsync() blocks indefinitely unless the channel is closed, we needed a safe way to signal completion when no more work remains. So I introduced a thread-safe work item counter, where we:
-- Increments each time a link is enqueued.
-- Decrements when a link is fully processed.
-- When the counter reaches zero, we complete the channel - which signals the workers to exit. 
-Special care needs to be done to ensure we are peforming atomic increase/decrease operations, otherwise we risk to have race conditions. This can be done using Interlocked or pure locks.
-I choose Interlock because it much more faster (CPU instruction level). 
-
-Another important thing to mention is the use of `CancellationToken` in the code. As we described above, we have an ApiClient that 
-## Alternatives
-
-Other alternatives where explored first, see below why they weren't chosen.
-
-### Pure `Async/Await`:
-While the pure async/await model works correctly and efficiently on a per-operation basis, it is less performant in our context because it executes sequentially by default. Even though await allows the thread to return to the thread pool (freeing it for other work), each operation still waits for the previous one to complete before starting the next.
-
-This pattern is ideal for I/O-bound, request/response-style applications like web APIs, where multiple client requests are processed concurrently using the same shared thread pool. However, in our case — a recursive, high-throughput web crawler — we need to process many independent HTTP requests concurrently to maximize throughput.
-
-To achieve that, we require true parallelism and concurrency — not just non-blocking I/O — so we can crawl multiple pages at once, discover more links, and fan out the crawl efficiently. This is where the producer-consumer model with Channel<T> and a controlled number of async workers becomes far more effective.
-
-### Multithreading:
-The initial approach was to spawn multiple asynchronous tasks for each URL using Task.WhenAll() to wait for them to complete. While this provides basic concurrency, it lacks central coordination, and quickly becomes problematic as the number of discovered links grows.
-
-This model leads to:
-
-- Unbounded concurrency, where hundreds or thousands of tasks may be created with no throttling
-- Thread pool exhaustion in high-load scenarios
-- No backpressure, making it easy to overwhelm system or network resources
-- Difficult error handling and retries, especially for transient failures or timeouts
-
-While some of these issues can be mitigated (e.g., using `SemaphoreSlim` to cap concurrency), doing so adds complexity, and still lacks a centralized, coordinated pipeline for managing crawl state, retries, and graceful shutdown. 
-In practice, it became clear that this approach was both inefficient and hard to maintain for a recursive, stateful crawling task.
 
 # Testing
 
-## Unit Test
+Inside the `/test` folder, I set up two testing project: `UnitTest` and `IntegrationTest`.
+I tried to follow the [testing pyramid](https://martinfowler.com/articles/practical-test-pyramid.html) approach: unit tests for Core layers and integration tests for API and Infrastructure.
 
-TBD
-
-## Integration Test
-
-TBD
-
-## System Test 
-
-TBD
-
-# Improvements & Future development
-Below are some thoughts & ideas to improve the current state of our project. 
-- We also might want to crawl urls that have been already been visited but changed the payload - we could create a hash and do this
-
-## Resiliency
-What happens if the crawler crashes mid-way? we will lose the pages crawl and we will need to start again! 
-we would like to be resilient and store each sitemap at least. 
-
-## BFS vs. DFS
-The way we implemented our core logic behaves like a BFS (Breath-First Search), although is not absolutely guaranteed due to the use of concurrent workers. However, depending on of our approach we could have choose DFS approach. I though DFS was less useful because we likely want to explore the links closest to the root domain and less on deep links. However if the requirements were different I would implement this differently.
-
-## Real-time updates
-Right now when a job is created we simply return a job-id for the client to poll our server - this is inefficient because it created load on our service inecessarily.
-One option is to implement long polling or SSE (Server-side events) to enhance this. But might be overengineering if short polling seems to work fine on our service. 
-
-## Caching URLs
-We are crawling on a domain every time a new job is requested. However this is very inefficient - the same URLs will be scraped again and again, plus http calls are our main bottleneck!
-Therefore we can set up some distributed caching like Redis for this purpose. However we need to be careful on this - what if some pages have new URLs to be crawled? A tradeoff needs to be done to efficiently deal with this. 
-
-## Database improvements
-- Paginated response
-- Commit crawls midway
-
-## Parsers
-Although we are using fallback mechanism to run the rendered HTML parser, we could have many of these to parse actual files like .pdf, .docx, etc. 
-
-## Infrastructure
-Currently our crawler is a good solution and the code is production-ready. However, in order to make this really production ready we should think of setting up the infrastructure and CI/CD deployment pipelines. A suggestion on how
-
-## CI/CD Development
-- Setup protection branch and CI jobs to run test, perform security scan, linting, etc
-- Trigger Github actions to create releases. An option could be to connect this to ArgoCD for deploying the binaries, and Spacelift for provision terraform changes. 
-
+Some description provided below:
+- **Unit tests:** I tried to cover  test the smallest pieces of code in isolation directly. For example any persistence, http client call I tried to keep away external functionality using mocks (e.g. `Moq` library). Inside these tests I tried to cover for edge cases and assumptions. 
+- **Integration tests:** Aims to ensure that different parts of the application work together as expected.
+    - The approach is to test the Controller directly using the `TestContainers` library, a lightweight solution to run some dependencies as docker containers. For more info, check [here](https://testcontainers.com/)
+    - I also combined it with some API client mock to test external calls to specific domains. In our code we test different scenarios but we could cover much more outside the MVP. 

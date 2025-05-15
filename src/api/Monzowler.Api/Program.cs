@@ -29,7 +29,6 @@ builder.Services.AddSwaggerGen(c =>
     c.MapType<ParserStatusCode>(() => new OpenApiSchema
     {
         Type = "string",
-        //So we can show strings on swagger instead of ugly int's
         Enum = Enum.GetNames(typeof(ParserStatusCode))
             .Select(name => new OpenApiString(name))
             .Cast<IOpenApiAny>()
@@ -37,6 +36,7 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+//Some websites return this format - not really sure why
 System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
 
 var app = builder.Build();

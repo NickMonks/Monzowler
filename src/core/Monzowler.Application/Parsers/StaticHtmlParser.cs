@@ -1,8 +1,7 @@
 using System.Diagnostics;
 using HtmlAgilityPack;
 using Microsoft.Extensions.Logging;
-using Monzowler.Crawler.Contracts.HttpClient;
-using Monzowler.Crawler.Models;
+using Monzowler.Application.Contracts.HttpClient;
 using Monzowler.Crawler.Parsers;
 using Monzowler.Domain.Requests;
 using Monzowler.Domain.Responses;
