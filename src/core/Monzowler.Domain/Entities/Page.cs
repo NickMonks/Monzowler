@@ -1,4 +1,4 @@
-namespace Monzowler.Crawler.Models;
+namespace Monzowler.Domain.Entities;
 
 public class Page
 {

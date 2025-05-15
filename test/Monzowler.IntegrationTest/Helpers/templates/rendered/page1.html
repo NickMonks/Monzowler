@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Page 1</title>
+</head>
+<body>
+<h1>Welcome to Page 1</h1>
+
+<script type="text/javascript">
+    const links = [
+        { href: "/page2_rendered", text: "Go to Page 2" },
+        { href: "/page3_rendered", text: "Go to Page 3" }
+    ];
+
+    links.forEach(link => {
+        const a = document.createElement('a');
+        a.href = link.href;
+        a.textContent = link.text;
+        document.body.appendChild(a);
+        document.body.appendChild(document.createElement('br'));
+    });
+</script>
+</body>
+</html>

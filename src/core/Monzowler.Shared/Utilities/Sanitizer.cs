@@ -8,7 +8,8 @@ public static class Sanitizer
         {
             if (string.IsNullOrWhiteSpace(href) || href.StartsWith("#"))
                 return null;
-
+            
+            //convert relative urls
             var candidateUri = new Uri(new Uri(url), href);
 
             //Ignores anything that is not an http-based link, like mailto:, ftp:, javascript:,...

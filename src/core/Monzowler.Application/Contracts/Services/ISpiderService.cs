@@ -1,6 +1,6 @@
-using Monzowler.Crawler.Models;
+using Monzowler.Domain.Entities;
 
-namespace Monzowler.Crawler.Interfaces;
+namespace Monzowler.Application.Contracts.Services;
 
 public interface ISpiderService
 {

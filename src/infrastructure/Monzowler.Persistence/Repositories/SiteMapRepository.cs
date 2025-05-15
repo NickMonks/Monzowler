@@ -1,6 +1,6 @@
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.Model;
-using Monzowler.Crawler.Models;
+using Monzowler.Domain.Entities;
 using Monzowler.Persistence.Interfaces;
 using Monzowler.Persistence.Models;
 

@@ -4,6 +4,7 @@ using Monzowler.Application.Services;
 using Monzowler.Crawler.Models;
 using Monzowler.Crawler.Parsers;
 using Monzowler.Domain.Entities;
+using Monzowler.Domain.Requests;
 using Monzowler.Domain.Responses;
 using Moq;
 

@@ -1,7 +1,6 @@
 using Monzowler.Application;
-using Monzowler.Crawler.Settings;
 using Monzowler.HttpClient;
-using Monzowler.Persistence;
+using Monzowler.Shared.Settings;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 
@@ -12,8 +11,7 @@ public static class StartupExtensions
     public static void AddStartupServices(this IServiceCollection services,
         IConfiguration configuration)
     {
-        services.AddPersistenceRegistration(configuration);
-        services.AddApplicationRegistration(configuration);
+        services.AddApplicationRegistration();
         services.AddApiClientRegistration(configuration);
     }
     public static void AddObservability(this IServiceCollection services, IConfiguration configuration)

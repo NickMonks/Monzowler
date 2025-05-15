@@ -1,4 +1,4 @@
-namespace Monzowler.Crawler.Models;
+namespace Monzowler.Domain.Requests;
 
 public class SiteMapRequest
 {

@@ -1,7 +1,7 @@
-namespace Monzowler.Crawler.Models;
+namespace Monzowler.Domain.Requests;
 
 public class ParserRequest
 {
-    public string Url { get; set; }
-    public string AllowedHost { get; set; }
+    public required string Url { get; set; }
+    public required string AllowedHost { get; set; }
 }

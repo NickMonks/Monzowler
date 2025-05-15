@@ -10,11 +10,24 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="coverlet.collector" Version="6.0.0"/>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0"/>
+        <PackageReference Include="coverlet.collector" Version="6.0.2"/>
+        <PackageReference Include="FluentAssertions" Version="8.2.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.11" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1"/>
         <PackageReference Include="Moq" Version="4.20.72" />
-        <PackageReference Include="xunit" Version="2.5.3"/>
-        <PackageReference Include="xunit.runner.visualstudio" Version="2.5.3"/>
+        <PackageReference Include="OpenTelemetry" Version="1.9.0" />
+        <PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.9.0" />
+        <PackageReference Include="OpenTelemetry.Exporter.Jaeger" Version="1.6.0-rc.1" />
+        <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.9.0" />
+        <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.9.0" />
+        <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.10.1" />
+        <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.10.0" />
+        <PackageReference Include="Testcontainers" Version="4.1.0" />
+        <PackageReference Include="Testcontainers.PostgreSql" Version="4.1.0" />
+        <PackageReference Include="WireMock.Net" Version="1.8.5" />
+        <PackageReference Include="xunit" Version="2.9.2"/>
+        <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2"/>
     </ItemGroup>
 
     <ItemGroup>
@@ -22,7 +35,57 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Controller\" />
+      <ProjectReference Include="..\..\src\api\Monzowler.Api\Monzowler.Api.csproj" />
+      <ProjectReference Include="..\..\src\core\Monzowler.Application\Monzowler.Application.csproj" />
+      <ProjectReference Include="..\..\src\core\Monzowler.Domain\Monzowler.Domain.csproj" />
+      <ProjectReference Include="..\..\src\core\Monzowler.Shared\Monzowler.Shared.csproj" />
+      <ProjectReference Include="..\..\src\infrastructure\Monzowler.HttpClient\Monzowler.HttpClient.csproj" />
+      <ProjectReference Include="..\..\src\infrastructure\Monzowler.Persistence\Monzowler.Persistence.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="Helpers\templates\static\page1_level0.html">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Helpers\templates\static\page2_level1.html">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Helpers\templates\static\page3_level1.html">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Helpers\templates\static\page4_level2.html">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Helpers\templates\with-robots-txt\page1.html">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Helpers\templates\with-robots-txt\page2.html">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Helpers\templates\with-robots-txt\disallow.html">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Helpers\templates\with-robots-txt\robots.txt">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Helpers\templates\rendered\page1.html">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Helpers\templates\rendered\page2.html">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Helpers\templates\rendered\page3.html">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Helpers\templates\rendered\page4.html">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Helpers\templates\not-found\" />
+      <Folder Include="Helpers\templates\too-many-requests\" />
+      <Folder Include="Helpers\templates\transient-failure\" />
     </ItemGroup>
 
 </Project>

@@ -2,21 +2,22 @@ using System.Diagnostics;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Monzowler.Application.Contracts.Services;
+using Monzowler.Application.Results;
 using Monzowler.Application.Session;
-using Monzowler.Crawler.Interfaces;
 using Monzowler.Crawler.Models;
 using Monzowler.Crawler.Parsers;
-using Monzowler.Crawler.Settings;
 using Monzowler.Domain.Entities;
-using Monzowler.Persistence.Interfaces;
+using Monzowler.Domain.Requests;
+using Monzowler.Domain.Responses;
 using Monzowler.Shared.Observability;
+using Monzowler.Shared.Settings;
 
 namespace Monzowler.Application.Services;
 
 public class SpiderService(
     IParser parser,
     IRobotsTxtService robots,
-    ISiteMapRepository siteMapRepository,
+    IResultHandler resultHandler,
     ILogger<SpiderService> logger,
     IPolitenessThrottlerService throttler,
     IOptions<CrawlerSettings> options)
@@ -54,7 +55,7 @@ public class SpiderService(
         span?.AddEvent(new ActivityEvent("CrawlCompleted"));
         span?.SetTag("pagesCrawled", session.Pages.Count);
 
-        await siteMapRepository.SaveCrawlAsync(session.Pages.ToList());
+        await resultHandler.HandleAsync(session.Pages.ToList());
         return session.Pages.ToList();
     }
 
@@ -64,7 +65,7 @@ public class SpiderService(
 
         await foreach (var item in session.ChannelSession.Reader.ReadAllAsync())
         {
-            using var span = TracingHelper.Source.StartActivity("CrawlPage", ActivityKind.Internal);
+            using var span = TracingHelper.Source.StartActivity("CrawlPage");
 
             try
             {
@@ -124,7 +125,7 @@ public class SpiderService(
                     LastModified = DateTime.UtcNow.ToString("O"),
                 });
 
-                foreach (var link in parserResponse.Links.Where(l => l is not null))
+                foreach (var link in parserResponse.Links)
                 {
                     try
                     {

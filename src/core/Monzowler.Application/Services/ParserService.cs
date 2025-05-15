@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Monzowler.Crawler.Models;
 using Monzowler.Crawler.Parsers;
 using Monzowler.Domain.Entities;
+using Monzowler.Domain.Requests;
 using Monzowler.Domain.Responses;
 using Monzowler.Shared.Observability;
 
@@ -33,7 +34,7 @@ public class ParserService(IEnumerable<ISubParser> parsers, ILogger<ParserServic
 
                 if (response.Links.Count > 0)
                 {
-                    childSpan?.SetTag("status", ParserStatusCode.Ok.ToString());
+                    childSpan?.SetTag("status", nameof(ParserStatusCode.Ok));
                     childSpan?.SetTag("linkCount", response.Links.Count);
                     childSpan?.AddEvent(new ActivityEvent("ParserSuccess"));
 
@@ -43,11 +44,11 @@ public class ParserService(IEnumerable<ISubParser> parsers, ILogger<ParserServic
                         StatusCode = ParserStatusCode.Ok
                     };
                 }
-
-                //If no links are found there is the possibility that the links are within scripts tags
-                //therefore we need to try our renderered parser.
+                
                 if (response.HasScriptTags)
                 {
+                    //If no links are found there is the possibility that the links are within scripts tags
+                    //therefore we need to try our renderered parser.
                     childSpan?.AddEvent(new ActivityEvent("HasScriptTags_ConsiderFallback"));
                     continue;
                 }
@@ -76,7 +77,6 @@ public class ParserService(IEnumerable<ISubParser> parsers, ILogger<ParserServic
                 childSpan?.SetTag("httpStatusCode", ex.StatusCode?.ToString());
                 childSpan?.SetTag("status", status.ToString());
                 childSpan?.AddEvent(new ActivityEvent("HttpException"));
-
                 logger.LogWarning("Http Exception occurred for {Url}: {Status}", request.Url, ex.StatusCode);
 
                 return new ParserResponse
@@ -87,9 +87,9 @@ public class ParserService(IEnumerable<ISubParser> parsers, ILogger<ParserServic
             }
             catch (Exception ex)
             {
+                //We catch the exception but continue - we will try next parser
                 childSpan?.SetStatus(ActivityStatusCode.Error, ex.Message);
                 childSpan?.AddEvent(new ActivityEvent("ParsingFailed"));
-
                 logger.LogWarning(ex, "ParserService {ParserService} failed for {Url}",
                     parser.GetType().Name, request.Url);
             }
@@ -97,8 +97,8 @@ public class ParserService(IEnumerable<ISubParser> parsers, ILogger<ParserServic
 
         span?.SetStatus(ActivityStatusCode.Error, "AllParsersFailed");
         span?.AddEvent(new ActivityEvent("AllParsersFailed"));
-
         logger.LogWarning("All parsers failed for {Url}", request.Url);
+        
         return new ParserResponse
         {
             Links = [],

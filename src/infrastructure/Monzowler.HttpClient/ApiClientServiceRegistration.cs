@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Monzowler.Application.Services;
 using Monzowler.Crawler.Contracts.HttpClient;
-using Monzowler.Crawler.Settings;
+using Monzowler.Shared.Settings;
 using Polly;
 using Polly.Extensions.Http;
 
@@ -48,7 +48,7 @@ public static class ApiClientServiceRegistration
                 // Check if the error is a 429 TooManyRequest Error - if so we need to honour the
                 // retry-after header from rate limiting.
                 // Otherwise, we continue with our retry after exponential backoff
-                sleepDurationProvider: (retryAttempt, response, context) =>
+                sleepDurationProvider: (retryAttempt, response, _) =>
                 {
                     if (response?.Result?.StatusCode == (HttpStatusCode)429 &&
                         response.Result.Headers.TryGetValues("Retry-After", out var values))
@@ -64,7 +64,7 @@ public static class ApiClientServiceRegistration
 
                     return TimeSpan.FromSeconds(Math.Pow(2, retryAttempt));
                 },
-                onRetryAsync: async (_, timespan, retryAttempt, _) =>
+                onRetryAsync: async (_, _, _, _) =>
                 {
                     await throttlerService.EnforceAsync(domain);
                 });

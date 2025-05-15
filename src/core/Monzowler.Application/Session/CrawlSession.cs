@@ -2,6 +2,7 @@ using System.Collections.Concurrent;
 using System.Threading.Channels;
 using Microsoft.Extensions.Logging;
 using Monzowler.Crawler.Models;
+using Monzowler.Domain.Entities;
 
 namespace Monzowler.Application.Session;
 
@@ -14,6 +15,9 @@ public class CrawlSession
 {
     public ConcurrentBag<Page> Pages { get; } = new();
     public ConcurrentDictionary<string, bool> Visited { get; } = new();
+    
+    //TODO: consider make it bounded - we have heavy producers vs consumers so introducing
+    //backpressure could be nice
     public Channel<Link> ChannelSession { get; } = Channel.CreateUnbounded<Link>();
     public Item Item { get; } = new();
 
@@ -35,9 +39,8 @@ public class CrawlSession
 }
 
 /// <summary>
-/// Represents the number of active items that are currently processing in our channel
+/// Represents the number of active items that are currently for processing in our session channel
 /// This is critical to ensure we don't close too soon the writers channel from our current sessions
-/// We need to
 /// </summary>
 public class Item
 {

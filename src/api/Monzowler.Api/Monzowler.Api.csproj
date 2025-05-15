@@ -29,6 +29,9 @@
     
     <ItemGroup>
       <None Remove="Properties\launchSettings.json" />
+      <None Include="appsettings.test.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
     
     <ItemGroup>
@@ -37,5 +40,9 @@
       <ProjectReference Include="..\..\infrastructure\Monzowler.HttpClient\Monzowler.HttpClient.csproj" />
       <ProjectReference Include="..\..\infrastructure\Monzowler.Persistence\Monzowler.Persistence.csproj" />
     </ItemGroup>
+
+    <PropertyGroup>
+        <NoWarn>CSxxxx;CSyyyy</NoWarn>
+    </PropertyGroup>
 
 </Project>

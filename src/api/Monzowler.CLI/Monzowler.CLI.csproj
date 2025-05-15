@@ -1,0 +1,41 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\core\Monzowler.Application\Monzowler.Application.csproj" />
+      <ProjectReference Include="..\..\core\Monzowler.Domain\Monzowler.Domain.csproj" />
+      <ProjectReference Include="..\..\core\Monzowler.Shared\Monzowler.Shared.csproj" />
+      <ProjectReference Include="..\..\infrastructure\Monzowler.HttpClient\Monzowler.HttpClient.csproj" />
+      <ProjectReference Include="..\..\infrastructure\Monzowler.Persistence\Monzowler.Persistence.csproj" />
+      <ProjectReference Include="..\Monzowler.Api\Monzowler.Api.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="9.0.5" />
+      <PackageReference Include="NuGet.CommandLine" Version="6.14.0">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+      <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Update="appsettings.json">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </Content>
+      <Content Update="appsettings.Development.json">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </Content>
+    </ItemGroup>
+
+</Project>

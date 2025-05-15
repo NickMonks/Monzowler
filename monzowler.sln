@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# 
+#
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{22E31CCB-6644-4B4E-8E35-ACE2E21DDF13}"
 	ProjectSection(SolutionItems) = preProject
 		docker-compose.yaml = docker-compose.yaml
@@ -29,6 +29,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monzowler.Application", "src\core\Monzowler.Application\Monzowler.Application.csproj", "{F59B5BDB-ED18-4496-8E1B-6D3E3C1633C1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monzowler.Shared", "src\core\Monzowler.Shared\Monzowler.Shared.csproj", "{C45C8482-A989-41D4-9A92-D9D684035462}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monzowler.CLI", "src\api\Monzowler.CLI\Monzowler.CLI.csproj", "{3EF7EDFC-966A-4279-9FD8-5549AE5371BB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -68,6 +70,10 @@ Global
 		{C45C8482-A989-41D4-9A92-D9D684035462}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C45C8482-A989-41D4-9A92-D9D684035462}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C45C8482-A989-41D4-9A92-D9D684035462}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3EF7EDFC-966A-4279-9FD8-5549AE5371BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3EF7EDFC-966A-4279-9FD8-5549AE5371BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3EF7EDFC-966A-4279-9FD8-5549AE5371BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3EF7EDFC-966A-4279-9FD8-5549AE5371BB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{42B18D55-F123-4538-B3CA-6A8AB64C00F0} = {50CF0B07-211C-4E83-8D41-E78ABB0A279D}
@@ -79,5 +85,6 @@ Global
 		{FC1F3DC4-DD83-4FB5-A95D-04D4340852AA} = {59DCA654-5FAD-4822-81F8-E0D0EC68994D}
 		{F59B5BDB-ED18-4496-8E1B-6D3E3C1633C1} = {59DCA654-5FAD-4822-81F8-E0D0EC68994D}
 		{C45C8482-A989-41D4-9A92-D9D684035462} = {59DCA654-5FAD-4822-81F8-E0D0EC68994D}
+		{3EF7EDFC-966A-4279-9FD8-5549AE5371BB} = {4CCBF55D-C64E-4744-83AA-F5F784E5BAFE}
 	EndGlobalSection
 EndGlobal

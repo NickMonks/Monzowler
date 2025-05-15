@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using Monzowler.Application.Contracts.Persistence;
 using Monzowler.Crawler.Models;
 using Monzowler.Domain.Entities;
+using Monzowler.Domain.Requests;
+using Monzowler.Domain.Responses;
 using Monzowler.Persistence.Interfaces;
 
 namespace Monzowler.Api.Controllers

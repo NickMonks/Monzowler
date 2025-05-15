@@ -2,8 +2,9 @@ using System.Text.Json.Serialization;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Monzowler.Api;
-using Monzowler.Crawler.Settings;
 using Monzowler.Domain.Entities;
+using Monzowler.Persistence;
+using Monzowler.Shared.Settings;
 using JsonOptions = Microsoft.AspNetCore.Http.Json.JsonOptions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +16,7 @@ builder.Services.Configure<JsonOptions>(options =>
     options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
 builder.Services.AddStartupServices(builder.Configuration);
+builder.Services.AddPersistenceRegistration(builder.Configuration);
 builder.Services.AddObservability(builder.Configuration);
 builder.Services.AddScoped<BackgroundCrawler>();
 builder.Services.AddControllers();

@@ -1,13 +1,12 @@
-namespace Monzowler.Crawler.Settings;
+namespace Monzowler.Shared.Settings;
 
 public class CrawlerSettings
 {
-    public string UserAgent { get; set; }
-    public int MaxConcurrency { get; set; }
-    public int MaxDepth { get; set; }
-    public int MaxRetries { get; set; }
-
-    public int Timeout { get; set; }
+    public required string UserAgent { get; init; }
+    public int MaxConcurrency { get; init; }
+    public int MaxDepth { get; init; }
+    public int MaxRetries { get; init; }
+    public int Timeout { get; init; }
 
 
 }

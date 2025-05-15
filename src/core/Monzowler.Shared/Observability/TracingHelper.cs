@@ -18,7 +18,7 @@ public static class TracingHelper
     /// <returns></returns>
     public static Activity? StartSpanWithActivity(string name, object? tagSource = null)
     {
-        var activity = TracingHelper.Source.StartActivity(name);
+        var activity = Source.StartActivity(name);
         if (activity != null && tagSource != null)
         {
             var type = tagSource.GetType();

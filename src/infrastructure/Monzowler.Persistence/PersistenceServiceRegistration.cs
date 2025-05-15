@@ -2,6 +2,7 @@ using Amazon.DynamoDBv2;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Monzowler.Application.Contracts.Persistence;
+using Monzowler.Application.Results;
 using Monzowler.Persistence.Interfaces;
 using Monzowler.Persistence.Repositories;
 
@@ -15,6 +16,7 @@ public static class PersistenceServiceRegistration
         services.AddAWSService<IAmazonDynamoDB>();
 
         services.AddSingleton<IJobRepository, JobRepository>();
-        services.AddScoped<ISiteMapRepository, SiteMapRepository>();
+        services.AddSingleton<ISiteMapRepository, SiteMapRepository>();
+        services.AddSingleton<IResultHandler, RepositoryResultHandler>();
     }
 }

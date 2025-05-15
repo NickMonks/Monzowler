@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Monzowler.Crawler.Contracts.HttpClient;
 using Monzowler.Crawler.Models;
 using Monzowler.Crawler.Parsers;
+using Monzowler.Domain.Requests;
 using Monzowler.Domain.Responses;
 using Monzowler.Shared.Observability;
 using Monzowler.Shared.Utilities;
@@ -21,19 +22,18 @@ public class StaticHtmlParser(IApiClient http, ILogger<StaticHtmlParser> logger)
         var doc = new HtmlDocument();
         doc.LoadHtml(response);
 
+        List<string?> links = [];
         var nodes = doc.DocumentNode.SelectNodes("//a[@href]");
-        if (nodes == null) return new ParserResponse
+        if (nodes != null)
         {
-            Links = new()
-        };
-
-        var links = nodes
-            .Select(a => a.GetAttributeValue("href", string.Empty))
-            .Select(href => Sanitizer.SanitizeUrl(href, request.Url))
-            .Where(u => u is not null && new Uri(u).Host == request.AllowedHost)
-            .Distinct()
-            .ToList();
-
+            links = nodes
+                .Select(a => a.GetAttributeValue("href", string.Empty))
+                .Select(href => Sanitizer.SanitizeUrl(href, request.Url))
+                .Where(u => u is not null && new Uri(u).Host == request.AllowedHost)
+                .Distinct()
+                .ToList();
+        }
+        
         var hasScriptTags = doc.DocumentNode.SelectSingleNode("//script") is not null;
 
         return new ParserResponse

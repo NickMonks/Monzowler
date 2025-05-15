@@ -1,37 +1,28 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Monzowler.Application.Contracts.Services;
+using Monzowler.Application.Results;
 using Monzowler.Application.Services;
-using Monzowler.Crawler.Models;
 using Monzowler.Crawler.Parsers;
-using Monzowler.Crawler.Settings;
 using Monzowler.Domain.Entities;
+using Monzowler.Domain.Requests;
 using Monzowler.Domain.Responses;
-using Monzowler.Persistence.Interfaces;
+using Monzowler.Shared.Settings;
 using Moq;
 
 namespace Monzowler.Unittest.Services;
 
 public class SpiderServiceTests
 {
-    private readonly Mock<IParser> _mockParser;
-    private readonly Mock<IRobotsTxtService> _mockRobots;
-    private readonly Mock<ISiteMapRepository> _mockRepo;
-    private readonly Mock<ILogger<SpiderService>> _mockLogger;
-    private readonly Mock<PolitenessThrottlerService> _mockThrottler;
+    private readonly Mock<IParser> _mockParser = new();
+    private readonly Mock<IRobotsTxtService> _mockRobots = new();
+    private readonly Mock<IResultHandler> _mockRepo = new();
+    private readonly Mock<ILogger<SpiderService>> _mockLogger = new();
+    private readonly Mock<PolitenessThrottlerService> _mockThrottler = new();
 
     private const string RootUrl = "https://example.com";
     private const string JobId = "test-job";
     private const string AllowedHost = "example.com";
-
-    public SpiderServiceTests()
-    {
-        _mockParser = new Mock<IParser>();
-        _mockRobots = new Mock<IRobotsTxtService>();
-        _mockRepo = new Mock<ISiteMapRepository>();
-        _mockLogger = new Mock<ILogger<SpiderService>>();
-        _mockThrottler = new Mock<PolitenessThrottlerService>();
-    }
 
     private SpiderService CreateService(CrawlerSettings? overrides = null)
     {
@@ -75,7 +66,7 @@ public class SpiderServiceTests
                 Links = expectedLinks,
                 StatusCode = ParserStatusCode.Ok
             });
-
+        
         var service = CreateService();
 
         // Act
@@ -85,7 +76,7 @@ public class SpiderServiceTests
         Assert.NotEmpty(result);
         Assert.Contains(result, p => p.PageUrl == RootUrl);
         Assert.Contains(result, p => p.PageUrl == expectedLinks[0]);
-        _mockRepo.Verify(r => r.SaveCrawlAsync(It.IsAny<List<Page>>()), Times.Once);
+        _mockRepo.Verify(r => r.HandleAsync(It.IsAny<List<Page>>()), Times.Once);
     }
 
     [Fact]
@@ -105,7 +96,7 @@ public class SpiderServiceTests
         _mockRobots.Setup(r => r.IsAllowed(It.IsAny<string>(), It.IsAny<List<string>>(), It.IsAny<List<string>>()))
             .Returns(true);
 
-        var service = CreateService(new CrawlerSettings { MaxConcurrency = 1, MaxDepth = 1, Timeout = 5, MaxRetries = 1, UserAgent = "TestBot" });
+        var service = CreateService(new CrawlerSettings { MaxConcurrency = 1, MaxDepth = 0, Timeout = 5, MaxRetries = 1, UserAgent = "TestBot" });
 
         // Act
         var result = await service.CrawlAsync(RootUrl, JobId);
@@ -122,7 +113,7 @@ public class SpiderServiceTests
         _mockParser.Setup(p => p.ParseLinksAsync(It.IsAny<ParserRequest>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new ParserResponse
             {
-                Links = ["https://external.com/page"],
+                Links = ["https://example.com/page"],
                 StatusCode = ParserStatusCode.Ok
             });
 

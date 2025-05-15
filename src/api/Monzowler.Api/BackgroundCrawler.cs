@@ -1,7 +1,6 @@
-using System.Collections.Concurrent;
 using System.Diagnostics;
 using Monzowler.Application.Contracts.Persistence;
-using Monzowler.Crawler.Interfaces;
+using Monzowler.Application.Contracts.Services;
 using Monzowler.Crawler.Models;
 using Monzowler.Shared.Observability;
 
@@ -16,8 +15,6 @@ public class BackgroundCrawler(
     ILogger<BackgroundCrawler> logger,
     IJobRepository jobRepository)
 {
-    private readonly ConcurrentDictionary<string, List<Page>> _results = new();
-
     public string EnqueueCrawl(string url)
     {
         var job = new Job
@@ -36,7 +33,7 @@ public class BackgroundCrawler(
             //Important: we need to get the parent context. the span is async-local but not thread-local,
             //So the context might be lost. So we need to grab it from the parent. 
             Activity.Current = parentContext;
-            Activity? span = TracingHelper.StartSpanWithActivity("JobStarted", job);
+            var spanWithActivity = TracingHelper.StartSpanWithActivity("JobStarted", job);
 
             try
             {
@@ -46,7 +43,8 @@ public class BackgroundCrawler(
                 var _ = await spider.CrawlAsync(url, job.JobId);
 
                 logger.LogInformation("----- JOB {JobId} : COMPLETED -------", job.JobId);
-                span?.AddEvent(new ActivityEvent("JobCompleted"));
+                Activity.Current = parentContext;
+                spanWithActivity?.AddEvent(new ActivityEvent("JobCompleted"));
 
                 await jobRepository.UpdateStatusAsync(job.JobId, JobStatus.Completed, DateTime.UtcNow);
             }
@@ -54,15 +52,14 @@ public class BackgroundCrawler(
             {
                 logger.LogError("----- JOB {JobId} : FAILED -------", job.JobId);
                 Activity.Current = parentContext;
-                span?.SetStatus(ActivityStatusCode.Error, ex.Message);
-                span?.AddEvent(new ActivityEvent("JobFailed"));
+                spanWithActivity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                spanWithActivity?.AddEvent(new ActivityEvent("JobFailed"));
 
                 await jobRepository.MarkAsFailedAsync(job.JobId, ex.Message);
             }
             finally
             {
-                //Important: we need to dispose this to mark the span as ready to export!
-                span?.Dispose();
+                spanWithActivity?.Dispose();
             }
         });
 

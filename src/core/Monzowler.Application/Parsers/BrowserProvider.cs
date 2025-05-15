@@ -2,7 +2,7 @@ using Monzowler.Application.Contracts.Services;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 
-namespace Monzowler.Application.Services;
+namespace Monzowler.Application.Parsers;
 
 /// <summary>
 /// Represents a browser provider that manages a Selenium Chrome WebDriver instance.
@@ -15,8 +15,6 @@ namespace Monzowler.Application.Services;
 ///   inside the docker-compose.yaml
 /// - Locally, it falls back to default behavior if paths are not specified,
 ///   allowing auto-resolution via Selenium Manager.
-/// The WebDriver is created lazily to avoid the high cost of launching a browser
-/// unless it's explicitly needed.
 /// </summary>
 public class BrowserProvider : IBrowserProvider, IDisposable
 {
@@ -31,7 +29,7 @@ public class BrowserProvider : IBrowserProvider, IDisposable
             var options = new ChromeOptions();
 
             // Allow override via environment variables - we need to do this 
-            // to run docker in selenium 
+            // to run docker with selenium!
             var chromeBinary = Environment.GetEnvironmentVariable("CHROME_BINARY");
             var driverPath = Environment.GetEnvironmentVariable("CHROMEDRIVER_PATH");
 
@@ -54,7 +52,7 @@ public class BrowserProvider : IBrowserProvider, IDisposable
                 return new ChromeDriver(service, options);
             }
 
-            // Fallback to use SeleniumManager if driverPath not specified
+            // Fallback to use default options (local)
             return new ChromeDriver(options);
         });
     }

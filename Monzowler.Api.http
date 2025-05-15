@@ -3,7 +3,7 @@ POST http://localhost:5002/crawl
 Content-Type: application/json
 
 {
-    "url": "https://monzo.com"
+  "url": "https://monzo.com"
 }
 
 ### --- JOB GET ---
@@ -85,5 +85,3 @@ Content-Type: application/json
 {
   "url": "https://monzo.com/help/monzo-fraud-category/Getting-your-money-back-authorised-push-payment-fraud"
 }
-
-

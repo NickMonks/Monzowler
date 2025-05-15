@@ -1,8 +1,8 @@
-namespace Monzowler.Crawler.Models;
+namespace Monzowler.Domain.Responses;
 
 public class RobotsTxtResponse
 {
-    public List<string> Disallows { get; set; }
-    public List<string> Allows { get; set; }
-    public int Delay { get; set; }
+    public required List<string> Disallows { get; init; }
+    public required List<string> Allows { get; init; }
+    public int Delay { get; init; }
 }

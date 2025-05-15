@@ -5,6 +5,7 @@ using Monzowler.Application.Contracts.Services;
 using Monzowler.Crawler.Contracts.HttpClient;
 using Monzowler.Crawler.Models;
 using Monzowler.Crawler.Parsers;
+using Monzowler.Domain.Requests;
 using Monzowler.Domain.Responses;
 using Monzowler.Shared.Observability;
 using Monzowler.Shared.Utilities;
@@ -69,7 +70,7 @@ public class RenderedHtmlParser(IBrowserProvider provider, IApiClient httpApiCli
         var js = (IJavaScriptExecutor)driver;
         var ready = false;
 
-        for (int i = 0; i < 10 && !ready; i++)
+        for (int i = 0; i < 5 && !ready; i++)
         {
             try
             {
@@ -84,7 +85,5 @@ public class RenderedHtmlParser(IBrowserProvider provider, IApiClient httpApiCli
             if (!ready)
                 await Task.Delay(300);
         }
-
-        //TODO: throw exception here
     }
 }

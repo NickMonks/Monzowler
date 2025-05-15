@@ -1,8 +1,8 @@
-namespace Monzowler.Crawler.Settings;
+namespace Monzowler.Shared.Settings;
 
 public class ObservabilitySettings
 {
-    public string JaegerExporterUri { get; set; }
-    public string ServiceName { get; set; }
-    public string ServiceVersion { get; set; }
+    public required string JaegerExporterUri { get; init; }
+    public required string ServiceName { get; init; }
+    public required string ServiceVersion { get; init; }
 }

@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Monzowler.Application.Contracts.Services;
 using Monzowler.Crawler.Contracts.HttpClient;
 using Monzowler.Crawler.Models;
+using Monzowler.Domain.Responses;
 using Monzowler.Shared.Observability;
 
 namespace Monzowler.Application.Services;
