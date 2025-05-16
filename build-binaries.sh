@@ -45,4 +45,4 @@ for RID in "${RUNTIMES[@]}"; do
   cd - > /dev/null
 done
 
-echo All binaries built and compressed successfully."
+echo "All binaries built and compressed successfully."
