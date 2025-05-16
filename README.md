@@ -37,12 +37,16 @@ For more info about the API specs, check API Overview section.
 
 Alternatively you can use the `Monzowler.Api.http` file or choose your favourite API Platform to hit the controller. 
 
-## Option 2 - Execute Binary directly
+## Option 2 - Generate Binary
 
-Binaries have been generated for each OS - choose your binary and execute it with the following arguments:
+:warning: For this option you need to install dotnet +8. Follow [this](https://dotnet.microsoft.com/en-us/download) link if you want to proceed with this step.
+
+A simple to execute the crawler is to use the binaries directly. To do so:
+
+Run the `./build-binaries.sh` - it will generate binaries for all OS. Then, go to the root folder and run:
 
 ```curl
-.\releases\win-x64\webcrawler.exe "https://monzo.com" --jobId my-job-id --depth 2 --maxConcurrency 4
+.\releases\win-x64\webcrawler.exe "https://monzo.com" 
 ```
 
 ## Option 3 - Command Line

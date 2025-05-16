@@ -1,0 +1,34 @@
+name: Publish Monzowler CLI Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Make build-binaries.sh executable
+        run: chmod +x ./build-binaries.sh
+
+      - name: Build Binaries & Compress
+        run: ./build-binaries.sh
+
+      - name: Upload Release Assets
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            releases/**/monzowler-cli-*.zip
+            releases/**/monzowler-cli-*.tar.gz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
