@@ -2,7 +2,6 @@ using System.Diagnostics;
 using Microsoft.Extensions.Logging;
 using Monzowler.Application.Contracts.HttpClient;
 using Monzowler.Application.Contracts.Services;
-using Monzowler.Crawler.Models;
 using Monzowler.Domain.Responses;
 using Monzowler.Shared.Observability;
 

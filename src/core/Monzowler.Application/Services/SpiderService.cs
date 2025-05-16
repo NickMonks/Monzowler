@@ -5,7 +5,6 @@ using Monzowler.Application.Contracts.HttpClient;
 using Monzowler.Application.Contracts.Results;
 using Monzowler.Application.Contracts.Services;
 using Monzowler.Application.Session;
-using Monzowler.Crawler.Models;
 using Monzowler.Domain.Entities;
 using Monzowler.Domain.Requests;
 using Monzowler.Domain.Responses;
@@ -20,7 +19,7 @@ public class SpiderService(
     IResultHandler resultHandler,
     ILogger<SpiderService> logger,
     IPolitenessThrottlerService throttler,
-    IApiClient _apiClient,
+    IApiClient apiClient,
     IOptions<CrawlerSettings> options)
     : ISpiderService
 {
@@ -28,7 +27,7 @@ public class SpiderService(
 
     public async Task<List<Page>> CrawlAsync(CrawlParameters crawlParams)
     {
-        using var span = TracingHelper.Source.StartActivity("CrawlJob", ActivityKind.Internal);
+        using var span = TracingHelper.Source.StartActivity("CrawlJob");
         span?.SetTag("rootUrl", crawlParams.RootUrl);
         span?.SetTag("jobId", crawlParams.JobId);
 
@@ -104,7 +103,7 @@ public class SpiderService(
                 using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(_opts.Timeout));
 
                 logger.LogInformation("Crawling: {Url} (Depth: {Depth})", item.Url, item.Depth);
-                var response = await _apiClient.GetStringAsync(item.Url, cts.Token);
+                var response = await apiClient.GetStringAsync(item.Url, cts.Token);
                 var parserResponse = await parser.ParseLinksAsync(new ParserRequest
                 {
                     Url = item.Url,

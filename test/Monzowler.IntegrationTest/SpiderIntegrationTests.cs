@@ -35,7 +35,7 @@ public class SpiderIntegrationTests : IClassFixture<WebApplicationFactory<Progra
 
             builder.ConfigureServices((context, services) =>
             {
-                services.AddStartupServices(context.Configuration);
+                services.AddStartupServices();
                 services.AddPersistenceRegistration(context.Configuration);
 
                 services.AddHttpClient<IApiClient, ApiClient>(client =>

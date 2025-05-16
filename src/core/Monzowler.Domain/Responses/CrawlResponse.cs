@@ -1,4 +1,4 @@
-using Monzowler.Crawler.Models;
+using Monzowler.Domain.Entities;
 
 namespace Monzowler.Domain.Responses;
 

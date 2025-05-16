@@ -1,4 +1,3 @@
-using Monzowler.Crawler.Models;
 using Monzowler.Domain.Responses;
 
 namespace Monzowler.Application.Contracts.Services;

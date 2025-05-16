@@ -2,7 +2,6 @@ using Microsoft.Extensions.Logging;
 using Monzowler.Api;
 using Monzowler.Application.Contracts.Persistence;
 using Monzowler.Application.Contracts.Services;
-using Monzowler.Crawler.Models;
 using Monzowler.Domain.Entities;
 using Monzowler.Domain.Requests;
 using Moq;

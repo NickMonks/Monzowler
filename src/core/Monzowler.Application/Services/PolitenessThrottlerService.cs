@@ -39,7 +39,7 @@ public class PolitenessThrottlerService : IPolitenessThrottlerService
 
             if (remaining > TimeSpan.Zero)
             {
-                using var span = TracingHelper.Source.StartActivity("EnforcePoliteness", ActivityKind.Internal);
+                using var span = TracingHelper.Source.StartActivity("EnforcePoliteness");
                 span?.SetTag("domain", domain);
                 span?.AddEvent(new ActivityEvent("ThrottlingStarted"));
                 await Task.Delay(remaining, ct);

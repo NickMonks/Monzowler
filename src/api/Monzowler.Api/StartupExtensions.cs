@@ -8,11 +8,10 @@ namespace Monzowler.Api;
 
 public static class StartupExtensions
 {
-    public static void AddStartupServices(this IServiceCollection services,
-        IConfiguration configuration)
+    public static void AddStartupServices(this IServiceCollection services)
     {
         services.AddApplicationRegistration();
-        services.AddApiClientRegistration(configuration);
+        services.AddApiClientRegistration();
     }
     public static void AddObservability(this IServiceCollection services, IConfiguration configuration)
     {

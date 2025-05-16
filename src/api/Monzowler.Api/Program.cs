@@ -15,7 +15,7 @@ builder.Services.Configure<JsonOptions>(options =>
 {
     options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
-builder.Services.AddStartupServices(builder.Configuration);
+builder.Services.AddStartupServices();
 builder.Services.AddPersistenceRegistration(builder.Configuration);
 builder.Services.AddObservability(builder.Configuration);
 builder.Services.AddScoped<BackgroundCrawler>();
@@ -36,7 +36,7 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-//Some websites return this format - not really sure why
+//Some websites return this format
 System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
 
 var app = builder.Build();

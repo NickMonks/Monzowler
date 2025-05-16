@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Monzowler.Crawler.Models;
+namespace Monzowler.Domain.Entities;
 
 [JsonConverter(typeof(JsonStringEnumConverter))]
 public enum JobStatus

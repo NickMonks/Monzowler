@@ -15,12 +15,12 @@ var urlArg = new Argument<string>(
 );
 
 var maxDepthOpt = new Option<int>(
-    aliases: new[] { "--maxDepth", "-d" },
+    aliases: ["--maxDepth", "-d"],
     description: "Maximum depth of the crawl from the root URL"
 );
 
 var maxRetriesOpt = new Option<int>(
-    aliases: new[] { "--maxRetries", "-r" },
+    aliases: ["--maxRetries", "-r"],
     description: "Maximum number of retries for a single URL"
 );
 
@@ -28,7 +28,7 @@ rootCommand.AddArgument(urlArg);
 rootCommand.AddOption(maxDepthOpt);
 rootCommand.AddOption(maxRetriesOpt);
 
-rootCommand.SetHandler(async (string url, int maxDepth, int maxRetries) =>
+rootCommand.SetHandler(async (url, maxDepth, maxRetries) =>
 {
     var exeDir = AppContext.BaseDirectory;
 
@@ -38,7 +38,7 @@ rootCommand.SetHandler(async (string url, int maxDepth, int maxRetries) =>
         {
             services.AddLogging();
             services.Configure<CrawlerSettings>(context.Configuration.GetSection("Crawler"));
-            services.AddStartupServices(context.Configuration);
+            services.AddStartupServices();
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
             services.AddLogging(config => config.AddConsole());
         })

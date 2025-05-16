@@ -11,7 +11,7 @@ namespace Monzowler.HttpClient;
 
 public static class ApiClientServiceRegistration
 {
-    public static void AddApiClientRegistration(this IServiceCollection services, IConfiguration configuration)
+    public static void AddApiClientRegistration(this IServiceCollection services)
     {
         services.AddSingleton<PolitenessThrottlerService>();
         services.AddHttpClient<IApiClient, ApiClient>((sp, client) =>

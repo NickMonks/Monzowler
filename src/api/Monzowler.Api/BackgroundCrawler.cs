@@ -1,7 +1,6 @@
 using System.Diagnostics;
 using Monzowler.Application.Contracts.Persistence;
 using Monzowler.Application.Contracts.Services;
-using Monzowler.Crawler.Models;
 using Monzowler.Domain.Entities;
 using Monzowler.Domain.Requests;
 using Monzowler.Shared.Observability;

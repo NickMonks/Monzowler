@@ -1,7 +1,6 @@
 using System.Collections.Concurrent;
 using System.Threading.Channels;
 using Microsoft.Extensions.Logging;
-using Monzowler.Crawler.Models;
 using Monzowler.Domain.Entities;
 
 namespace Monzowler.Application.Session;
@@ -13,11 +12,11 @@ namespace Monzowler.Application.Session;
 /// </summary>
 public class CrawlSession
 {
-    public ConcurrentBag<Page> Pages { get; } = new();
+    public ConcurrentBag<Page> Pages { get; } = [];
     public ConcurrentDictionary<string, bool> Visited { get; } = new();
 
     //TODO: consider make it bounded - we have heavy producers vs consumers so introducing
-    //backpressure could be nice
+    //backpressure could be a good idea
     public Channel<Link> ChannelSession { get; } = Channel.CreateUnbounded<Link>();
     public Item Item { get; } = new();
 

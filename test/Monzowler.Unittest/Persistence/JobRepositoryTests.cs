@@ -1,7 +1,6 @@
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.Model;
 using Moq;
-using Monzowler.Crawler.Models;
 using Monzowler.Domain.Entities;
 using Monzowler.Persistence.Repositories;
 namespace Monzowler.Unittest.Persistence;

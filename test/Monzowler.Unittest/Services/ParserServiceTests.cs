@@ -2,7 +2,6 @@ using System.Net;
 using Microsoft.Extensions.Logging;
 using Monzowler.Application.Contracts.Services;
 using Monzowler.Application.Services;
-using Monzowler.Crawler.Models;
 using Monzowler.Domain.Entities;
 using Monzowler.Domain.Requests;
 using Monzowler.Domain.Responses;

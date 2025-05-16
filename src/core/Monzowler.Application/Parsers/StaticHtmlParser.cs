@@ -15,7 +15,7 @@ public class StaticHtmlParser(ILogger<StaticHtmlParser> logger) : ISubParser
     public async Task<ParserResponse> ParseLinksAsync(ParserRequest request, CancellationToken ct)
     {
         logger.LogInformation("Start parsing links - {ParserName}", nameof(StaticHtmlParser));
-        using var span = TracingHelper.Source.StartActivity(nameof(StaticHtmlParser), ActivityKind.Internal);
+        using var span = TracingHelper.Source.StartActivity(nameof(StaticHtmlParser));
 
         var doc = new HtmlDocument();
         doc.LoadHtml(request.HtmlResult);

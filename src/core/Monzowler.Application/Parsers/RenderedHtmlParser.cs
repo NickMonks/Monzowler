@@ -1,6 +1,5 @@
 using HtmlAgilityPack;
 using Microsoft.Extensions.Logging;
-using Monzowler.Application.Contracts.HttpClient;
 using Monzowler.Application.Contracts.Services;
 using Monzowler.Domain.Requests;
 using Monzowler.Domain.Responses;
@@ -64,9 +63,10 @@ public class RenderedHtmlParser(IBrowserProvider provider, ILogger<RenderedHtmlP
     private static async Task WaitUntilDomReadyAsync(IWebDriver driver)
     {
         var js = (IJavaScriptExecutor)driver;
+        var maxRetries = 5;
         var ready = false;
 
-        for (int i = 0; i < 5 && !ready; i++)
+        for (int i = 0; i < maxRetries && !ready; i++)
         {
             try
             {
