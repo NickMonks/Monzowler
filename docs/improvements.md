@@ -1,5 +1,6 @@
 # Improvements & Future development
 Below are some thoughts & ideas to improve the current state of our project.
+
 - We also might want to crawl urls that have been already been visited but changed the payload - we could create a hash and do this
 
 ## Resiliency

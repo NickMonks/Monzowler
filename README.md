@@ -9,7 +9,7 @@ A fast, performant webcrawler for the Monzo Task Challenge!
 
 # Requirements
 
-For information regarding assumed requirements of the home task assigment check this document.
+For information regarding assumed requirements check docs/requirements.md.
 
 # How to Run
 
@@ -37,7 +37,15 @@ For more info about the API specs, check API Overview section.
 
 Alternatively you can use the `Monzowler.Api.http` file or choose your favourite API Platform to hit the controller. 
 
-## Option 2 - Command Line
+## Option 2 - Execute Binary directly
+
+Binaries have been generated for each OS - choose your binary and execute it with the following arguments:
+
+```curl
+.\releases\win-x64\webcrawler.exe "https://monzo.com" --jobId my-job-id --depth 2 --maxConcurrency 4
+```
+
+## Option 3 - Command Line
 
 :warning: For this option you need to install dotnet +8. Follow [this](https://dotnet.microsoft.com/en-us/download) link to do so. 
 
@@ -130,6 +138,9 @@ Example Response:
 - `204 No Content`: No matching pages found.
 - `500 Internal Server Error`: On failure to fetch data.
 
+# Architecture
+
+For information regarding the architecture of the project and deep dives please check docs/architecture.md.
 
 # Testing
 
@@ -141,3 +152,5 @@ Some description provided below:
 - **Integration tests:** Aims to ensure that different parts of the application work together as expected.
     - The approach is to test the Controller directly using the `TestContainers` library, a lightweight solution to run some dependencies as docker containers. For more info, check [here](https://testcontainers.com/)
     - I also combined it with some API client mock to test external calls to specific domains. In our code we test different scenarios but we could cover much more outside the MVP. 
+
+# 

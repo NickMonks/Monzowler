@@ -14,11 +14,13 @@ public static class ApiClientServiceRegistration
     public static void AddApiClientRegistration(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddSingleton<PolitenessThrottlerService>();
-        services.AddHttpClient<IApiClient, ApiClient>(client =>
+        services.AddHttpClient<IApiClient, ApiClient>((sp, client) =>
             {
+                var configuration = sp.GetRequiredService<IConfiguration>();
+
                 var crawlerSettings = configuration
                     .GetSection("Crawler")
-                    .Get<CrawlerSettings>() ?? throw new NullReferenceException();
+                    .Get<CrawlerSettings>() ?? throw new InvalidOperationException("CrawlerSettings not found in configuration.");
 
                 client.DefaultRequestHeaders.UserAgent.ParseAdd(crawlerSettings.UserAgent);
             })

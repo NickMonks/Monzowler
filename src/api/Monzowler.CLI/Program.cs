@@ -15,7 +15,10 @@ rootCommand.AddOption(jobIdOpt);
 
 rootCommand.SetHandler(async (url, jobId) =>
 {
+    var exeDir = AppContext.BaseDirectory;
+
     var host = Host.CreateDefaultBuilder(args)
+        .UseContentRoot(exeDir)
         .ConfigureServices((context, services) =>
         {
             services.AddLogging();

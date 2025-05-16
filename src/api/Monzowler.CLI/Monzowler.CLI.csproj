@@ -8,6 +8,13 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <Content Update="appsettings.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        </Content>
+    </ItemGroup>
+
+    <ItemGroup>
       <ProjectReference Include="..\..\core\Monzowler.Application\Monzowler.Application.csproj" />
       <ProjectReference Include="..\..\core\Monzowler.Domain\Monzowler.Domain.csproj" />
       <ProjectReference Include="..\..\core\Monzowler.Shared\Monzowler.Shared.csproj" />
