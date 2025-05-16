@@ -5,6 +5,7 @@ on:
     tags:
       - 'v*.*.*'
 
+
 jobs:
   build-and-release:
     runs-on: ubuntu-latest
