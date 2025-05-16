@@ -1,4 +1,6 @@
-namespace Monzowler.Crawler.Models;
+using Monzowler.Crawler.Models;
+
+namespace Monzowler.Domain.Entities;
 
 public class Job
 {

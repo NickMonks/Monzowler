@@ -4,9 +4,5 @@ public class CrawlerSettings
 {
     public required string UserAgent { get; init; }
     public int MaxConcurrency { get; init; }
-    public int MaxDepth { get; init; }
-    public int MaxRetries { get; init; }
     public int Timeout { get; init; }
-
-
 }

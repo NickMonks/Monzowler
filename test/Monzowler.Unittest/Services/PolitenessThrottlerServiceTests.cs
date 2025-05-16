@@ -1,13 +1,17 @@
 namespace Monzowler.Unittest.Services;
 
-using System.Diagnostics;
 using Monzowler.Application.Services;
 using Xunit;
 
 public class PolitenessThrottlerServiceTests
 {
-    private readonly PolitenessThrottlerService _throttler = new();
+    private readonly PolitenessThrottlerService _throttler;
     private const string Domain = "example.com";
+
+    public PolitenessThrottlerServiceTests()
+    {
+        _throttler = new PolitenessThrottlerService();
+    }
 
     [Fact]
     public async Task EnforceAsync_DoesNotDelay_IfNoDelaySet()

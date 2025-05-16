@@ -3,7 +3,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Monzowler.Application.Contracts.Results;
 using Monzowler.Application.Contracts.Services;
-using Monzowler.Application.Results;
 using Monzowler.Application.Session;
 using Monzowler.Crawler.Models;
 using Monzowler.Crawler.Parsers;
@@ -26,22 +25,22 @@ public class SpiderService(
 {
     private readonly CrawlerSettings _opts = options.Value;
 
-    public async Task<List<Page>> CrawlAsync(string rootUrl, string jobId)
+    public async Task<List<Page>> CrawlAsync(CrawlParameters crawlParams)
     {
         using var span = TracingHelper.Source.StartActivity("CrawlJob", ActivityKind.Internal);
-        span?.SetTag("rootUrl", rootUrl);
-        span?.SetTag("jobId", jobId);
+        span?.SetTag("rootUrl", crawlParams.RootUrl);
+        span?.SetTag("jobId", crawlParams.JobId);
 
         var session = new CrawlSession();
-        var baseUri = new Uri(rootUrl);
+        var baseUri = new Uri(crawlParams.RootUrl);
         var rootHost = baseUri.Host;
 
-        var robotsTxtResponse = await robots.GetRulesAsync(rootUrl, _opts.UserAgent);
+        var robotsTxtResponse = await robots.GetRulesAsync(crawlParams.RootUrl, _opts.UserAgent);
         throttler.SetDelay(rootHost, robotsTxtResponse.Delay);
 
         await session.TryEnqueueAsync(new Link
         {
-            Url = rootUrl,
+            Url = crawlParams.RootUrl,
             Domain = rootHost,
             Depth = 0,
             Retries = 0
@@ -49,7 +48,7 @@ public class SpiderService(
 
 
         var workers = Enumerable.Range(0, _opts.MaxConcurrency)
-            .Select(_ => Task.Run(() => ExecuteAsync(session, baseUri, robotsTxtResponse, jobId)));
+            .Select(_ => Task.Run(() => ExecuteAsync(session, baseUri, robotsTxtResponse, crawlParams)));
 
         await Task.WhenAll(workers);
 
@@ -60,7 +59,7 @@ public class SpiderService(
         return session.Pages.ToList();
     }
 
-    private async Task ExecuteAsync(CrawlSession session, Uri baseUri, RobotsTxtResponse robotsTxtResponse, string jobId)
+    private async Task ExecuteAsync(CrawlSession session, Uri baseUri, RobotsTxtResponse robotsTxtResponse, CrawlParameters crawlParams)
     {
         var rootHost = baseUri.Host;
 
@@ -72,10 +71,10 @@ public class SpiderService(
             {
                 span?.SetTag("url", item.Url);
                 span?.SetTag("depth", item.Depth);
-                span?.SetTag("jobId", jobId);
+                span?.SetTag("jobId", crawlParams.JobId);
                 span?.SetTag("retries", item.Retries);
 
-                if (item.Depth > _opts.MaxDepth)
+                if (item.Depth > crawlParams.MaxDepth)
                 {
                     span?.AddEvent(new ActivityEvent("Skipped:MaxDepth"));
                     return;
@@ -92,7 +91,7 @@ public class SpiderService(
                         Depth = item.Depth,
                         Domain = rootHost,
                         Links = [],
-                        JobId = jobId,
+                        JobId = crawlParams.JobId,
                         Status = nameof(ParserStatusCode.Disallowed),
                         LastModified = DateTime.UtcNow.ToString("O"),
                     });
@@ -121,7 +120,7 @@ public class SpiderService(
                     Depth = item.Depth,
                     Domain = rootHost,
                     Links = parserResponse.Links,
-                    JobId = jobId,
+                    JobId = crawlParams.JobId,
                     Status = parserResponse.StatusCode.ToString(),
                     LastModified = DateTime.UtcNow.ToString("O"),
                 });
@@ -135,7 +134,7 @@ public class SpiderService(
                         var linkPath = linkUri.AbsolutePath;
 
                         if (linkUri.Host == rootHost &&
-                            newDepth <= _opts.MaxDepth &&
+                            newDepth <= crawlParams.MaxDepth &&
                             !session.Visited.ContainsKey(link) &&
                             robots.IsAllowed(linkPath, robotsTxtResponse.Disallows, robotsTxtResponse.Allows))
                         {
@@ -162,7 +161,7 @@ public class SpiderService(
                                 Depth = newDepth,
                                 Domain = rootHost,
                                 Links = [],
-                                JobId = jobId,
+                                JobId = crawlParams.JobId,
                                 Status = nameof(ParserStatusCode.Disallowed),
                                 LastModified = DateTime.UtcNow.ToString("O"),
                             });
@@ -182,7 +181,7 @@ public class SpiderService(
                 span?.SetStatus(ActivityStatusCode.Error, "Timeout");
                 span?.AddEvent(new ActivityEvent("Timeout"));
 
-                if (item.Retries < _opts.MaxRetries)
+                if (item.Retries < crawlParams.MaxRetries)
                 {
                     session.Visited.TryRemove(item.Url, out _);
 

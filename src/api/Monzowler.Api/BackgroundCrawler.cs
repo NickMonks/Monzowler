@@ -2,6 +2,8 @@ using System.Diagnostics;
 using Monzowler.Application.Contracts.Persistence;
 using Monzowler.Application.Contracts.Services;
 using Monzowler.Crawler.Models;
+using Monzowler.Domain.Entities;
+using Monzowler.Domain.Requests;
 using Monzowler.Shared.Observability;
 
 namespace Monzowler.Api;
@@ -15,13 +17,13 @@ public class BackgroundCrawler(
     ILogger<BackgroundCrawler> logger,
     IJobRepository jobRepository)
 {
-    public string EnqueueCrawl(string url)
+    public string EnqueueCrawl(CrawlRequest request)
     {
         var job = new Job
         {
             JobId = Guid.NewGuid().ToString(),
             Status = JobStatus.InProgress,
-            Url = url,
+            Url = request.Url,
             StartedAt = DateTime.UtcNow
         };
 
@@ -39,7 +41,14 @@ public class BackgroundCrawler(
             {
                 logger.LogInformation(" ----- JOB {JobId} : START -------", job.JobId);
                 await jobRepository.CreateAsync(job);
-                var _ = await spider.CrawlAsync(url, job.JobId);
+                var crawlParams = new CrawlParameters
+                {
+                    JobId = job.JobId,
+                    RootUrl = request.Url,
+                    MaxDepth = request.MaxDepth,
+                    MaxRetries = request.MaxRetries,
+                };
+                var _ = await spider.CrawlAsync(crawlParams);
 
                 logger.LogInformation("----- JOB {JobId} : COMPLETED -------", job.JobId);
                 Activity.Current = parentContext;

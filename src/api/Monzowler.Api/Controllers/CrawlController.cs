@@ -24,7 +24,7 @@ namespace Monzowler.Api.Controllers
             try
             {
                 var url = new Uri(req.Url).ToString().TrimEnd('/');
-                var jobId = crawler.EnqueueCrawl(url);
+                var jobId = crawler.EnqueueCrawl(req);
 
                 return Accepted($"/crawl/{jobId}", new CrawlResponse
                 {

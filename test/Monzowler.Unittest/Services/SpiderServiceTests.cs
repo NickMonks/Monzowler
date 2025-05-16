@@ -2,7 +2,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Monzowler.Application.Contracts.Results;
 using Monzowler.Application.Contracts.Services;
-using Monzowler.Application.Results;
 using Monzowler.Application.Services;
 using Monzowler.Crawler.Parsers;
 using Monzowler.Domain.Entities;
@@ -30,9 +29,7 @@ public class SpiderServiceTests
         var opts = Options.Create(overrides ?? new CrawlerSettings
         {
             MaxConcurrency = 1,
-            MaxDepth = 1,
             Timeout = 10,
-            MaxRetries = 1,
             UserAgent = "TestBot"
         });
 
@@ -67,11 +64,19 @@ public class SpiderServiceTests
                 Links = expectedLinks,
                 StatusCode = ParserStatusCode.Ok
             });
+
+        var crawlParams = new CrawlParameters
+        {
+            RootUrl = RootUrl,
+            JobId = JobId,
+            MaxDepth = 1,
+            MaxRetries = 2
+        };
         
         var service = CreateService();
 
         // Act
-        var result = await service.CrawlAsync(RootUrl, JobId);
+        var result = await service.CrawlAsync(crawlParams);
 
         // Assert
         Assert.NotEmpty(result);
@@ -96,11 +101,19 @@ public class SpiderServiceTests
 
         _mockRobots.Setup(r => r.IsAllowed(It.IsAny<string>(), It.IsAny<List<string>>(), It.IsAny<List<string>>()))
             .Returns(true);
+        
+        var crawlParams = new CrawlParameters
+        {
+            RootUrl = RootUrl,
+            JobId = JobId,
+            MaxDepth = 0,
+            MaxRetries = 2
+        };
 
-        var service = CreateService(new CrawlerSettings { MaxConcurrency = 1, MaxDepth = 0, Timeout = 5, MaxRetries = 1, UserAgent = "TestBot" });
+        var service = CreateService(new CrawlerSettings { MaxConcurrency = 1, UserAgent = "TestBot" });
 
         // Act
-        var result = await service.CrawlAsync(RootUrl, JobId);
+        var result = await service.CrawlAsync(crawlParams);
 
         // Assert
         Assert.Single(result);
@@ -123,11 +136,19 @@ public class SpiderServiceTests
 
         _mockRobots.Setup(r => r.IsAllowed(It.IsAny<string>(), It.IsAny<List<string>>(), It.IsAny<List<string>>()))
             .Returns(true);
+        
+        var crawlParams = new CrawlParameters
+        {
+            RootUrl = RootUrl,
+            JobId = JobId,
+            MaxDepth = 0,
+            MaxRetries = 2
+        };
 
-        var service = CreateService(new CrawlerSettings { MaxConcurrency = 1, MaxDepth = 2, Timeout = 5, MaxRetries = 1, UserAgent = "TestBot" });
+        var service = CreateService(new CrawlerSettings { MaxConcurrency = 1, Timeout = 5, UserAgent = "TestBot" });
 
         // Act
-        var result = await service.CrawlAsync(RootUrl, JobId);
+        var result = await service.CrawlAsync(crawlParams);
 
         // Assert
         Assert.Single(result);
@@ -148,11 +169,19 @@ public class SpiderServiceTests
 
         _mockRobots.Setup(r => r.IsAllowed(It.IsAny<string>(), It.IsAny<List<string>>(), It.IsAny<List<string>>()))
             .Returns(true);
-
-        var service = CreateService(new CrawlerSettings { MaxConcurrency = 1, MaxDepth = 2, Timeout = 5, MaxRetries = 1, UserAgent = "TestBot" });
+        
+        var crawlParams = new CrawlParameters
+        {
+            RootUrl = RootUrl,
+            JobId = JobId,
+            MaxDepth = 1,
+            MaxRetries = 2
+        };
+        
+        var service = CreateService(new CrawlerSettings { MaxConcurrency = 1, Timeout = 5, UserAgent = "TestBot" });
 
         // Act
-        var result = await service.CrawlAsync(RootUrl, JobId);
+        var result = await service.CrawlAsync(crawlParams);
 
         // Assert
         Assert.Equal(2, result.Count);
@@ -176,11 +205,19 @@ public class SpiderServiceTests
 
         _mockRobots.Setup(r => r.IsAllowed(It.Is<string>(p => p == "/"), It.IsAny<List<string>>(), It.IsAny<List<string>>()))
             .Returns(true);
+        
+        var crawlParams = new CrawlParameters
+        {
+            RootUrl = RootUrl,
+            JobId = JobId,
+            MaxDepth = 1,
+            MaxRetries = 2
+        };
 
-        var service = CreateService(new CrawlerSettings { MaxConcurrency = 1, MaxDepth = 2, Timeout = 5, MaxRetries = 1, UserAgent = "TestBot" });
+        var service = CreateService(new CrawlerSettings { MaxConcurrency = 1, Timeout = 5, UserAgent = "TestBot" });
 
         // Act
-        var result = await service.CrawlAsync(RootUrl, JobId);
+        var result = await service.CrawlAsync(crawlParams);
 
         // Assert
         Assert.Contains(result, p => p.PageUrl == disallowedLink && p.Status == "Disallowed");
@@ -198,11 +235,19 @@ public class SpiderServiceTests
 
         _mockRobots.Setup(r => r.IsAllowed(It.IsAny<string>(), It.IsAny<List<string>>(), It.IsAny<List<string>>()))
             .Returns(true);
+        
+        var crawlParams = new CrawlParameters
+        {
+            RootUrl = RootUrl,
+            JobId = JobId,
+            MaxDepth = 1,
+            MaxRetries = 2
+        };
 
-        var service = CreateService(new CrawlerSettings { MaxConcurrency = 1, MaxDepth = 1, Timeout = 5, MaxRetries = 0, UserAgent = "TestBot" });
+        var service = CreateService(new CrawlerSettings { MaxConcurrency = 1, Timeout = 5, UserAgent = "TestBot" });
 
         // Act
-        var result = await service.CrawlAsync(RootUrl, JobId);
+        var result = await service.CrawlAsync(crawlParams);
 
         // Assert
         Assert.Empty(result);

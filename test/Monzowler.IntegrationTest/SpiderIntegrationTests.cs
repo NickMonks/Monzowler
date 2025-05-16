@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Monzowler.Api;
 using Monzowler.Application.Contracts.HttpClient;
 using Monzowler.Application.Contracts.Services;
+using Monzowler.Domain.Entities;
 using Monzowler.HttpClient;
 using Monzowler.IntegrationTest.Helpers;
 using Monzowler.Persistence;
@@ -54,14 +55,19 @@ public class SpiderIntegrationTests : IClassFixture<WebApplicationFactory<Progra
         using var scope = _services.CreateScope();
         var spider = scope.ServiceProvider.GetRequiredService<ISpiderService>();
         var seedUrl = _testEnvironment.BaseUrl + "/";
-
+        var crawlParams = new CrawlParameters
+        {
+            RootUrl = seedUrl,
+            JobId = Guid.NewGuid().ToString(),
+            MaxDepth = 2,
+            MaxRetries = 2
+        };
         var expectedSitemap = Stubs.ExpectedStaticSiteMap(_testEnvironment.BaseUrl);
         
         
 
         //Act
-        var jobId = Guid.NewGuid().ToString();
-        var actualSitemap = await spider.CrawlAsync(seedUrl, jobId);
+        var actualSitemap = await spider.CrawlAsync(crawlParams);
 
         //Assert
         Assert.NotNull(actualSitemap);
@@ -84,10 +90,16 @@ public class SpiderIntegrationTests : IClassFixture<WebApplicationFactory<Progra
         var spider = scope.ServiceProvider.GetRequiredService<ISpiderService>();
         var seedUrl = _testEnvironment.BaseUrl + "/rendered";
         var expectedSitemap = Stubs.ExpectedRenderedSiteMap(_testEnvironment.BaseUrl);
+        var crawlParams = new CrawlParameters
+        {
+            RootUrl = seedUrl,
+            JobId = Guid.NewGuid().ToString(),
+            MaxDepth = 2,
+            MaxRetries = 2
+        };
         
         //Act
-        var jobId = Guid.NewGuid().ToString();
-        var actualSitemap = await spider.CrawlAsync(seedUrl, jobId);
+        var actualSitemap = await spider.CrawlAsync(crawlParams);
 
         //Assert
         Assert.NotNull(actualSitemap);
@@ -109,12 +121,17 @@ public class SpiderIntegrationTests : IClassFixture<WebApplicationFactory<Progra
         using var scope = _services.CreateScope();
         var spider = scope.ServiceProvider.GetRequiredService<ISpiderService>();
         var seedUrl = _testEnvironment.BaseUrl + "/with-robots-txt";
-
+        var crawlParams = new CrawlParameters
+        {
+            RootUrl = seedUrl,
+            JobId = Guid.NewGuid().ToString(),
+            MaxDepth = 2,
+            MaxRetries = 2
+        };
         var expectedSitemap = Stubs.ExpectedSiteMapWithRobotsTxt(_testEnvironment.BaseUrl);
 
         //Act
-        var jobId = Guid.NewGuid().ToString();
-        var actualSitemap = await spider.CrawlAsync(seedUrl, jobId);
+        var actualSitemap = await spider.CrawlAsync(crawlParams);
 
         //Assert
         Assert.NotNull(actualSitemap);
