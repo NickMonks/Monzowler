@@ -1,40 +1,55 @@
-# Improvements & Future development
-Below are some thoughts & ideas to improve the current state of our project.
+Here are some key areas where the current crawler could be enhanced further, with some potential ideas for future improvements:
 
-- We also might want to crawl urls that have been already been visited but changed the payload - we could create a hash and do this
+## Handling Updated URLs
+Currently, the crawler avoids reprocessing URLs that have already been visited. However, content on a URL might change over time.
+A future improvement could involve computing a content hash of crawled pages, enabling detection of changes and allowing re-crawling when needed.
 
-## Resiliency
-What happens if the crawler crashes mid-way? we will lose the pages crawl and we will need to start again!
-we would like to be resilient and store each sitemap at least.
+# Resiliency & Fault Tolerance
+If the crawler crashes mid-process, the current implementation would lose the partially crawled sitemap.
+To enhance resiliency we should:
+- have intermediate sitemap results should be persisted incrementally. 
+- This would allow resuming jobs without starting from scratch.
 
-## BFS vs. DFS
-The way we implemented our core logic behaves like a BFS (Breath-First Search), although is not absolutely guaranteed due to the use of concurrent workers. However, depending on of our approach we could have choose DFS approach. I though DFS was less useful because we likely want to explore the links closest to the root domain and less on deep links. However if the requirements were different I would implement this differently.
+# BFS vs. DFS Approach
+The core crawling logic currently follows a Breadth-First Search (BFS)-like behavior.
+While concurrency makes this not strictly BFS, the approach prioritizes exploring links closer to the root domain — which aligns with typical crawl priorities.
+For different use cases (e.g., prioritizing deep exploration), a Depth-First Search (DFS) strategy could be considered.
 
-## Real-time updates
-Right now when a job is created we simply return a job-id for the client to poll our server - this is inefficient because it created load on our service inecessarily.
-One option is to implement long polling or SSE (Server-side events) to enhance this. But might be overengineering if short polling seems to work fine on our service.
+# Real-time Job Updates
+Currently, clients must poll the API to check job status. In real production system short-polling might not be the best option. 
+Other alternatives: Implementing long polling, Server-Sent Events (SSE) for real-time updates.
+This reduces unnecessary load from frequent polling, though should be balanced to avoid over-engineering for small-scale use.
 
-## Efficiency
-We are crawling on a domain every time a new job is requested. However this is very inefficient - the same URLs will be crawled again and again, plus http calls are our main bottleneck!
-Therefore we can set up some distributed caching like Redis for this purpose.
+# Efficiency & Caching
+Each crawl job currently re-fetches all URLs, which is inefficient.
+A distributed cache (e.g., Redis) could prevent redundant crawls of unchanged URLs.
+However, we need to be careful for account for:
+- Freshly discovered links on revisited pages.
+- Expiry policies to balance freshness vs. performance.
+An practical solution is to hash the string response and check if we already have been visited, but this is out of scope for the MVP. 
 
-However we need to be careful on this - what if some pages have new URLs to be crawled? A tradeoff needs to be done to efficiently deal with this.
+# Database Improvements
+Potential enhancements for DynamoDB persistence:
+- Support paginated responses when querying large sitemaps. Currently if you crawl a very large website, good luck getting the response!
+- As mentioned above too, Persist partial crawl results mid-process for robustness and resume capability.
 
-## Database improvements
-- Paginated response
-- Commit crawls midway
+# Extending Parsers
+Beyond HTML, the parser architecture could be extended to handle other content types like PDFs, DOCX, or even structured JSON feeds.
 
-## Parsers
-Although we are using fallback mechanism to run the rendered HTML parser, we could have many of these to parse actual files like .pdf, .docx, etc.
+# Infrastructure & Scalability
+While the current solution is designed to be production-quality code in mind, further infrastructure improvements would include:
+- Deploying the crawler as a serverless Lambda function for example.
+- Using SQS for decoupled, scalable crawl job processing (as we are using AWS).
+- Introducing CI/CD pipelines for build, test, deploy automation.
 
-## Infrastructure
-Currently our crawler is a good solution and the code is production-ready. However, in order to make this really production ready we should think of setting up the infrastructure and CI/CD deployment pipelines. A suggestion on how
-I would do it is by deploying the webcrawler using a lambda and use it as a consumer of our messages in a queue, which since we are using DynamoDB AWS ecosystem I would probably use SQS. 
+# CI/CD Pipeline Enhancements
+To streamline the development workflow we should do a few things in our project:
+- Enforce branch protections, PR checks, unit tests, linting, security scans through CI (e.g. Github Actions, CircleCI)
+- Automate releases with GitHub Actions, possibly integrating with:
+   - ArgoCD for deployment orchestration. 
+   - Spacelift for infrastructure provisioning (Terraform).
 
-## CI/CD Development
-- Setup protection branch and CI jobs to run test, perform security scan, linting, etc
-- Trigger Github actions to create releases. An option could be to connect this to ArgoCD for deploying the binaries, and Spacelift for provision terraform changes.
-
-## Observability
-Even if Jaeger OTLP exporter is helpful for observability, there is a lot of improvement: some span might've been missed, and from the code perspective this cross-cutting concern makes the code a bit ugly. If I had more time I would
-definitely work on refactor this. 
+# Observability Improvements
+While basic observability is in place (via Jaeger and OTLP exporters):
+- Span coverage could be improved for more insightful tracing.
+- Refactor cross-cutting concerns like logging & tracing to improve code readability maintainability - now is a bit messy. 

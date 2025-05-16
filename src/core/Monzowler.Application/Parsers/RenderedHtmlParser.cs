@@ -2,7 +2,6 @@ using HtmlAgilityPack;
 using Microsoft.Extensions.Logging;
 using Monzowler.Application.Contracts.HttpClient;
 using Monzowler.Application.Contracts.Services;
-using Monzowler.Crawler.Parsers;
 using Monzowler.Domain.Requests;
 using Monzowler.Domain.Responses;
 using Monzowler.Shared.Observability;
@@ -17,14 +16,14 @@ namespace Monzowler.Application.Parsers;
 /// especially those that are not SEO-optimized or do not expose static HTML content.
 /// </summary>
 /// <param name="provider"></param>
-public class RenderedHtmlParser(IBrowserProvider provider, IApiClient httpApiClient, ILogger<RenderedHtmlParser> logger) : ISubParser
+public class RenderedHtmlParser(IBrowserProvider provider, ILogger<RenderedHtmlParser> logger) : ISubParser
 {
     public async Task<ParserResponse> ParseLinksAsync(ParserRequest request, CancellationToken ct)
     {
         logger.LogInformation("Start parsing links - {ParserName}", nameof(RenderedHtmlParser));
         using var span = TracingHelper.Source.StartActivity(nameof(RenderedHtmlParser));
 
-        var html = await GetRenderedHtmlAsync(request.Url, ct);
+        var html = await GetRenderedHtmlAsync(request.HtmlResult, ct);
         var doc = new HtmlDocument();
         doc.LoadHtml(html);
 
@@ -42,10 +41,9 @@ public class RenderedHtmlParser(IBrowserProvider provider, IApiClient httpApiCli
     }
 
 
-    private async Task<string> GetRenderedHtmlAsync(string url, CancellationToken cancellationToken)
+    private async Task<string> GetRenderedHtmlAsync(string html, CancellationToken cancellationToken)
     {
         var driver = provider.GetDriver();
-        var html = await httpApiClient.GetStringAsync(url, cancellationToken);
 
         // about:blank is an empty browser page - we then write our raw htlm from the client
         // to the document generated, using the DOM API

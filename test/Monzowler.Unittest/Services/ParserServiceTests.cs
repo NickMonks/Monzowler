@@ -1,8 +1,8 @@
 using System.Net;
 using Microsoft.Extensions.Logging;
+using Monzowler.Application.Contracts.Services;
 using Monzowler.Application.Services;
 using Monzowler.Crawler.Models;
-using Monzowler.Crawler.Parsers;
 using Monzowler.Domain.Entities;
 using Monzowler.Domain.Requests;
 using Monzowler.Domain.Responses;
@@ -17,6 +17,7 @@ public class ParserServiceTests
 
     private ParserRequest CreateRequest() => new()
     {
+        HtmlResult = "",
         Url = "https://example.com",
         AllowedHost = "example.com"
     };

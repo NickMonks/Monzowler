@@ -1,8 +1,7 @@
-using Monzowler.Crawler.Models;
 using Monzowler.Domain.Requests;
 using Monzowler.Domain.Responses;
 
-namespace Monzowler.Crawler.Parsers;
+namespace Monzowler.Application.Contracts.Services;
 
 public interface IParser
 {

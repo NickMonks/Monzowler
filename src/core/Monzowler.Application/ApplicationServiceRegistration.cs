@@ -4,7 +4,6 @@ using Monzowler.Application.Contracts.Services;
 using Monzowler.Application.Parsers;
 using Monzowler.Application.Results;
 using Monzowler.Application.Services;
-using Monzowler.Crawler.Parsers;
 
 namespace Monzowler.Application;
 

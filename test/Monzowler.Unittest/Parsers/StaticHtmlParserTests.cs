@@ -1,7 +1,6 @@
 using Microsoft.Extensions.Logging;
 using Monzowler.Application.Contracts.HttpClient;
 using Monzowler.Application.Parsers;
-using Monzowler.Crawler.Models;
 using Monzowler.Domain.Requests;
 using Monzowler.Unittest.Helpers;
 using Moq;
@@ -19,7 +18,7 @@ public class StaticHtmlParserTests
     {
         _mockHttp = new Mock<IApiClient>();
         var mockLogger = new Mock<ILogger<StaticHtmlParser>>();
-        _parser = new StaticHtmlParser(_mockHttp.Object, mockLogger.Object);
+        _parser = new StaticHtmlParser(mockLogger.Object);
     }
 
     [Fact]
@@ -33,6 +32,7 @@ public class StaticHtmlParserTests
 
         var request = new ParserRequest
         {
+            HtmlResult = html,
             Url = Url,
             AllowedHost = AllowedHost
         };
@@ -57,6 +57,7 @@ public class StaticHtmlParserTests
 
         var request = new ParserRequest
         {
+            HtmlResult = html,
             Url = Url,
             AllowedHost = AllowedHost
         };
@@ -80,6 +81,7 @@ public class StaticHtmlParserTests
 
         var request = new ParserRequest
         {
+            HtmlResult = html,
             Url = Url,
             AllowedHost = AllowedHost
         };
@@ -103,6 +105,7 @@ public class StaticHtmlParserTests
 
         var request = new ParserRequest
         {
+            HtmlResult = html,
             Url = Url,
             AllowedHost = AllowedHost
         };
@@ -125,6 +128,7 @@ public class StaticHtmlParserTests
 
         var request = new ParserRequest
         {
+            HtmlResult = html,
             Url = Url,
             AllowedHost = AllowedHost
         };

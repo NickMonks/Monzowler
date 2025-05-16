@@ -2,7 +2,7 @@ using System.Diagnostics;
 using HtmlAgilityPack;
 using Microsoft.Extensions.Logging;
 using Monzowler.Application.Contracts.HttpClient;
-using Monzowler.Crawler.Parsers;
+using Monzowler.Application.Contracts.Services;
 using Monzowler.Domain.Requests;
 using Monzowler.Domain.Responses;
 using Monzowler.Shared.Observability;
@@ -10,16 +10,15 @@ using Monzowler.Shared.Utilities;
 
 namespace Monzowler.Application.Parsers;
 
-public class StaticHtmlParser(IApiClient http, ILogger<StaticHtmlParser> logger) : ISubParser
+public class StaticHtmlParser(ILogger<StaticHtmlParser> logger) : ISubParser
 {
     public async Task<ParserResponse> ParseLinksAsync(ParserRequest request, CancellationToken ct)
     {
         logger.LogInformation("Start parsing links - {ParserName}", nameof(StaticHtmlParser));
         using var span = TracingHelper.Source.StartActivity(nameof(StaticHtmlParser), ActivityKind.Internal);
 
-        var response = await http.GetStringAsync(request.Url, ct);
         var doc = new HtmlDocument();
-        doc.LoadHtml(response);
+        doc.LoadHtml(request.HtmlResult);
 
         List<string?> links = [];
         var nodes = doc.DocumentNode.SelectNodes("//a[@href]");

@@ -1,8 +1,6 @@
 using Microsoft.Extensions.Logging;
 using Monzowler.Application.Contracts.HttpClient;
 using Monzowler.Application.Parsers;
-using Monzowler.Application.Services;
-using Monzowler.Crawler.Models;
 using Monzowler.Domain.Requests;
 using Monzowler.Unittest.Helpers;
 using Moq;
@@ -22,7 +20,7 @@ public class RenderedHtmlParserTests : IDisposable
         _provider = new BrowserProvider();
         _mockHttp = new Mock<IApiClient>();
         var logger = new Mock<ILogger<RenderedHtmlParser>>();
-        _parser = new RenderedHtmlParser(_provider, _mockHttp.Object, logger.Object);
+        _parser = new RenderedHtmlParser(_provider, logger.Object);
     }
 
     [Fact]
@@ -35,6 +33,7 @@ public class RenderedHtmlParserTests : IDisposable
 
         var request = new ParserRequest
         {
+            HtmlResult = html,
             Url = Url,
             AllowedHost = AllowedHost
         };
@@ -56,6 +55,7 @@ public class RenderedHtmlParserTests : IDisposable
 
         var request = new ParserRequest
         {
+            HtmlResult = html,
             Url = Url,
             AllowedHost = AllowedHost
         };
@@ -75,6 +75,7 @@ public class RenderedHtmlParserTests : IDisposable
 
         var request = new ParserRequest
         {
+            HtmlResult = html,
             Url = Url,
             AllowedHost = AllowedHost
         };
@@ -94,6 +95,7 @@ public class RenderedHtmlParserTests : IDisposable
 
         var request = new ParserRequest
         {
+            HtmlResult = html,
             Url = Url,
             AllowedHost = AllowedHost
         };

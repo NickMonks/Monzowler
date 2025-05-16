@@ -1,9 +1,9 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Monzowler.Application.Contracts.HttpClient;
 using Monzowler.Application.Contracts.Results;
 using Monzowler.Application.Contracts.Services;
 using Monzowler.Application.Services;
-using Monzowler.Crawler.Parsers;
 using Monzowler.Domain.Entities;
 using Monzowler.Domain.Requests;
 using Monzowler.Domain.Responses;
@@ -19,6 +19,8 @@ public class SpiderServiceTests
     private readonly Mock<IResultHandler> _mockRepo = new();
     private readonly Mock<ILogger<SpiderService>> _mockLogger = new();
     private readonly Mock<PolitenessThrottlerService> _mockThrottler = new();
+    private readonly Mock<IApiClient> _apiClient = new();
+
 
     private const string RootUrl = "https://example.com";
     private const string JobId = "test-job";
@@ -39,6 +41,7 @@ public class SpiderServiceTests
             _mockRepo.Object,
             _mockLogger.Object,
             _mockThrottler.Object,
+            _apiClient.Object,
             opts
         );
     }
