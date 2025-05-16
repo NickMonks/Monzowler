@@ -3,7 +3,9 @@ POST http://localhost:5002/crawl
 Content-Type: application/json
 
 {
-  "url": "https://monzo.com"
+  "url": "https://monzo.com",
+  "maxDepth": 2,
+  "maxRetries": 2
 }
 
 ### --- JOB GET ---
@@ -17,71 +19,3 @@ GET http://localhost:5002/crawl/sitemap/f2e4b922-22b3-469e-b363-4703cfeaa616
 Content-Type: application/json
 
 {}
-
-### --- DEBUGGING ---
-GET http://localhost:4566
-x-amz-target: DynamoDB_20120810.ListTables
-content-type: application/x-amz-json-1.0
-
-{}
-
-### --- DEBUG: CRAWL -----
-POST http://localhost:5000/crawl
-Content-Type: application/json
-
-{
-  "url": "https://monzo.com"
-}
-
-### --- DEBUG: NO LINKS FOUND -----
-POST http://localhost:5000/crawl
-Content-Type: application/json
-
-{
-  "url": "https://monzo.com/-webviews/content/p2p/ios"
-}
-
-
-### --- DEBUG: NOT FOUND -----
-POST http://localhost:5000/crawl
-Content-Type: application/json
-
-{
-  "url": "https://monzo.com/help/monzo-flex/interest-rates-for-monzo-flex"
-}
-
-### --- DEBUG: PARSER ERROR -----
-POST http://localhost:5000/crawl
-Content-Type: application/json
-
-{
-  "url": "https://monzo.com/help/monzo-flex/interest-rates-for-monzo-flex"
-}
-
-### --- DEBUG: JOB GET ---
-GET http://localhost:5000/crawl/8d0e0a89-4347-4780-90ad-0dc2f572851e
-Content-Type: application/json
-
-{}
-
-### --- DEBUG: SITEMAP JOB GET ---
-GET http://localhost:5000/crawl/sitemap/850ef988-22ed-4b76-8e84-16c3224373a5?status=ServerError&status=ParserError
-Content-Type: application/json
-
-{}
-
-### --- CREATE JOB CRAWL (BBC) - DEBUG ---
-POST http://localhost:5000/crawl
-Content-Type: application/json
-
-{
-  "url": "https://www.hellointerview.com/"
-}
-
-### --- RENDERED HTML PARSING - DEBUG ---
-POST http://localhost:5000/crawl
-Content-Type: application/json
-
-{
-  "url": "https://monzo.com/help/monzo-fraud-category/Getting-your-money-back-authorised-push-payment-fraud"
-}
