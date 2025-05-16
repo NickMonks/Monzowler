@@ -143,11 +143,15 @@ In practice, this model proved inefficient, error-prone, and hard to scale for r
 
 ## Persistence
 
-The main datastore used for the web crawler is DynamoDB. Despite its potential cost and vendor lock-in, is a fully managed, highly scalable, key-value store that 
-has shown to be extremely fast on both read and write operations, and since we don't require strong schema nor complex queries, and our access patterns are quite simple,
-I decided this was a good option. 
+For this project, the primary datastore is DynamoDB. While it's true that DynamoDB comes with considerations such as potential cost and vendor lock-in, it has advantages that align well with the needs of a web crawler:
+- It's fully managed, highly scalable key-value store. 
+- Provides exceptionally fast read and write performance. 
+- Fits perfectly for use cases with simple access patterns as we don't need complex queries or strict schemas.
 
-In the project this is set up in the dockerfile using localstack and AWS CLI.
+Given that the crawler’s persistence layer is primarily used to Track job statuses (e.g., InProgress, Failed, Completed) and store sitemaps as crawl results DynamoDB’s characteristics became a natural choice for the system.
+
+### Local Development
+To keep development lightweight and vendor-agnostic, I used LocalStack to emulate DynamoDB locally. As the rest of the dependencies this setup is done via Docker and the AWS CLI, ensuring easy reproducibility from actual AWS infrastructure.
 
 ## HTTP Client
 
