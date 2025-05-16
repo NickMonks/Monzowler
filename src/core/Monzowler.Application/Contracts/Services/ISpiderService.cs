@@ -4,5 +4,5 @@ namespace Monzowler.Application.Contracts.Services;
 
 public interface ISpiderService
 {
-    Task<List<Page>> CrawlAsync(CrawlParameters  parameters);
+    Task<List<Page>> CrawlAsync(CrawlParameters parameters);
 }

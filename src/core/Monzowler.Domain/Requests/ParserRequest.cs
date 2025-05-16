@@ -2,7 +2,7 @@ namespace Monzowler.Domain.Requests;
 
 public class ParserRequest
 {
-    public required string Url { get; set; }
-    public required string HtmlResult { get; set; }
-    public required string AllowedHost { get; set; }
+    public required string Url { get; init; }
+    public required string HtmlResult { get; init; }
+    public required string AllowedHost { get; init; }
 }

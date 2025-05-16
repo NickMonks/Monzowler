@@ -20,7 +20,7 @@ public class TestEnvironment : IAsyncLifetime
 
     public TestEnvironment()
     {
-        Server = new TestServer(); 
+        Server = new TestServer();
 
         LocalstackContainer = new ContainerBuilder()
             .WithImage("localstack/localstack:latest")
@@ -105,7 +105,7 @@ public class TestEnvironment : IAsyncLifetime
 
         await client.CreateTableAsync(jobsTable);
     }
-    
+
     public async Task DisposeAsync()
     {
         await LocalstackContainer.DisposeAsync();

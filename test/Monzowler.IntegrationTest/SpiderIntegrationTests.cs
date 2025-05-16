@@ -63,8 +63,8 @@ public class SpiderIntegrationTests : IClassFixture<WebApplicationFactory<Progra
             MaxRetries = 2
         };
         var expectedSitemap = Stubs.ExpectedStaticSiteMap(_testEnvironment.BaseUrl);
-        
-        
+
+
 
         //Act
         var actualSitemap = await spider.CrawlAsync(crawlParams);
@@ -81,7 +81,7 @@ public class SpiderIntegrationTests : IClassFixture<WebApplicationFactory<Progra
                     .Including(x => x.Links));
         }
     }
-    
+
     [Fact]
     public async Task EnqueueCrawl_ShouldReturnCorrectPages_Rendered()
     {
@@ -97,7 +97,7 @@ public class SpiderIntegrationTests : IClassFixture<WebApplicationFactory<Progra
             MaxDepth = 2,
             MaxRetries = 2
         };
-        
+
         //Act
         var actualSitemap = await spider.CrawlAsync(crawlParams);
 
@@ -113,7 +113,7 @@ public class SpiderIntegrationTests : IClassFixture<WebApplicationFactory<Progra
                     .Including(x => x.Links));
         }
     }
-    
+
     [Fact]
     public async Task EnqueueCrawl_ShouldReturnCorrectPages_RobotsTxt()
     {

@@ -35,8 +35,8 @@ public static class Stubs
         }
 
     ];
-    
-    public static List<Page> ExpectedRenderedSiteMap(string baseUrl) =>  new List<Page>
+
+    public static List<Page> ExpectedRenderedSiteMap(string baseUrl) => new List<Page>
     {
         new()
         {
@@ -63,16 +63,16 @@ public static class Stubs
             Links = []
         },
     };
-    
+
     public static List<Page> ExpectedSiteMapWithRobotsTxt(string baseUrl) =>
     [
         new()
         {
             PageUrl = $"{baseUrl}/with-robots-txt",
             Status = nameof(ParserStatusCode.Ok),
-            Links = [$"{baseUrl}/page2_with-robots-txt",$"{baseUrl}/disallow"]
+            Links = [$"{baseUrl}/page2_with-robots-txt", $"{baseUrl}/disallow"]
         },
-        
+
         new()
         {
             PageUrl = $"{baseUrl}/disallow",

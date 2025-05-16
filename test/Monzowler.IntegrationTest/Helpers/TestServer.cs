@@ -24,14 +24,14 @@ public class TestServer : IDisposable
         RegisterPage("/page2_level1", "page2_level1.html");
         RegisterPage("/page3_level1", "page3_level1.html");
         RegisterPage("/page4_level2", "page4_level2.html");
-        
+
         //rendered
         type = "rendered";
         RegisterPage($"/{type}", "page1.html", type);
         RegisterPage($"/page2_{type}", "page2.html", type);
         RegisterPage($"/page3_{type}", "page3.html", type);
         RegisterPage($"/page4_{type}", "page4.html", type);
-        
+
         //robots txt
         type = "with-robots-txt";
         RegisterPage($"/{type}", "page1.html", type);
@@ -39,7 +39,7 @@ public class TestServer : IDisposable
         RegisterPage($"/disallow", "disallow.html", type);
         RegisterPage($"/robots.txt", "robots.txt", type);
     }
-    
+
     private void RegisterPage(string route, string fileName, string type = "static")
     {
         var basePath = Directory.GetCurrentDirectory();

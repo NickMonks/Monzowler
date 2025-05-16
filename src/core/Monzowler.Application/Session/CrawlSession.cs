@@ -15,7 +15,7 @@ public class CrawlSession
 {
     public ConcurrentBag<Page> Pages { get; } = new();
     public ConcurrentDictionary<string, bool> Visited { get; } = new();
-    
+
     //TODO: consider make it bounded - we have heavy producers vs consumers so introducing
     //backpressure could be nice
     public Channel<Link> ChannelSession { get; } = Channel.CreateUnbounded<Link>();

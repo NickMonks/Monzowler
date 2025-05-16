@@ -75,7 +75,7 @@ public class SpiderServiceTests
             MaxDepth = 1,
             MaxRetries = 2
         };
-        
+
         var service = CreateService();
 
         // Act
@@ -104,7 +104,7 @@ public class SpiderServiceTests
 
         _mockRobots.Setup(r => r.IsAllowed(It.IsAny<string>(), It.IsAny<List<string>>(), It.IsAny<List<string>>()))
             .Returns(true);
-        
+
         var crawlParams = new CrawlParameters
         {
             RootUrl = RootUrl,
@@ -139,7 +139,7 @@ public class SpiderServiceTests
 
         _mockRobots.Setup(r => r.IsAllowed(It.IsAny<string>(), It.IsAny<List<string>>(), It.IsAny<List<string>>()))
             .Returns(true);
-        
+
         var crawlParams = new CrawlParameters
         {
             RootUrl = RootUrl,
@@ -172,7 +172,7 @@ public class SpiderServiceTests
 
         _mockRobots.Setup(r => r.IsAllowed(It.IsAny<string>(), It.IsAny<List<string>>(), It.IsAny<List<string>>()))
             .Returns(true);
-        
+
         var crawlParams = new CrawlParameters
         {
             RootUrl = RootUrl,
@@ -180,7 +180,7 @@ public class SpiderServiceTests
             MaxDepth = 1,
             MaxRetries = 2
         };
-        
+
         var service = CreateService(new CrawlerSettings { MaxConcurrency = 1, Timeout = 5, UserAgent = "TestBot" });
 
         // Act
@@ -208,7 +208,7 @@ public class SpiderServiceTests
 
         _mockRobots.Setup(r => r.IsAllowed(It.Is<string>(p => p == "/"), It.IsAny<List<string>>(), It.IsAny<List<string>>()))
             .Returns(true);
-        
+
         var crawlParams = new CrawlParameters
         {
             RootUrl = RootUrl,
@@ -238,7 +238,7 @@ public class SpiderServiceTests
 
         _mockRobots.Setup(r => r.IsAllowed(It.IsAny<string>(), It.IsAny<List<string>>(), It.IsAny<List<string>>()))
             .Returns(true);
-        
+
         var crawlParams = new CrawlParameters
         {
             RootUrl = RootUrl,

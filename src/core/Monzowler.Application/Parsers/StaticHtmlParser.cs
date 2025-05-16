@@ -31,7 +31,7 @@ public class StaticHtmlParser(ILogger<StaticHtmlParser> logger) : ISubParser
                 .Distinct()
                 .ToList();
         }
-        
+
         var hasScriptTags = doc.DocumentNode.SelectSingleNode("//script") is not null;
 
         return new ParserResponse

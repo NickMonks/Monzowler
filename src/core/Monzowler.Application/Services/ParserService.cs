@@ -43,7 +43,7 @@ public class ParserService(IEnumerable<ISubParser> parsers, ILogger<ParserServic
                         StatusCode = ParserStatusCode.Ok
                     };
                 }
-                
+
                 if (response.HasScriptTags)
                 {
                     //If no links are found there is the possibility that the links are within scripts tags
@@ -97,7 +97,7 @@ public class ParserService(IEnumerable<ISubParser> parsers, ILogger<ParserServic
         span?.SetStatus(ActivityStatusCode.Error, "AllParsersFailed");
         span?.AddEvent(new ActivityEvent("AllParsersFailed"));
         logger.LogWarning("All parsers failed for {Url}", request.Url);
-        
+
         return new ParserResponse
         {
             Links = [],

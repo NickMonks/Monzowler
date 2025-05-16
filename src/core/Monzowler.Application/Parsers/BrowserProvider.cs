@@ -37,7 +37,7 @@ public class BrowserProvider : IBrowserProvider, IDisposable
             options.AddArgument("--no-sandbox");
             options.AddArgument("--disable-dev-shm-usage");
             options.AddArgument("--disable-gpu");
-            
+
             if (!string.IsNullOrWhiteSpace(chromeBinary))
             {
                 options.BinaryLocation = chromeBinary;
